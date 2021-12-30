@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+from . import local_settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,23 +22,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fjsx4@4@$(r#260924mmy#anc=r*2x%km$m@x%*%=8z^&5&u$r'
+SECRET_KEY = local_settings.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = local_settings.DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = local_settings.ALLOWED_HOSTS
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # builtin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # installed
+
+    # custom
+    'conf',
+    'accounts.apps.AccountsConfig',
+    'blog.apps.BlogConfig',
+    'resumes.apps.ResumesConfig',
+    'vacancies.apps.VacanciesConfig',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +66,7 @@ ROOT_URLCONF = 'conf.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,8 +128,93 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR.joinpath('static')
+
+
+# Media files
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR.joinpath('media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+try:
+    os.makedirs(BASE_DIR.joinpath('logs'))    # make "logs" directory if not exists
+except FileExistsError:
+    pass
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '{levelname}, {asctime}, {module}, {process:d}/{thread:d} - {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'django_server': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': f'{BASE_DIR.joinpath("logs").joinpath("django_server.log")}',
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 5,
+            'formatter': 'default',
+        },
+        'accounts_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': f'{BASE_DIR.joinpath("logs").joinpath("accounts.log")}',
+            'formatter': 'default',
+        },
+        'resumes_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': f'{BASE_DIR.joinpath("logs").joinpath("resumes.log")}',
+            'formatter': 'default',
+        },
+        'vacancies_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': f'{BASE_DIR.joinpath("logs").joinpath("vacancies.log")}',
+            'formatter': 'default',
+        },
+        'blog_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': f'{BASE_DIR.joinpath("logs").joinpath("blog.log")}',
+            'formatter': 'default',
+        },
+    },
+    'loggers': {
+        'django.server': {
+            'handlers': ['django_server'],
+            'propagate': True,
+        },
+        'accounts': {
+            'handlers': ['accounts_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'resumes': {
+            'handlers': ['resumes_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'vacancies': {
+            'handlers': ['vacancies_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'blog': {
+            'handlers': ['blog_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
