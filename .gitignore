@@ -137,3 +137,6 @@ migrations/
 # Ignore static and media files
 hh/static/
 hh/media/
+
+# my
+.vscode/
