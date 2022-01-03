@@ -83,7 +83,7 @@ class Vacancy(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now_add=True)
-    published_at = models.DateTimeField()
+    published_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Вакансия'
