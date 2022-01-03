@@ -21,6 +21,7 @@ class Command(BaseCommand):
                 employer=f'Vacancy №{i} employer',
                 title=f'Vacancy №{i}',
                 description=f'Vacancy №{i} description',
-                employment_type=employment_type
+                employment_type=employment_type,
+                num_of_applications=random.randint(0, 30)
             )
             vacancy.positions.add(position)
