@@ -49,7 +49,7 @@ class Vacancy(models.Model):
     # )
     employer = models.CharField(max_length=100)
     title = models.CharField(
-        max_length=200,
+        max_length=50,
         verbose_name='Название'
     )
     description = models.TextField(
