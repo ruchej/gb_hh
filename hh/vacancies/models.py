@@ -14,6 +14,7 @@ class Position(models.Model):
 
     title = models.CharField(
         choices=POSITION_CHOICES,
+        max_length=50,
         verbose_name='Должность'
     )
 
@@ -46,7 +47,7 @@ class Vacancy(models.Model):
     #     Employer,
     #     on_delete=models.CASCADE
     # )
-    employer = models.CharField()
+    employer = models.CharField(max_length=100)
     title = models.CharField(
         max_length=200,
         verbose_name='Название'
@@ -62,6 +63,7 @@ class Vacancy(models.Model):
     )
     employment_type = models.CharField(
         choices=EMPLOYMENT_TYPE_CHOICES,
+        max_length=30,
         verbose_name='Тип занятости'
     )
     # TODO: experience choices
@@ -71,6 +73,7 @@ class Vacancy(models.Model):
     # )
     status = models.CharField(
         choices=VACANCY_STATUS_CHOICES,
+        max_length=30,
         default=DRAFT,
         verbose_name='Статус'
     )
