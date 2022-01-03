@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from vacancies.views import VacancyList
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('vacancies/', VacancyList.as_view())
 ]
