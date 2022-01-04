@@ -1,8 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.db.models.enums import Choices
+from django.db.models import Q
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.utils.translation import gettext_lazy as _
+
+# from django.db.models.enums import Choices
 
 
+'''
 class ExperienceYear(models.IntegerChoices):
     """Перечисления опыта работы в годах для требования вакансий"""
 
@@ -10,61 +14,86 @@ class ExperienceYear(models.IntegerChoices):
     ONE_TO_THREE = 1, "От 1 до 3 лет"
     THREE_TO_SIX = 2, "От 3 до 6 лет"
     MORE_SIX = 3, "Более 6 лет"
+'''
 
 
-class User(AbstractUser):
-    class Status(models.IntegerChoices):
-        MODERATOR = 0, "Модератор"
-        JOBSEEKER = 1, "Соискатель"
-        EMPLOYER = 2, "Работодатель"
+class UserStatus(models.IntegerChoices):
+    MODERATOR = 0, _("Модератор")
+    JOBSEEKER = 1, _("Соискатель")
+    EMPLOYER = 2, _("Работодатель")
 
+
+class AccountManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
+
+class JobSeekerManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=UserStatus.JOBSEEKER)
+
+
+class EmployerManager(UserManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status=UserStatus.EMPLOYER)
+
+
+class Account(AbstractUser):
     patronymic = models.CharField(
-        max_length=20, blank=True, default="", verbose_name="Отчество"
+        max_length=20, blank=True, default="", verbose_name=_("Отчество")
     )
-    phone = models.CharField(max_length=20, blank=True, verbose_name="Телефон")
-    adress = models.TextField(blank=True, verbose_name="Район поиска")
+    phone = models.CharField(max_length=20, blank=True, verbose_name=_("Телефон"))
+    adress = models.TextField(blank=True, verbose_name=_("Район поиска"))
     status = models.PositiveSmallIntegerField(
-        choices=Status.choices,
-        default=Status.JOBSEEKER,
-        verbose_name="Статус пользователя",
+        choices=UserStatus.choices,
+        default=UserStatus.JOBSEEKER,
+        verbose_name=_("Статус пользователя"),
     )
+    objects = AccountManager()
 
     class Meta:
 
-        verbose_name = "пользователя"
-        verbose_name_plural = "Пользователи"
+        verbose_name = _("пользователя")
+        verbose_name_plural = _("Пользователи")
 
     def __str__(self):
         return f"{self.first_name} {self.patronymic} {self.last_name}"
 
 
 class JobSeeker(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.PROTECT, verbose_name="Соискатель"
+    """Соискатель. Аккаунт пользователя ищущего работу"""
+
+    seeker = models.OneToOneField(
+        Account, on_delete=models.PROTECT, verbose_name=_("Соискатель")
     )
+    objects = JobSeekerManager()
 
     class Meta:
-        verbose_name = "соискателя"
-        verbose_name_plural = "Соискатели"
+        verbose_name = _("соискателя")
+        verbose_name_plural = _("Соискатели")
 
     def __str__(self):
         return self.user
 
 
 class Employer(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.PROTECT, verbose_name="Работодатель"
+    """Работодатель"""
+
+    employer = models.OneToOneField(
+        Account, on_delete=models.PROTECT, verbose_name=_("Работодатель")
     )
-    description = models.TextField(blank=True, null=True, verbose_name="Описание")
+    description = models.TextField(blank=True, null=True, verbose_name=_("Описание"))
+    objects = EmployerManager()
 
     class Meta:
-        verbose_name = "работодателя"
-        verbose_name_plural = "Работодатели"
+        verbose_name = _("работодателя")
+        verbose_name_plural = _("Работодатели")
 
     def __str__(self):
         return self.user
 
 
+'''
 class Resume(models.Model):
     class Sex(models.IntegerChoices):
         WOMAN = 0, "Женщина"
@@ -164,3 +193,4 @@ class WorkExperience(models.Model):
 
     def __str__(self):
         return self.organization
+'''
