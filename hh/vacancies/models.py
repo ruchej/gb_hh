@@ -1,24 +1,6 @@
 from django.db import models
 
 
-class Position(models.Model):
-    SW_DEVELOPER = 'SW_DEV'
-    ELECTRICAL_ENG = 'E_ENG'
-    MECHANICAL_ENG = 'M_ENG'
-
-    POSITION_CHOICES = (
-        (SW_DEVELOPER, 'Разработчик ПО'),
-        (ELECTRICAL_ENG, 'Инженер-электрик'),
-        (MECHANICAL_ENG, 'Инженер-механик')
-    )
-
-    title = models.CharField(
-        choices=POSITION_CHOICES,
-        max_length=50,
-        verbose_name='Должность'
-    )
-
-
 class Vacancy(models.Model):
     DRAFT = 'DF'
     WAITING = 'WTG'
@@ -57,9 +39,10 @@ class Vacancy(models.Model):
         null=True,
         verbose_name='Описание'
     )
-    positions = models.ManyToManyField(
-        Position,
-        verbose_name='Должности'
+    hashtags = models.ManyToManyField(
+        models.CharField,
+        max_length=50,
+        verbose_name='Ключевые навыки'
     )
     employment_type = models.CharField(
         choices=EMPLOYMENT_TYPE_CHOICES,
