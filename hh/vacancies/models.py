@@ -60,10 +60,6 @@ class Vacancy(models.Model):
         default=DRAFT,
         verbose_name='Статус'
     )
-    num_of_applications = models.PositiveIntegerField(
-        default=0,
-        verbose_name='Подано резюме'
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now_add=True)
     published_at = models.DateTimeField(auto_now_add=True)
