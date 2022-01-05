@@ -2,7 +2,7 @@ import random
 
 from django.core.management import BaseCommand
 
-from vacancies.models import Vacancy, Position
+from vacancies.models import Vacancy
 
 
 class Command(BaseCommand):
@@ -13,15 +13,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         Vacancy.objects.all().delete()
-        positions = Position.objects.all()
         for i in range(options['count']):
-            position = random.choice(positions)
             employment_type, _ = random.choice(Vacancy.EMPLOYMENT_TYPE_CHOICES)
-            vacancy = Vacancy.objects.create(
+            experience, _ = random.choice(Vacancy.EXPERIENCE_CHOICES)
+            salary = round(random.randint(2, 14)) * 10000
+            Vacancy.objects.create(
                 employer=f'Vacancy №{i} employer',
                 title=f'Vacancy №{i}',
                 description=f'Vacancy №{i} description',
+                experience=experience,
                 employment_type=employment_type,
-                num_of_applications=random.randint(0, 30)
+                salary=f'От {salary} р.'
             )
-            vacancy.positions.add(position)
