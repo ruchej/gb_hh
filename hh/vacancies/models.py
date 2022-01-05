@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Vacancy(models.Model):
+    """Модель вакансий от работодателя"""
+
     DRAFT = 'DF'
     WAITING = 'WTG'
     PUBLISHED = 'PBL'
