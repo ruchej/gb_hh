@@ -61,7 +61,6 @@ class Vacancy(models.Model):
         verbose_name='Статус'
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now_add=True)
     published_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
