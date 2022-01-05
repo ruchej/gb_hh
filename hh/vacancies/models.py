@@ -51,8 +51,7 @@ class Vacancy(models.Model):
         null=True,
         verbose_name='Описание'
     )
-    hashtags = models.ManyToManyField(
-        models.CharField,
+    hashtags = models.CharField(
         max_length=50,
         verbose_name='Ключевые навыки'
     )
