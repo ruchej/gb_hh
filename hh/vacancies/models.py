@@ -54,6 +54,8 @@ class Vacancy(models.Model):
     )
     hashtags = models.CharField(
         max_length=50,
+        blank=True,
+        null=True,
         verbose_name=_('Ключевые навыки')
     )
     employment_type = models.CharField(
