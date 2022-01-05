@@ -24,6 +24,18 @@ class Vacancy(models.Model):
         (INTERNSHIP, 'Стажировка')
     )
 
+    NO_EXP = 'NE'
+    ONE_TO_THREE = 'OT'
+    THREE_TO_SIX = 'TS'
+    GREATER_SIX = 'GS'
+
+    EXPERIENCE_CHOICES = (
+        (NO_EXP, 'Без опыта'),
+        (ONE_TO_THREE, 'От 1 до 3 лет'),
+        (THREE_TO_SIX, 'От 3 до 6 лет'),
+        (GREATER_SIX, 'Более 6 лет')
+    )
+
     # TODO: add employer
     # employer = models.OneToOneField(
     #     Employer,
@@ -49,11 +61,11 @@ class Vacancy(models.Model):
         max_length=3,
         verbose_name='Тип занятости'
     )
-    # TODO: experience choices
-    # experience = models.CharField(
-    #     choices=EXPERIENCE_CHOICES,
-    #     verbose_name='Опыт работы'
-    # )
+    experience = models.CharField(
+        choices=EXPERIENCE_CHOICES,
+        max_length=2,
+        verbose_name='Опыт работы'
+    )
     salary = models.CharField(
         max_length=30,
         default='Не указана',
