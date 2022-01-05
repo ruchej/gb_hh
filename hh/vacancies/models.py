@@ -54,6 +54,11 @@ class Vacancy(models.Model):
     #     choices=EXPERIENCE_CHOICES,
     #     verbose_name='Опыт работы'
     # )
+    salary = models.CharField(
+        max_length=30,
+        default='Не указана',
+        verbose_name='Зарплата'
+    )
     status = models.CharField(
         choices=VACANCY_STATUS_CHOICES,
         max_length=30,
