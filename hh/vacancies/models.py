@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Vacancy(models.Model):
@@ -8,10 +9,10 @@ class Vacancy(models.Model):
     ARCHIVED = 'ARC'
 
     VACANCY_STATUS_CHOICES = (
-        (DRAFT, 'Черновик'),
-        (WAITING, 'Ожидает проверки'),
-        (PUBLISHED, 'Опубликовано'),
-        (ARCHIVED, 'Архивировано')
+        (DRAFT, _('Черновик')),
+        (WAITING, _('Ожидает проверки')),
+        (PUBLISHED, _('Опубликовано')),
+        (ARCHIVED, _('Архивировано'))
     )
 
     FULL_TIME = 'FT'
@@ -19,9 +20,9 @@ class Vacancy(models.Model):
     INTERNSHIP = 'INT'
 
     EMPLOYMENT_TYPE_CHOICES = (
-        (FULL_TIME, 'Полная занятость'),
-        (PART_TIME, 'Неполная занятость'),
-        (INTERNSHIP, 'Стажировка')
+        (FULL_TIME, _('Полная занятость')),
+        (PART_TIME, _('Неполная занятость')),
+        (INTERNSHIP, _('Стажировка'))
     )
 
     NO_EXP = 'NE'
@@ -30,10 +31,10 @@ class Vacancy(models.Model):
     GREATER_SIX = 'GS'
 
     EXPERIENCE_CHOICES = (
-        (NO_EXP, 'Без опыта'),
-        (ONE_TO_THREE, 'От 1 до 3 лет'),
-        (THREE_TO_SIX, 'От 3 до 6 лет'),
-        (GREATER_SIX, 'Более 6 лет')
+        (NO_EXP, _('Без опыта')),
+        (ONE_TO_THREE, _('От 1 до 3 лет')),
+        (THREE_TO_SIX, _('От 3 до 6 лет')),
+        (GREATER_SIX, _('Более 6 лет'))
     )
 
     # TODO: add employer
@@ -44,44 +45,44 @@ class Vacancy(models.Model):
     employer = models.CharField(max_length=100)
     title = models.CharField(
         max_length=50,
-        verbose_name='Название'
+        verbose_name=_('Название')
     )
     description = models.TextField(
         blank=True,
         null=True,
-        verbose_name='Описание'
+        verbose_name=_('Описание')
     )
     hashtags = models.CharField(
         max_length=50,
-        verbose_name='Ключевые навыки'
+        verbose_name=_('Ключевые навыки')
     )
     employment_type = models.CharField(
         choices=EMPLOYMENT_TYPE_CHOICES,
         max_length=3,
-        verbose_name='Тип занятости'
+        verbose_name=_('Тип занятости')
     )
     experience = models.CharField(
         choices=EXPERIENCE_CHOICES,
         max_length=2,
-        verbose_name='Опыт работы'
+        verbose_name=_('Опыт работы')
     )
     salary = models.CharField(
         max_length=30,
-        default='Не указана',
-        verbose_name='Зарплата'
+        default=_('Не указана'),
+        verbose_name=_('Зарплата')
     )
     status = models.CharField(
         choices=VACANCY_STATUS_CHOICES,
         max_length=3,
         default=DRAFT,
-        verbose_name='Статус'
+        verbose_name=_('Статус')
     )
     created_at = models.DateTimeField(auto_now_add=True)
     published_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Вакансия'
-        verbose_name_plural = 'Вакансии'
+        verbose_name = _('Вакансия')
+        verbose_name_plural = _('Вакансии')
 
     def delete(self, using=None, keep_parents=False):
         """Метод удаления вакансии"""
