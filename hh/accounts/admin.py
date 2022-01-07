@@ -5,7 +5,6 @@ from django.contrib.auth.forms import UserChangeForm
 from .models import Account
 
 
-
 class AccountChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = Account
@@ -16,43 +15,42 @@ class AccountAdmin(UserAdmin):
 
     form = AccountChangeForm
 
-    list_display = ('username', 'first_name', 'last_name', 'status')
+    list_display = ("username", "first_name", "last_name", "status")
     fieldsets = (
         (
-            'Пользователь',
+            "Пользователь",
             {
-                'fields': (
-                    'username',
-                    ('first_name', 'patronymic', 'last_name'),
-                    'email',
-                    'phone',
-                    'adress',
+                "fields": (
+                    "username",
+                    ("first_name", "patronymic", "last_name"),
+                    "email",
+                    "phone",
+                    "adress",
                 )
             },
         ),
         (
-            'Статус',
+            "Статус",
             {
-                'fields': (
-                    'status',
-                    'is_superuser',
-                    'is_staff',
-                    'is_active',
-                    'date_joined',
+                "fields": (
+                    "status",
+                    "is_superuser",
+                    "is_staff",
+                    "is_active",
+                    "date_joined",
                 )
             },
         ),
         (
-            'Прочее',
+            "Прочее",
             {
-                'fields': (
-                    'groups',
-                    'user_permissions',
-                    'last_login',
-                    'password',
+                "fields": (
+                    "groups",
+                    "user_permissions",
+                    "last_login",
+                    "password",
                 ),
-                'classes': ('collapse', 'wide', 'extrapretty'),
+                "classes": ("collapse", "wide", "extrapretty"),
             },
         ),
     )
-
