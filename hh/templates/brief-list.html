@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/brief.css">
+    <link rel="stylesheet" href="{% static 'main.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'brief.css' %}" type="text/css">
     <title>Резюме</title>
 </head>
 <body>
@@ -33,118 +34,23 @@
             </div>
         </div>
         <div class="content">
-            <div class="data">
-                <div class="user-photo"><img src="user-photo.svg" alt="user-photo"></div>
-                <div class="user-profile">
-                    <a class="hidden-link" href="#"><div class="user-data">Федот Иванович Пользовательский</div></a>
-                    <div class="self-about">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Sunt et repellat perspiciatis tenetur excepturi eveniet esse, maxime tempore asperiores 
-                        inventore quaerat qui a accusantium quibusdam facilis unde optio nostrum enim laboriosam? 
-                        Hic repellendus minima dolorem obcaecati officiis repudiandae quas consequuntur iure amet expedita. 
-                        Aspernatur minus atque facere nesciunt unde, cumque ipsam quam laboriosam reprehenderit ut autem non 
-                        voluptas consectetur rerum voluptates alias id saepe esse? Aspernatur nihil deserunt blanditiis ea! 
-                        Possimus eveniet delectus mollitia ullam nemo repellat esse provident deleniti enim beatae dolore natus 
-                        praesentium, ipsam non? Error tempora, sed tempore natus, ut sapiente, rem pariatur nobis eos sint nulla 
-                        quod libero animi provident? Libero praesentium ipsum officia, omnis corrupti porro nihil nisi iure dolorum 
-                        architecto, deserunt laudantium. Unde sequi distinctio mollitia error nostrum, corporis ullam aliquam cupiditate 
-                        consequuntur placeat a maxime dolorem quaerat nulla doloremque possimus id officia quisquam odit iusto minus, 
-                        aliquid repellendus amet? Libero voluptatem ipsam exercitationem ab voluptas omnis quasi rem dignissimos, iste 
-                        dolore earum obcaecati nostrum quos quaerat fugit minima iusto? Quia ad consectetur laudantium totam maxime tenetur 
-                        numquam consequuntur placeat cum officia ea, quo quos aliquid eaque, corrupti error ipsam, fuga iure. Ipsa beatae, 
-                        molestiae facere repellat dolorem quos sapiente, cupiditate neque nisi impedit obcaecati vero? Id, illum nemo iste 
-                        reprehenderit, odit sunt recusandae tenetur aspernatur perferendis, numquam dolore possimus enim officia a itaque. 
-                        Nobis totam vel molestiae tempora quam a dolorem quas id! Illum hic laboriosam accusamus rerum, doloribus minima 
-                        ipsa repellendus officia vitae optio! Neque minima recusandae voluptas numquam ducimus inventore atque?
+            {% for resume in object_list %}
+                <div class="data">
+                    <div class="user-photo"><img src="/media/{{ resume.photo }}" alt="user-photo"></div>
+                    <div class="user-profile">
+                        <a class="hidden-link" href="#">
+                            <div class="user-data">
+                                {{ resume.personal_info.surname }}
+                                {{ resume.personal_info.name }}
+                                {{ resume.personal_info.patronymic }}
+                            </div>
+                        </a>
+                        <div class="self-about">{{ resume.experience.about }}</div>
+                        <div class="skills-info">{{ resume.experience.skills }}</div>
                     </div>
-                    <div class="skills-info">Сварщик, повар, бард 80 уровня</div>
+                    <div class="salary">{{ resume.position.salary }} руб.</div>
                 </div>
-                <div class="salary">40 000 руб.</div>
-            </div>
-            <div class="data">
-                <div class="user-photo"><img src="user-photo.svg" alt="user-photo"></div>
-                <div class="user-profile">
-                    <a class="hidden-link" href="#"><div class="user-data">Федот Иванович Пользовательский</div></a>
-                    <div class="self-about">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Sunt et repellat perspiciatis tenetur excepturi eveniet esse, maxime tempore asperiores 
-                        inventore quaerat qui a accusantium quibusdam facilis unde optio nostrum enim laboriosam? 
-                        Hic repellendus minima dolorem obcaecati officiis repudiandae quas consequuntur iure amet expedita. 
-                        Aspernatur minus atque facere nesciunt unde, cumque ipsam quam laboriosam reprehenderit ut autem non 
-                        voluptas consectetur rerum voluptates alias id saepe esse? Aspernatur nihil deserunt blanditiis ea! 
-                        Possimus eveniet delectus mollitia ullam nemo repellat esse provident deleniti enim beatae dolore natus 
-                        praesentium, ipsam non? Error tempora, sed tempore natus, ut sapiente, rem pariatur nobis eos sint nulla 
-                        quod libero animi provident? Libero praesentium ipsum officia, omnis corrupti porro nihil nisi iure dolorum 
-                        architecto, deserunt laudantium. Unde sequi distinctio mollitia error nostrum, corporis ullam aliquam cupiditate 
-                        consequuntur placeat a maxime dolorem quaerat nulla doloremque possimus id officia quisquam odit iusto minus, 
-                        aliquid repellendus amet? Libero voluptatem ipsam exercitationem ab voluptas omnis quasi rem dignissimos, iste 
-                        dolore earum obcaecati nostrum quos quaerat fugit minima iusto? Quia ad consectetur laudantium totam maxime tenetur 
-                        numquam consequuntur placeat cum officia ea, quo quos aliquid eaque, corrupti error ipsam, fuga iure. Ipsa beatae, 
-                        molestiae facere repellat dolorem quos sapiente, cupiditate neque nisi impedit obcaecati vero? Id, illum nemo iste 
-                        reprehenderit, odit sunt recusandae tenetur aspernatur perferendis, numquam dolore possimus enim officia a itaque. 
-                        Nobis totam vel molestiae tempora quam a dolorem quas id! Illum hic laboriosam accusamus rerum, doloribus minima 
-                        ipsa repellendus officia vitae optio! Neque minima recusandae voluptas numquam ducimus inventore atque?
-                    </div>
-                    <div class="skills-info">Сварщик, повар, бард 80 уровня</div>
-                </div>
-                <div class="salary">40 000 руб.</div>
-            </div>
-            <div class="data">
-                <div class="user-photo"><img src="user-photo.svg" alt="user-photo"></div>
-                <div class="user-profile">
-                    <a class="hidden-link" href="#"><div class="user-data">Федот Иванович Пользовательский</div></a>
-                    <div class="self-about">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Sunt et repellat perspiciatis tenetur excepturi eveniet esse, maxime tempore asperiores 
-                        inventore quaerat qui a accusantium quibusdam facilis unde optio nostrum enim laboriosam? 
-                        Hic repellendus minima dolorem obcaecati officiis repudiandae quas consequuntur iure amet expedita. 
-                        Aspernatur minus atque facere nesciunt unde, cumque ipsam quam laboriosam reprehenderit ut autem non 
-                        voluptas consectetur rerum voluptates alias id saepe esse? Aspernatur nihil deserunt blanditiis ea! 
-                        Possimus eveniet delectus mollitia ullam nemo repellat esse provident deleniti enim beatae dolore natus 
-                        praesentium, ipsam non? Error tempora, sed tempore natus, ut sapiente, rem pariatur nobis eos sint nulla 
-                        quod libero animi provident? Libero praesentium ipsum officia, omnis corrupti porro nihil nisi iure dolorum 
-                        architecto, deserunt laudantium. Unde sequi distinctio mollitia error nostrum, corporis ullam aliquam cupiditate 
-                        consequuntur placeat a maxime dolorem quaerat nulla doloremque possimus id officia quisquam odit iusto minus, 
-                        aliquid repellendus amet? Libero voluptatem ipsam exercitationem ab voluptas omnis quasi rem dignissimos, iste 
-                        dolore earum obcaecati nostrum quos quaerat fugit minima iusto? Quia ad consectetur laudantium totam maxime tenetur 
-                        numquam consequuntur placeat cum officia ea, quo quos aliquid eaque, corrupti error ipsam, fuga iure. Ipsa beatae, 
-                        molestiae facere repellat dolorem quos sapiente, cupiditate neque nisi impedit obcaecati vero? Id, illum nemo iste 
-                        reprehenderit, odit sunt recusandae tenetur aspernatur perferendis, numquam dolore possimus enim officia a itaque. 
-                        Nobis totam vel molestiae tempora quam a dolorem quas id! Illum hic laboriosam accusamus rerum, doloribus minima 
-                        ipsa repellendus officia vitae optio! Neque minima recusandae voluptas numquam ducimus inventore atque?
-                    </div>
-                    <div class="skills-info">Сварщик, повар, бард 80 уровня</div>
-                </div>
-                <div class="salary">40 000 руб.</div>
-            </div>
-            <div class="data">
-                <div class="user-photo"><img src="user-photo.svg" alt="user-photo"></div>
-                <div class="user-profile">
-                    <a class="hidden-link" href="#"><div class="user-data">Федот Иванович Пользовательский</div></a>
-                    <div class="self-about">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Sunt et repellat perspiciatis tenetur excepturi eveniet esse, maxime tempore asperiores 
-                        inventore quaerat qui a accusantium quibusdam facilis unde optio nostrum enim laboriosam? 
-                        Hic repellendus minima dolorem obcaecati officiis repudiandae quas consequuntur iure amet expedita. 
-                        Aspernatur minus atque facere nesciunt unde, cumque ipsam quam laboriosam reprehenderit ut autem non 
-                        voluptas consectetur rerum voluptates alias id saepe esse? Aspernatur nihil deserunt blanditiis ea! 
-                        Possimus eveniet delectus mollitia ullam nemo repellat esse provident deleniti enim beatae dolore natus 
-                        praesentium, ipsam non? Error tempora, sed tempore natus, ut sapiente, rem pariatur nobis eos sint nulla 
-                        quod libero animi provident? Libero praesentium ipsum officia, omnis corrupti porro nihil nisi iure dolorum 
-                        architecto, deserunt laudantium. Unde sequi distinctio mollitia error nostrum, corporis ullam aliquam cupiditate 
-                        consequuntur placeat a maxime dolorem quaerat nulla doloremque possimus id officia quisquam odit iusto minus, 
-                        aliquid repellendus amet? Libero voluptatem ipsam exercitationem ab voluptas omnis quasi rem dignissimos, iste 
-                        dolore earum obcaecati nostrum quos quaerat fugit minima iusto? Quia ad consectetur laudantium totam maxime tenetur 
-                        numquam consequuntur placeat cum officia ea, quo quos aliquid eaque, corrupti error ipsam, fuga iure. Ipsa beatae, 
-                        molestiae facere repellat dolorem quos sapiente, cupiditate neque nisi impedit obcaecati vero? Id, illum nemo iste 
-                        reprehenderit, odit sunt recusandae tenetur aspernatur perferendis, numquam dolore possimus enim officia a itaque. 
-                        Nobis totam vel molestiae tempora quam a dolorem quas id! Illum hic laboriosam accusamus rerum, doloribus minima 
-                        ipsa repellendus officia vitae optio! Neque minima recusandae voluptas numquam ducimus inventore atque?
-                    </div>
-                    <div class="skills-info">Сварщик, повар, бард 80 уровня</div>
-                </div>
-                <div class="salary">40 000 руб.</div>
-            </div>
+            {% endfor %}
         </div>
         <div class="footer"> Team-3 patry&copy; 2022</div>
     </div>
