@@ -1,0 +1,43 @@
+.data-block {
+    max-width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2%;
+    border-radius: 5px;
+    border: 1px solid silver;
+    margin-bottom: 10px;
+}
+.vacancy {
+    text-decoration: none;
+    color: white;
+}
+.vacancy:hover{
+    text-decoration: underline;
+    text-shadow: 0 0 5px black;
+}
+.title {
+    font-size: 24px;
+    padding-bottom: 10px;
+}
+.data-body {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.description {
+    width: 80%;
+    height: 20vh;
+    overflow: hidden;
+    opacity: 0.8;
+}
+.salary {
+    opacity: 0.8;
+}
+.hashtags {
+    margin-top: 10px;
+    font-size: 10px;
+    opacity: 0.7;
+}
