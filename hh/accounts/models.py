@@ -17,12 +17,12 @@ class AccountManager(UserManager):
 
 class JobSeekerManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(status=UserStatus.JOBSEEKER)
+        return super().get_queryset().filter(status=UserStatus.JOBSEEKER, is_active=True)
 
 
 class EmployerManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(status=UserStatus.EMPLOYER)
+        return super().get_queryset().filter(status=UserStatus.EMPLOYER, is_active=True)
 
 
 class Account(AbstractUser):
