@@ -1,4 +1,4 @@
-"""conf URL Configuration
+"""gb_hh URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -14,8 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('vacancies/', include('vacancies.urls', namespace='vacancies')),
+    path('resumes/', include('resumes.urls', namespace='resumes')),
+    path('blog/', include('blog.urls', namespace='blog')),
 ]
