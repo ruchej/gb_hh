@@ -15,11 +15,17 @@
         {% block menu %}
         <div class="menu">
             <div class="nav-buttons">
-                <a href="#" class="menu-link">
+                <a href="{% url 'blog:news' %}" class="menu-link">
                     <div class="menu-button">Новости</div>
                 </a>
                 <a href="#" class="menu-link">
                     <div class="menu-button"><p>Наши партнёры</p></div>
+                </a>
+                <a href="{% url 'resumes:resume_list' %}" class="menu-link">
+                    <div class="menu-button">Резюме</div>
+                </a>
+                <a href="{% url 'vacancies:resume_list' %}" class="menu-link">
+                    <div class="menu-button">Вакансии</div>
                 </a>
             </div>
             <div class="profile">
@@ -35,13 +41,13 @@
                 </a>
             </div>
         </div>
-        {% endblock menu %}
+        {% endblock %}
             
         <div class="content">
             
             {% block content %}
 
-            {% endblock content %}
+            {% endblock %}
                 
         </div>
         <div class="footer"> Team-3 patry&copy; 2022</div>

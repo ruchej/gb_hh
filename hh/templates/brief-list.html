@@ -1,58 +1,20 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'main.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'brief.css' %}" type="text/css">
-    <title>Резюме</title>
-</head>
-<body>
-    <div class="wrapper">
-        <div class="menu">
-            <div class="nav-buttons">
-                <a href="#" class="menu-link">
-                    <div class="menu-button">Новости</div>
-                </a>
-                <a href="#" class="menu-link">
-                    <div class="menu-button"><p>Наши партнёры</p></div>
-                </a>
-            </div>
-            <div class="profile">
-                <img src="https://img.icons8.com/ios-glyphs/30/ffffff/checked-user-male.png"/>
-                <a href="#" class="menu-link">
-                    <div class="menu-button"><p>Имя пользователя</p></div>
-                </a>
-                <a href="#" class="menu-link">
-                    <div class="menu-button"><p>Вход</p></div>
-                </a>
-                <a href="#" class="menu-link">
-                    <div class="menu-button"><p>Выход</p></div>
-                </a>
-            </div>
-        </div>
-        <div class="content">
-            {% for resume in object_list %}
-                <div class="data">
-                    <div class="user-photo"><img src="/media/{{ resume.photo }}" alt="user-photo"></div>
-                    <div class="user-profile">
-                        <a class="hidden-link" href="#">
-                            <div class="user-data">
-                                {{ resume.personal_info.surname }}
-                                {{ resume.personal_info.name }}
-                                {{ resume.personal_info.patronymic }}
-                            </div>
-                        </a>
-                        <div class="self-about">{{ resume.experience.about }}</div>
-                        <div class="skills-info">{{ resume.experience.skills }}</div>
+{% extends 'base.html' %}
+{% block content %}
+    {% for resume in object_list %}
+        <div class="data">
+            <div class="user-photo"><img src="/media/{{ resume.photo }}" alt="user-photo"></div>
+            <div class="user-profile">
+                <a class="hidden-link" href="#">
+                    <div class="user-data">
+                        {{ resume.personal_info.surname }}
+                        {{ resume.personal_info.name }}
+                        {{ resume.personal_info.patronymic }}
                     </div>
-                    <div class="salary">{{ resume.position.salary }} руб.</div>
-                </div>
-            {% endfor %}
+                </a>
+                <div class="self-about">{{ resume.experience.about }}</div>
+                <div class="skills-info">{{ resume.experience.skills }}</div>
+            </div>
+            <div class="salary">{{ resume.position.salary }} руб.</div>
         </div>
-        <div class="footer"> Team-3 patry&copy; 2022</div>
-    </div>
-</body>
-</html>
+    {% endfor %}
+{% endblock %}
