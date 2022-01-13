@@ -20,5 +20,5 @@ from .views import VacancyList
 app_name = 'vacancies'
 
 urlpatterns = [
-    path('', VacancyList.as_view(), name='resume_list'),
+    path('', VacancyList.as_view(), name='vacancy_list'),
 ]
