@@ -5,6 +5,7 @@ from django.core.management import BaseCommand
 
 from resumes import models as resumes_models
 from vacancies import models as vacancies_models
+from blog import models as blog_models
 from mixer.backend.django import mixer
 
 User = get_user_model()
@@ -20,13 +21,18 @@ class Command(BaseCommand):
 
     @staticmethod
     def create_resumes():
-        for i in range(random.randint(10, 100)):
+        for _ in range(random.randint(10, 100)):
             mixer.blend(resumes_models.Resume)
 
     @staticmethod
     def create_vacancies():
-        for i in range(random.randint(10, 100)):
+        for _ in range(random.randint(10, 100)):
             mixer.blend(vacancies_models.Vacancy)
+
+    @staticmethod
+    def create_blog():
+        for _ in range(random.randint(10, 100)):
+            mixer.blend(blog_models.Article)
 
     @staticmethod
     def clear_db():
@@ -55,5 +61,6 @@ class Command(BaseCommand):
             self.create_suser()
             self.create_resumes()
             self.create_vacancies()
+            self.create_blog()
         elif options.get('clear'):
             self.clear_db()
