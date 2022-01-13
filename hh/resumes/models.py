@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+User = get_user_model()
 
 class PersonalInfo(models.Model):
     """Model for keeping personal info of employee."""
@@ -121,7 +123,7 @@ class Job(models.Model):
 class Resume(models.Model):
     """Model for keeping employee's resume."""
 
-    # TODO: Add link to employee (fk).
+    user = models.ForeignKey(User, verbose_name=_('пользователь'), on_delete=models.CASCADE)
     title = models.CharField(verbose_name=_('название'), max_length=128)
     photo = models.ImageField(verbose_name=_('фотография'), blank=True, upload_to='photos/')
     personal_info = models.OneToOneField(PersonalInfo, verbose_name=_('личная информация'), on_delete=models.CASCADE)

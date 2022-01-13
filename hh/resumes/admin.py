@@ -43,7 +43,7 @@ class JobAdmin(admin.ModelAdmin):
 
 @admin.register(models.Resume)
 class ResumeAdmin(admin.ModelAdmin):
-    list_display = ('title', 'photo', 'personal_info', 'contacts', 'position', 'experience',)
+    list_display = ('user', 'title', 'photo', 'personal_info', 'contacts', 'position', 'experience',)
     list_select_related = ('personal_info', 'contacts', 'position', 'experience',)
     list_per_page = 15
-    search_fields = ('title',)
+    search_fields = ('user', 'title',)
