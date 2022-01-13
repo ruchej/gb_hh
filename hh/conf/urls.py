@@ -22,7 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('resumes/', include('resumes.urls', namespace='resumes')),
-    path('vacancies/', include('vacancies.urls', namespace='vacancies'))
+    path('vacancies/', include('vacancies.urls', namespace='vacancies')),
+    path('blog/', include('blog.urls', namespace='blog')),
 ]
 
 if settings.DEBUG:

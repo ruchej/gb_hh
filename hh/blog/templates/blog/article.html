@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/blog-home.css' %}" rel="stylesheet">
+{% block content %}
+{% for article in  news_list %}
+<div class="article">
+    <h2 class="title">
+        <a class="title_link" href="#">{{ article.title }}</a>
+    </h2>
+    <p class="lead">
+        by <a class="author" href="#">{{ article.author }}</a>
+    </p>
+    <p><span class="glyphicon glyphicon-time"></span> Posted on {{ article.created_at }}</p>
+    <hr>
+    <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+    <hr>
+    <p>{{ article.short_description }}</p>
+    <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+    <hr>
+</div>
+{% endfor %}
+{% endblock %}
