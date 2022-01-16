@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="blog-posts-area section-gap">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-8 post-list blog-post-list">
+                    {% for article in  news_list %}
+                        <div class="single-post">
+                            <img class="img-fluid" src="http://placehold.it/900x300" alt="">
+                            <p class="author">{{ article.author }}, {{ article.created_at }}</p>
+                            <a href="#">
+                                <h1>
+                                    {{ article.title }}
+                                </h1>
+                            </a>
+                            <p>{{ article.short_description }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="col-lg-4 sidebar">
+                    <div class="single-slidebar search-widget">
+                        <form class="example" action="#" style="margin:auto;max-width:300px">
+                            <input type="text" placeholder="Найти новость" name="search2">
+                            <button type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+
+                    <div class="single-slidebar">
+                        <h4>Последние новости</h4>
+
+                        <div class="blog-list">
+                            <div class="single-blog">
+                                <a href="#"><h4>Какая то новость</h4></a>
+                                <div class="meta justify-content-between d-flex">
+                                    <p>2 часа назад</p>
+                                </div>
+                            </div>
+
+                            <div class="single-blog">
+                                <a href="#"><h4>Какая то новость</h4></a>
+                                <div class="meta justify-content-between d-flex">
+                                    <p>2 часа назад</p>
+                                </div>
+                            </div>
+
+                            <div class="single-blog">
+                                <a href="#"><h4>Какая то новость</h4></a>
+                                <div class="meta justify-content-between d-flex">
+                                    <p>2 часа назад</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
