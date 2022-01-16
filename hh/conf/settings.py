@@ -126,7 +126,7 @@ STATICFILES_FINDERS = ["django.contrib.staticfiles.finders.FileSystemFinder",
                        "django.contrib.staticfiles.finders.AppDirectoriesFinder"]
 STATIC_ROOT = BASE_DIR.joinpath('static')
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'templates/styles'),
+    os.path.join(BASE_DIR, 'templates'),
 )
 
 AUTH_USER_MODEL = 'accounts.Account'
