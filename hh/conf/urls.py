@@ -29,6 +29,7 @@ urlpatterns = [
     path('resumes/', include('resumes.urls', namespace='resumes')),
     path('vacancies/', include('vacancies.urls', namespace='vacancies')),
     path('blog/', include('blog.urls', namespace='blog')),
+    path('recruiting/', include('recruiting.urls', namespace='recruiting')),
 ]
 
 if settings.DEBUG:
