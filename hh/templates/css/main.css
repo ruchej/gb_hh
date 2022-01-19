@@ -1938,19 +1938,13 @@ h1, h2, h3, h4, h5, h6 {
 .ticker-btn {
   background: #49e4fa;
   color: #fff;
-  padding: 6px 20px !important;
+  padding: 6px 20px;
   text-transform: uppercase;
 }
 
 .ticker-btn:hover {
   background: rgba(73, 228, 250, 0.2);
   color: #49e4fa;
-}
-
-@media (max-width: 960px) {
-  .ticker-btn {
-    display: none !important;
-  }
 }
 
 /*--------------------------------------------------------------
@@ -2144,6 +2138,7 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   outline: none;
   font-weight: 700;
+  background: none;
 }
 
 #mobile-nav ul li a:hover {
