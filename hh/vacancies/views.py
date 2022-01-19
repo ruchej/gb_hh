@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from .forms import VacancyForm
 from .models import Vacancy
 
 
@@ -12,3 +14,32 @@ class VacancyList(LoginRequiredMixin, ListView):
         context = super(VacancyList, self).get_context_data()
         context.update({'title': 'Вакансии'})
         return context
+
+
+class VacancyDetail(LoginRequiredMixin, DetailView):
+    model = Vacancy
+    template_name = 'vacancy-detail.html'
+    extra_context = {'title': 'Детали Вакансии'}
+
+
+class VacancyCreate(LoginRequiredMixin, CreateView):
+    model = Vacancy
+    form_class = VacancyForm
+    template_name = 'vacancy-create.html'
+    extra_context = {'title': 'Создание Вакансии'}
+    success_url = reverse_lazy('vacancies:vacancy_list')
+
+
+class VacancyUpdate(LoginRequiredMixin, UpdateView):
+    model = Vacancy
+    form_class = VacancyForm
+    template_name = 'vacancy-update.html'
+    extra_context = {'title': 'Изменение Вакансии'}
+    success_url = reverse_lazy('vacancies:vacancy_list')
+
+
+class VacancyDelete(LoginRequiredMixin, DeleteView):
+    model = Vacancy
+    template_name = 'vacancy-delete.html'
+    extra_context = {'title': 'Удаление Вакансии'}
+    success_url = reverse_lazy('vacancies:vacancy_list')
