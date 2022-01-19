@@ -1,109 +1,117 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    {% if vacancy_list %}
-        <section class="post-area section-gap">
-            <div class="container">
-                <div class="row justify-content-center d-flex">
-                    <div class="col-lg-8 post-list">
-                        {% for vacancy in vacancy_list %}
-                            <div class="single-post d-flex flex-row">
-                                <div class="thumb justify-content-center">
-                                    <img src="http://placehold.it/119x70" alt="">
-                                    <ul class="tags">
-                                        {% if vacancy.hashtags %}
-                                            <li>
-                                                <a href="#">{{ vacancy.hashtags }}</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Media</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Design</a>
-                                            </li>
-                                        {% endif %}
-                                    </ul>
-                                </div>
-                                <div class="details">
-                                    <div class="title d-flex flex-row justify-content-between">
-                                        <div class="titles">
-                                            <a href="#"><h4>{{ vacancy.title }}</h4></a>
-                                            <h6>Компания Васи Пупкина</h6>
-                                        </div>
-                                        <ul class="btns">
-                                            <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
-                                            <li><a href="#">Подать заявку</a></li>
-                                        </ul>
-                                    </div>
-                                    <p>
-                                        {% if vacancy.description %}
-                                        {{ vacancy.description }}
-                                        {% else %}
-                                        Нет описания
-                                        {% endif %}
-                                    </p>
-                                    <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
-                                    <p class="address"><span class="lnr lnr-map"></span> Здесь будет адрес фирмы</p>
-                                    <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}</p>
-                                </div>
-                            </div>
-                        {% endfor %}
+{% if vacancy_list %}
+<section class="post-area section-gap">
+    <div class="container">
+        <div class="row justify-content-center d-flex">
+            <div class="col-lg-8 post-list">
+                <a class="d-flex flex-row ticker-btn" href="{% url 'vacancies:create' %}">
+                    Создать вакансию
+                </a>
+                {% for vacancy in vacancy_list %}
+                <div class="single-post d-flex flex-row">
+                    <div class="thumb justify-content-center">
+                        <img src="http://placehold.it/119x70" alt="">
+                        <ul class="tags">
+                            {% if vacancy.hashtags %}
+                            <li>
+                                <a href="#">{{ vacancy.hashtags }}</a>
+                            </li>
+                            <li>
+                                <a href="#">Media</a>
+                            </li>
+                            <li>
+                                <a href="#">Design</a>
+                            </li>
+                            {% endif %}
+                        </ul>
                     </div>
-                    <div class="col-lg-4 sidebar">
-                        <div class="single-slidebar search-widget">
-                            <form class="example" action="#" style="margin:auto;max-width:300px">
-                                <input type="text" placeholder="Найти вакансию" name="search2">
-                                <button type="submit"><i class="fa fa-search"></i></button>
-                            </form>
-                        </div>
-
-                        <div class="single-slidebar">
-                            <h4>Вакансии по расположению</h4>
-                            <ul class="cat-list">
-                                <li><a class="justify-content-between d-flex" href="#"><p>Москва</p><span>37</span></a></li>
-                                <li><a class="justify-content-between d-flex" href="#"><p>Санкт-Петербург</p><span>57</span></a></li>
-                                <li><a class="justify-content-between d-flex" href="#"><p>И так далее</p><span>33</span></a></li>
+                    <div class="details">
+                        <div class="title d-flex flex-row justify-content-between">
+                            <div class="titles">
+                                <a href="{% url 'vacancies:detail' vacancy.id %}"><h4>{{ vacancy.title }}</h4></a>
+                                <h6>Компания Васи Пупкина</h6>
+                            </div>
+                            <ul class="btns">
+                                <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
+                                <li><a href="#">Подать заявку</a></li>
+                                <li><a href="{% url 'vacancies:update' vacancy.id %}">Редактировать</a></li>
+                                <li><a href="{% url 'vacancies:delete' vacancy.id %}">Удалить</a></li>
                             </ul>
                         </div>
+                        <p>
+                            {% if vacancy.description %}
+                            {{ vacancy.description }}
+                            {% else %}
+                            Нет описания
+                            {% endif %}
+                        </p>
+                        <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
+                        <p class="address"><span class="lnr lnr-map"></span> Здесь будет адрес фирмы</p>
+                        <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-lg-4 sidebar">
+                <div class="single-slidebar search-widget">
+                    <form class="example" action="#" style="margin:auto;max-width:300px">
+                        <input type="text" placeholder="Найти вакансию" name="search2">
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
 
-                        <div class="single-slidebar">
-                            <h4>Вакансии по категориям</h4>
-                            <ul class="cat-list">
-                                <li><a class="justify-content-between d-flex" href="#"><p>Разработчик ПО</p><span>37</span></a></li>
-                                <li><a class="justify-content-between d-flex" href="#"><p>Инженер</p><span>57</span></a></li>
-                                <li><a class="justify-content-between d-flex" href="#"><p>Кто-то еще</p><span>33</span></a></li>
-                            </ul>
+                <div class="single-slidebar">
+                    <h4>Вакансии по расположению</h4>
+                    <ul class="cat-list">
+                        <li><a class="justify-content-between d-flex" href="#"><p>Москва</p><span>37</span></a></li>
+                        <li><a class="justify-content-between d-flex" href="#"><p>Санкт-Петербург</p><span>57</span></a>
+                        </li>
+                        <li><a class="justify-content-between d-flex" href="#"><p>И так далее</p><span>33</span></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="single-slidebar">
+                    <h4>Вакансии по категориям</h4>
+                    <ul class="cat-list">
+                        <li><a class="justify-content-between d-flex" href="#"><p>Разработчик ПО</p><span>37</span></a>
+                        </li>
+                        <li><a class="justify-content-between d-flex" href="#"><p>Инженер</p><span>57</span></a></li>
+                        <li><a class="justify-content-between d-flex" href="#"><p>Кто-то еще</p><span>33</span></a></li>
+                    </ul>
+                </div>
+
+                <div class="single-slidebar">
+                    <h4>Последние новости</h4>
+                    <div class="blog-list">
+
+                        <div class="single-blog">
+                            <a href="#"><h4>Какая то новость</h4></a>
+                            <div class="meta justify-content-between d-flex">
+                                <p>2 часа назад</p>
+                            </div>
                         </div>
 
-                        <div class="single-slidebar">
-                            <h4>Последние новости</h4>
-                            <div class="blog-list">
+                        <div class="single-blog">
+                            <a href="#"><h4>Какая то новость</h4></a>
+                            <div class="meta justify-content-between d-flex">
+                                <p>2 часа назад</p>
+                            </div>
+                        </div>
 
-                                <div class="single-blog">
-                                    <a href="#"><h4>Какая то новость</h4></a>
-                                    <div class="meta justify-content-between d-flex">
-                                        <p>2 часа назад</p>
-                                    </div>
-                                </div>
-
-                                <div class="single-blog">
-                                    <a href="#"><h4>Какая то новость</h4></a>
-                                    <div class="meta justify-content-between d-flex">
-                                        <p>2 часа назад</p>
-                                    </div>
-                                </div>
-
-                                <div class="single-blog">
-                                    <a href="#"><h4>Какая то новость</h4></a>
-                                    <div class="meta justify-content-between d-flex">
-                                        <p>2 часа назад</p>
-                                    </div>
-                                </div>
+                        <div class="single-blog">
+                            <a href="#"><h4>Какая то новость</h4></a>
+                            <div class="meta justify-content-between d-flex">
+                                <p>2 часа назад</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}
