@@ -15,10 +15,24 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import ResumeListView
+from . import views
 
 app_name = 'resumes'
 
 urlpatterns = [
-    path('', ResumeListView.as_view(), name='resume_list'),
+    path('', views.ResumeListView.as_view(), name='resume_list'),
+    path('', views.ResumeDetailView.as_view(), name='resume_detail'),
+    path('', views.ResumeCreateView.as_view(), name='resume_create'),
+    path('', views.ResumeUpdateView.as_view(), name='resume_update'),
+    path('', views.ResumeDeleteView.as_view(), name='resume_delete'),
+    path('', views.PersonalInfoDetailView.as_view(), name='personal_info_detail'),
+    path('', views.PersonalInfoUpdateView.as_view(), name='personal_info_update'),
+    path('', views.ContactsDetailView.as_view(), name='contacts_detail'),
+    path('', views.ContactsUpdateView.as_view(), name='contacts_update'),
+    path('', views.PositionDetailView.as_view(), name='position_detail'),
+    path('', views.PositionUpdateView.as_view(), name='position_update'),
+    path('', views.ExperienceDetailView.as_view(), name='experience_detail'),
+    path('', views.ExperienceUpdateView.as_view(), name='experience_update'),
+    path('', views.JobDetailView.as_view(), name='job_detail'),
+    path('', views.JobUpdateView.as_view(), name='job_update'),
 ]
