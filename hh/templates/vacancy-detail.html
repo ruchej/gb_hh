@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <section class="post-area section-gap">
+        <div class="container">
+            <div class="title d-flex flex-row justify-content-between">
+                <div class="titles">
+                    <a href="#"><h1>{{ vacancy.title }}</h1></a>
+                    <h4>Компания Васи Пупкина</h4>
+                </div>
+                <ul class="btns">
+                    <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
+                    <li><a href="#">Подать заявку</a></li>
+                    <li><a href="{% url 'vacancies:update' vacancy.id %}">Редактировать</a></li>
+                    <li><a href="{% url 'vacancies:delete' vacancy.id %}">Удалить</a></li>
+                </ul>
+            </div>
+            <p>
+                {% if vacancy.description %}
+                    {{ vacancy.description }}
+                {% else %}
+                    Нет описания
+                {% endif %}
+            </p>
+            <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
+            <p class="address"><span class="lnr lnr-map"></span> Здесь будет адрес фирмы</p>
+            <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}</p>
+        </div>
+    </section>
+{% endblock %}
