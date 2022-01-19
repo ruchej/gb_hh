@@ -31,7 +31,9 @@
                     <li><a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
                         {{ user.username }}
                     </a></li>
-                    <li><a class="ticker-btn" href="{% url 'accounts:Logout' %}">Выйти</a></li>
+                    <li><a class="ticker-btn" href="{% url 'accounts:Logout' %}?next={{ request.path|urlencode }}">
+                        Выйти
+                    </a></li>
                     {% else %}
                     <li><a class="ticker-btn" href="{% url 'accounts:Login' %}" data-toggle="modal" data-target="#modal"
                            data-tooltip>
