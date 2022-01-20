@@ -4,5 +4,5 @@ from .models import Article
 
 class NewsList(ListView):
     model = Article
-    template_name = 'blog/article.html'
+    template_name = 'index.html'
     context_object_name = 'news_list'
