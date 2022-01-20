@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from .forms import VacancyForm
 from .models import Vacancy
+from accounts.models import UserStatus
 
 
 class VacancyList(LoginRequiredMixin, ListView):
@@ -14,6 +15,13 @@ class VacancyList(LoginRequiredMixin, ListView):
         context = super(VacancyList, self).get_context_data()
         context.update({'title': 'Вакансии'})
         return context
+
+    def get_queryset(self):
+        queryset = Vacancy.objects.all()
+
+        if self.request.user.status == UserStatus.EMPLOYER:
+            queryset = queryset.filter(employer=self.request.user)
+        return queryset
 
 
 class VacancyDetail(LoginRequiredMixin, DetailView):
