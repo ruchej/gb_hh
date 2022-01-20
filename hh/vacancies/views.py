@@ -37,6 +37,10 @@ class VacancyCreate(LoginRequiredMixin, CreateView):
     extra_context = {'title': 'Создание Вакансии'}
     success_url = reverse_lazy('vacancies:vacancy_list')
 
+    def form_valid(self, form):
+        form.instance.employer_id = self.kwargs.get('pk')
+        return super(VacancyCreate, self).form_valid(form)
+
 
 class VacancyUpdate(LoginRequiredMixin, UpdateView):
     model = Vacancy

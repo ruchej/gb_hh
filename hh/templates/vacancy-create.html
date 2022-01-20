@@ -4,7 +4,7 @@
 {% block content %}
 <section class="post-area section-gap">
     <div class="container">
-        <form method="post">
+        <form method="post" action="{% url 'vacancies:create_vacancy' user.id %}">
             {% csrf_token %}
             {{ form|crispy }}
             <button type="submit" class="btn btn-primary">Создать</button>
