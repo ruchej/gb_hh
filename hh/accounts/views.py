@@ -106,6 +106,7 @@ class UserDetail(LoginRequiredMixin, DetailView):
         "page_title": _("Профиль пользователя"),
         "header_class": "hero",
     }
+    template_name = '../templates/user-detail.html'
 
     def get_object(self, *args, **kwargs):
         return self.request.user
