@@ -5,19 +5,27 @@
 {% endblock %}
 {% block content %}
     <form class="logon" action="#" method="post">
+        {% csrf_token %}
         <div class="pair">
-            <label class="title">
-                Логин
-            </label>
-            <input class="input" type="text">
+            <label class="title" for="{{ form.username.id_for_label }}">Логин</label>
+            {{ form.username }}
         </div>
         <div class="pair">
-            <label class="title">
-                Пароль
-            </label>
-            <input class="input" type="text">
+            <label class="title" for="{{ form.password.id_for_label }}">Пароль</label>
+            {{ form.password }}
         </div>
         <button type='submit' class="log-button">Войти</button>
         <a class="hidden-link" href="#">или создайте учётную запись</a>
     </form>
 {% endblock %}
+{# Классы для добавления в форму указаны в примере ниже #}
+{#<form class="login-form" action="{% url 'authapp:login' %}" method="post">#}
+{#    <...>#}
+{#        <div class="pair">#}
+{#            <label class="title">#}
+{#                Пароль#}
+{#            </label>#}
+{#            <input class="input" type="text">#}
+{#        </div>#}
+{#    <...>#}
+{#</form>#}
