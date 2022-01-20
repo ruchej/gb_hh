@@ -10,6 +10,8 @@ from accounts.models import UserStatus
 class VacancyList(LoginRequiredMixin, ListView):
     template_name = '../templates/vacancy-list.html'
     model = Vacancy
+    paginate_by = 10
+    filterset_class = None
 
     def get_context_data(self, **kwargs):
         context = super(VacancyList, self).get_context_data()
@@ -17,8 +19,7 @@ class VacancyList(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        queryset = Vacancy.objects.all()
-
+        queryset = super().get_queryset()
         if self.request.user.status == UserStatus.EMPLOYER:
             queryset = queryset.filter(employer=self.request.user)
         return queryset
