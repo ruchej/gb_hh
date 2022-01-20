@@ -102,10 +102,7 @@ class UserDetail(LoginRequiredMixin, DetailView):
     """
 
     model = Account
-    extra_context = {
-        "page_title": _("Профиль пользователя"),
-        "header_class": "hero",
-    }
+    extra_context = {"title": _("Профиль")}
     template_name = '../templates/user-detail.html'
 
     def get_object(self, *args, **kwargs):
