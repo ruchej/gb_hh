@@ -1,33 +1,15 @@
-<div class="modal fade" id="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Войти</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body mr-4 ml-4">
-                <form id="loginForm" method="post"
-                      action="{% url 'accounts:Login' %}?next={{ request.path|urlencode }}">
-                    {% csrf_token %}
-                    <div class="form-outline mb-3">
-                        <input type="text" id="id_username" name="username" maxlength="30"
-                               class="form-control form-control-lg"
-                               placeholder="Логин"/>
-                    </div>
-                    <div class="form-outline mb-3">
-                        <input type="password" id="id_password" name="password" class="form-control form-control-lg"
-                               placeholder="Пароль"/>
-                    </div>
-                    <!--                    <input class="btn btn-primary btn-lg mt-2 pt-2" type="submit" name="login" value="Войти"/>-->
-                    <a class="ticker-btn mt-2 pt-2" href="#" onclick="document.getElementById('loginForm').submit();">
-                        Войти
-                    </a>
-                    <div class="text-lg-start">
-                        <a class="hidden-link" href="{% url 'accounts:UserCreate' %}">или создайте учётную
-                            запись</a>
-                    </div>
-                </form>
-            </div>
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <section class="post-area section-gap">
+        <div class="container col-3">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.username|as_crispy_field }}
+                {{ form.password|as_crispy_field }}
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
         </div>
-    </div>
-</div>
+    </section>
+{% endblock %}
