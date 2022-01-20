@@ -11,7 +11,6 @@ class VacancyList(LoginRequiredMixin, ListView):
     template_name = '../templates/vacancy-list.html'
     model = Vacancy
     paginate_by = 10
-    filterset_class = None
 
     def get_context_data(self, **kwargs):
         context = super(VacancyList, self).get_context_data()
