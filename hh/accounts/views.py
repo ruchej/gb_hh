@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView, DetailView
 from django.utils.translation import gettext_lazy as _
-from .models import Account
+from .models import Account, UserStatus
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
@@ -73,6 +73,12 @@ class UserCreate(
     template_name = "../templates/user-register.html"
     email_template_name = "../templates/user-signup-email.html"
     success_message = _("Для активации аккаунта выслано письмо")
+
+    def get_form_kwargs(self):
+        form_kwargs = super(UserCreate, self).get_form_kwargs()
+        form_kwargs['new_status_choices'] = UserStatus.choices
+        form_kwargs['new_status_choices'].pop(UserStatus.MODERATOR)
+        return form_kwargs
 
 
 class UserConfirm(PasswordResetConfirmView):
