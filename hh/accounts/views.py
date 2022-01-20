@@ -37,15 +37,10 @@ class Login(SuccessMessageMixin, UserNotAuthMixin, LoginView):
     template_name = '../templates/login.html'
     success_message = _("Вход в систему выполнен")
     extra_context = {
-        "page_title": _("Login"),
+        "title": _("Вход"),
         "header_class": "hero",
         "content_class": "tab-content",
     }
-
-    def get_context_data(self, **kwargs):
-        context = super(Login, self).get_context_data()
-        context.update({'title': 'Вход'})
-        return context
 
 
 class Logout(UserAuthMixin, LogoutView):

@@ -10,12 +10,8 @@ from accounts.models import UserStatus
 class VacancyList(LoginRequiredMixin, ListView):
     template_name = '../templates/vacancy-list.html'
     model = Vacancy
+    extra_context = {'title': 'Вакансии'}
     paginate_by = 10
-
-    def get_context_data(self, **kwargs):
-        context = super(VacancyList, self).get_context_data()
-        context.update({'title': 'Вакансии'})
-        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
