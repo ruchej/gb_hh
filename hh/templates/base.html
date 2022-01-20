@@ -24,8 +24,15 @@
             <nav id="nav-menu-container">
                 <ul class="nav-menu">
                     <li><a href="{% url 'blog:news' %}">Новости</a></li>
+                    {% if user.username %}
                     <li><a href="{% url 'resumes:resume_list' %}">Резюме</a></li>
                     <li><a href="{% url 'vacancies:vacancy_list' %}">Вакансии</a></li>
+                    {% else %}
+                    <li><a href="{% url 'vacancies:vacancy_list' %}" data-toggle="modal" data-target="#modal"
+                           data-toolti>
+                        Вакансии
+                    </a></li>
+                    {% endif %}
                     <li><a href="#">О нас</a></li>
                     {% if user.username %}
                     <li><a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
