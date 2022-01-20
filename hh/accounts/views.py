@@ -73,8 +73,8 @@ class UserCreate(
     """
     success_url = reverse_lazy("accounts:Login")
     url_redirect = reverse_lazy("accounts:UserDetail")
-    template_name = "registration/registration.html"
-    email_template_name = "accounts/signup_email.html"
+    template_name = "../templates/user-register.html"
+    email_template_name = "../templates/user-signup-email.html"
     success_message = _("Для активации аккаунта выслано письмо")
 
 
