@@ -1,5 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+User = get_user_model()
 
 
 class Vacancy(models.Model):
@@ -39,12 +42,11 @@ class Vacancy(models.Model):
         (GREATER_SIX, _('Более 6 лет'))
     )
 
-    # TODO: add employer
-    # employer = models.OneToOneField(
-    #     Employer,
-    #     on_delete=models.CASCADE
-    # )
-    employer = models.CharField(max_length=100)
+    employer = models.ForeignKey(
+        User,
+        verbose_name=_('Работодатель'),
+        on_delete=models.CASCADE
+    )
     title = models.CharField(
         max_length=50,
         verbose_name=_('Название')
