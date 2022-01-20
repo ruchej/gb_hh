@@ -6,9 +6,9 @@
         <div class="container">
             <div class="row">
 
-                <div class="col-lg-8 post-list blog-post-list">
+                <div class="col-lg-8 post-list blog-post-list infinite-container">
                     {% for article in  news_list %}
-                        <div class="single-post">
+                        <div class="single-post infinite-item">
                             <img class="img-fluid" src="http://placehold.it/900x300" alt="">
                             <p class="author">{{ article.author }}, {{ article.created_at }}</p>
                             <a href="#">
