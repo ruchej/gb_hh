@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'styles/vacancy.css' %}">
+{% endblock %}
+
 {% block content %}
     {% if vacancy_list %}
         {% for vacancy in vacancy_list %}

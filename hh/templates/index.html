@@ -1,2 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'styles/news.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% if news_list %}
+        {% for news in news_list %}
+            <div class="news-block">
+                <label class="title">{{ news.title }}</label>
+                <div class="data">
+                    <p>
+                        {{ news.text }}
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="news-block">
+                <label class="title">Новостей ещё нет</label>
+                <div class="data">
+                    <p>
+                        К сожалению, новостей ещё не добавили. Но если что - мы сразу всё покажем и расскажем!
+                    </p>
+                </div>
+            </div>
+    {% endif %}
+{% endblock %}

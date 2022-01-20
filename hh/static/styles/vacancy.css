@@ -11,7 +11,7 @@
 }
 .vacancy {
     text-decoration: none;
-    color: white;
+    color: black;
 }
 .vacancy:hover{
     text-decoration: underline;

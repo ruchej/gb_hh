@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'styles/brief.css' %}">
+{% endblock %}
+
 {% block content %}
     {% for resume in object_list %}
         <div class="data">

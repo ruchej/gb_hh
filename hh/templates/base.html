@@ -5,52 +5,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
-    <link rel="stylesheet" href="{% static 'styles/news.css' %}">
-    <title>Главная</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    {% block style %} {% endblock %}
+    <title>{{ title }}</title>
 </head>
 <body>
     <div class="wrapper">
-        
-        {% block menu %}
-        <div class="menu">
-            <div class="nav-buttons">
-                <a href="{% url 'blog:news' %}" class="menu-link">
-                    <div class="menu-button">Новости</div>
-                </a>
-                <a href="#" class="menu-link">
-                    <div class="menu-button"><p>Наши партнёры</p></div>
-                </a>
-                <a href="{% url 'resumes:resume_list' %}" class="menu-link">
-                    <div class="menu-button">Резюме</div>
-                </a>
-                <a href="{% url 'vacancies:vacancy_list' %}" class="menu-link">
-                    <div class="menu-button">Вакансии</div>
-                </a>
-            </div>
-            <div class="profile">
-                <img src="https://img.icons8.com/ios-glyphs/30/ffffff/checked-user-male.png"/>
-                <a href="#" class="menu-link">
-                    <div class="menu-button"><p>{{ user.username }}</p></div>
-                </a>
-                <a href="{% url 'accounts:Login' %}" class="menu-link">
-                    <div class="menu-button"><p>Вход</p></div>
-                </a>
-                <a href="{% url 'accounts:Logout' %}" class="menu-link">
-                    <div class="menu-button"><p>Выход</p></div>
-                </a>
-            </div>
-        </div>
-        {% endblock %}
-            
-        <div class="content">
-            
-            {% block content %}
+        {% include 'header.html' %}
 
+        <div class="content">
+            {% block content %}
             {% endblock %}
-                
         </div>
-        <div class="footer"> Team-3 patry&copy; 2022</div>
+
+        <div class="footer"> Team-3 patry&copy; {% now "Y" %}</div>
     </div>
 </body>
 </html>
