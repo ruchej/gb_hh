@@ -23,6 +23,7 @@ urlpatterns = [
     path('', VacancyList.as_view(), name='vacancy_list'),
     path('<int:pk>/detail/', VacancyDetail.as_view(), name='detail'),
     path('create/', VacancyCreate.as_view(), name='create'),
+    path('create/employer/<int:pk>/', VacancyCreate.as_view(), name='create_vacancy'),
     path('<int:pk>/update/', VacancyUpdate.as_view(), name='update'),
     path('<int:pk>/delete/', VacancyDelete.as_view(), name='delete'),
 ]
