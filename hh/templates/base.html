@@ -92,8 +92,21 @@
 
 </div>
 
-<script src="{% static 'js/vendor/jquery-2.2.4.min.js' %}"></script>
+<script src="{% static 'js/vendor/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/vendor/infinite.min.js' %}"></script>
 <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
+<script>
+    let infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function ($items) {
+            $('.loading').hide();
+        }
+    });
+</script>
 </body>
 </html>
