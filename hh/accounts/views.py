@@ -63,10 +63,7 @@ class UserCreate(
     PasswordResetView,
 ):
     model = Account
-    extra_context = {
-        "page_title": _("Форма регистрации"),
-        "header_class": "hero",
-    }
+    extra_context = {"title": _("Регистрация")}
     form_class = UserRegisterForm
     """
     Registration User with send email and post activation (SignUpConfirmView)
