@@ -14,10 +14,13 @@ class UserRegisterForm(UserCreationForm, PasswordResetForm):
             "email",
             "password1",
             "password2",
+            "status"
         )
 
     def __init__(self, *args, **kwargs):
+        new_status_choices = kwargs.pop('new_status_choices')
         super().__init__(*args, **kwargs)
+        self.fields['status'].choices = new_status_choices
         for field_name, field in self.fields.items():
             field.widget.attrs["class"] = "form-control"
             field.help_text = ""

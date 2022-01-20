@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # installed
+    'crispy_forms',
 
     # custom
     'conf',
@@ -222,3 +223,5 @@ LOGGING = {
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
