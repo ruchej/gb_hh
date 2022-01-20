@@ -9,6 +9,7 @@ class ResumeListView(LoginRequiredMixin, ListView):
 
     model = models.Resume
     template_name = 'brief-list.html'
+    extra_context = {'title': 'Резюме'}
 
 
 class ResumeDetailView(LoginRequiredMixin, DetailView):
