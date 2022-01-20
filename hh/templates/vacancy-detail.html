@@ -7,13 +7,16 @@
             <div class="title d-flex flex-row justify-content-between">
                 <div class="titles">
                     <a href="#"><h1>{{ vacancy.title }}</h1></a>
-                    <h4>Компания Васи Пупкина</h4>
+                    <h4>{{ vacancy.employer.first_name }}</h4>
                 </div>
                 <ul class="btns">
-                    <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
-                    <li><a href="#">Подать заявку</a></li>
-                    <li><a href="{% url 'vacancies:update' vacancy.id %}">Редактировать</a></li>
-                    <li><a href="{% url 'vacancies:delete' vacancy.id %}">Удалить</a></li>
+                    {% if user.status == 2 %}
+                        <li><a href="{% url 'vacancies:update' vacancy.id %}">Редактировать</a></li>
+                        <li><a href="{% url 'vacancies:delete' vacancy.id %}">Удалить</a></li>
+                    {% else %}
+                        <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
+                        <li><a href="#">Подать заявку</a></li>
+                    {% endif %}
                 </ul>
             </div>
             <p>
@@ -23,8 +26,11 @@
                     Нет описания
                 {% endif %}
             </p>
-            <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
-            <p class="address"><span class="lnr lnr-map"></span> Здесь будет адрес фирмы</p>
+            <h5>Опыт работы: {{ vacancy.get_experience_display }}</h5>
+            {% if vacancy.employment_type %}
+                <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
+            {% endif %}
+            <p class="address"><span class="lnr lnr-map"></span> {{ vacancy.employer.adress }}</p>
             <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}</p>
         </div>
     </section>
