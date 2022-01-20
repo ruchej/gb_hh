@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'blog',
     'resumes.apps.ResumesConfig',
     'vacancies.apps.VacanciesConfig',
+    'recruiting.apps.RecruitingConfig',
 ]
 
 MIDDLEWARE = [
