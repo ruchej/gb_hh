@@ -8,34 +8,34 @@ class ResumeListView(LoginRequiredMixin, ListView):
     """View for getting list of all resumes."""
 
     model = models.Resume
-    template_name = 'resume-list.html'
+    template_name = 'resumes/resume-list.html'
 
 
 class ResumeDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail info in resume."""
 
     model = models.Resume
-    template_name = 'resume-detail.html'
+    template_name = 'resumes/resume-detail.html'
 
 
 class ResumeCreateView(LoginRequiredMixin, CreateView):
     """View for creating resume."""
     model = models.Resume
-    template_name = 'resume-create.html'
+    template_name = 'resumes/resume-create.html'
 
 
 class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     """View for updating resume."""
 
     model = models.Resume
-    template_name = 'resume-update.html'
+    template_name = 'resumes/resume-update.html'
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):
     """View for deleting resume."""
 
     model = models.Resume
-    template_name = 'resume-delete.html'
+    template_name = 'resumes/resume-delete.html'
 
 
 class PersonalInfoDetailView(LoginRequiredMixin, DetailView):

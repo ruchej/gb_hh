@@ -6,7 +6,6 @@
 {% endblock %}
 
 {% block content %}
-    {% for resume in object_list %}
         <div class="data">
             <div class="user-photo"><img src="/media/{{ resume.photo }}" alt="user-photo"></div>
             <div class="user-profile">
@@ -22,5 +21,4 @@
             </div>
             <div class="salary">{{ resume.position.salary }} руб.</div>
         </div>
-    {% endfor %}
 {% endblock %}

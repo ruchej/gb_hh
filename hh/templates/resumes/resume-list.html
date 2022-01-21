@@ -17,7 +17,7 @@
             <div class="data">
                 <div class="user-photo"><img src="/media/{{ resume.photo }}" alt="user-photo"></div>
                 <div class="user-profile">
-                    <a class="hidden-link" href="#">
+                    <a class="hidden-link" href="{% url 'resumes:resume_detail' resume.id %}">
                         <div class="user-data">
                             {{ resume.personal_info.surname|capfirst }}
                             {{ resume.personal_info.name|capfirst }}

@@ -7,7 +7,7 @@ from .forms import ArticleCreateForm
 
 class NewsList(ListView):
     model = Article
-    template_name = 'index.html'
+    template_name = 'blog/index.html'
     context_object_name = 'news_list'
 
 
