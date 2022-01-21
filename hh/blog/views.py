@@ -24,5 +24,5 @@ class CreatePost(CreateView):
 #     success_url = reverse_lazy('blog:news')
 
 
-def show_post(request, post_id):
-    return HttpResponse(f"Отображение статьи с id = {post_id}")
+def show_post(request, post_slug):
+    return HttpResponse(f"Отображение статьи с id = {post_slug}")
