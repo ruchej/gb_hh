@@ -61,7 +61,6 @@ coverage.xml
 
 # Django stuff:
 *.log
-local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
@@ -136,5 +135,9 @@ dmypy.json
 migrations/
 
 # Ignore static and media files
-hh/static/
-hh/media/
+# hh/static/
+/hh/media/photos/
+/media
+# my
+.vscode/
+

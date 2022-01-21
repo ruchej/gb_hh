@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'styles/logon.css' %}">
+{% endblock %}
+
+{% block content %}
+    <form class="logon" action="#" method="post">
+        <div class="pair">
+                    <span class="title">
+                        Логин
+                    </span>
+            <input class="input" type="text">
+        </div>
+        <div class="pair">
+            <label class="title">
+                Укажите e-mail
+            </label>
+            <input class="input" type="text">
+        </div>
+        <div class="pair">
+            <label class="title">
+                Пароль
+            </label>
+            <input class="input" type="text">
+        </div>
+        <div class="pair">
+            <label class="title">
+                Повторите пароль
+            </label>
+            <input class="input" type="text">
+        </div>
+        <button type="submit" class="log-button">Зарегистрироваться</button>
+    </form>
+{% endblock %}
