@@ -141,3 +141,4 @@ migrations/
 # my
 .vscode/
 
+/hh/templates/resumes/old_revision/
