@@ -8,22 +8,28 @@
     {% if news_list %}
         {% for news in news_list %}
             <div class="news-block">
-                <label class="title">{{ news.title }}</label>
+                <a class="title" href="{% url 'blog:post' news.id %}">{{ news.title }}</a>
+                <div class="small-info">
+                    {{ news.author }} - {{ news.created_at }}
+                </div>
                 <div class="data">
                     <p>
-                        {{ news.text }}
+                        {{ news.short_description }}
+                    </p>
+                    <p>
+                        <a class="small-info" href="{% url 'blog:post' news.id %}">Читать далее...</a>
                     </p>
                 </div>
             </div>
         {% endfor %}
     {% else %}
         <div class="news-block">
-                <label class="title">Новостей ещё нет</label>
-                <div class="data">
-                    <p>
-                        К сожалению, новостей ещё не добавили. Но если что - мы сразу всё покажем и расскажем!
-                    </p>
-                </div>
+            <label class="title">Новостей ещё нет</label>
+            <div class="data">
+                <p>
+                    К сожалению, новостей ещё не добавили. Но если что - мы сразу всё покажем и расскажем!
+                </p>
             </div>
+        </div>
     {% endif %}
 {% endblock %}

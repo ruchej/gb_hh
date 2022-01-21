@@ -9,10 +9,10 @@ from django.urls import reverse
 class Article(models.Model):
     title = models.CharField(max_length=64)
     slug = models.SlugField(max_length=255, unique=True,
-                            db_index=True, verbose_name='URL')
+                            db_index=True, verbose_name='URL', null=True)
     short_description = models.CharField(max_length=200)
     description = models.TextField(max_length=1000)
-    image = models.ImageField(upload_to='blog/%Y/%m/%d/')
+    image = models.ImageField(upload_to='blog/%Y/%m/%d/', default='media/no-image-icon-23489.png')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.CharField(max_length=64)

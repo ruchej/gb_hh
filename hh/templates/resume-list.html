@@ -6,7 +6,12 @@
 {% endblock %}
 
 {% block content %}
-
+    <div class="data">
+        <label class="title">Добавьте своё резюме, чтобы уже сейчас его увидели наши партнёры!</label>
+        <a href="{% url 'resumes:resume_create' %}" class="menu-link">
+            <div class="create-button">СОЗДАТЬ!</div>
+        </a>
+    </div>
     {% if object_list %}
         {% for resume in object_list %}
             <div class="data">

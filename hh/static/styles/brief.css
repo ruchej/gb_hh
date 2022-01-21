@@ -7,6 +7,7 @@
     padding: 5px 15px;
     border: 1px solid #1E90FF;
     border-radius: 5px;
+    margin-bottom: 10px;
 }
 .user-photo {
     height: 128px;
@@ -19,11 +20,11 @@
 }
 .hidden-link {
     text-decoration: none;
-    color: #191970;
+    color: #494970;
     font-size: 10px;
 }
 .hidden-link:hover {
-    text-shadow: 0 0 3px black;
+    text-shadow: 0 0 2px #32CD32;
     text-decoration: underline;
 }
 .user-profile {

@@ -23,12 +23,11 @@ from . import views
 app_name = 'conf'
 
 urlpatterns = [
-    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('resumes/', include('resumes.urls', namespace='resumes')),
     path('vacancies/', include('vacancies.urls', namespace='vacancies')),
-    path('blog/', include('blog.urls', namespace='blog')),
+    path('', include('blog.urls', namespace='blog')),
     path('recruiting/', include('recruiting.urls', namespace='recruiting')),
 ]
 
