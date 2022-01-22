@@ -1,0 +1,40 @@
+<div class="tab-pane fade" id="experience" role="tabpanel"
+     aria-labelledby="experience-tab">
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Навыки</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.experience.skills }}
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">О себе</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.experience.about }}
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Портфолио</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.experience.portfolio }}
+        </div>
+    </div>
+    <hr/>
+
+    {% if user == resume.user %}
+        <a class="ticker-btn" href="{% url 'resumes:experience_update'  resume.experience.id %}">
+            Изменить
+        </a>
+    {% endif %}
+
+</div>

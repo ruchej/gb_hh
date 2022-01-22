@@ -1,0 +1,29 @@
+<div class="tab-pane fade" id="jobs" role="tabpanel"
+     aria-labelledby="jobs-tab">
+    {% if jobs %}
+        {% for job in jobs %}
+            <h4 class="mb-5">{{ job.position }} в {{ job.organization }}:</h4>
+            {% include 'resumes/snippets/detail/job_card.html' %}
+        {% endfor %}
+    {% else %}
+        Опыт работы отсутствует
+    {% endif %}
+
+    {% if user == resume.user %}
+        {% if jobs %}
+            <div class="d-flex justify-content-between">
+                <a class="ticker-btn" href="{% url 'resumes:job_update' resume.personal_info.id %}">
+                    Изменить
+                </a>
+                <a class="ticker-btn" href="#">
+                    Добавить
+                </a>
+            </div>
+        {% else %}
+            <a class="ticker-btn" href="#">
+                Добавить
+            </a>
+        {% endif %}
+    {% endif %}
+
+</div>

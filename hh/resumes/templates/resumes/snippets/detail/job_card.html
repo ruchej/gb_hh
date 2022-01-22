@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-sm-3 col-md-2 col-5">
+        <label style="font-weight:bold;">Фирма</label>
+    </div>
+    <div class="col-md-8 col-6">
+        {{ job.organization }}
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-sm-3 col-md-2 col-5">
+        <label style="font-weight:bold;">Сфера</label>
+    </div>
+    <div class="col-md-8 col-6">
+        {{ job.scope }}
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-sm-3 col-md-2 col-5">
+        <label style="font-weight:bold;">Локация</label>
+    </div>
+    <div class="col-md-8 col-6">
+        {{ job.location }}
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-sm-3 col-md-2 col-5">
+        <label style="font-weight:bold;">Сайт</label>
+    </div>
+    <div class="col-md-8 col-6">
+        {{ job.site }}
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-sm-3 col-md-2 col-5">
+        <label style="font-weight:bold;">Период работы</label>
+    </div>
+    <div class="col-md-8 col-6">
+        с {{ job.start }} до {{ job.end }}
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-sm-3 col-md-2 col-5">
+        <label style="font-weight:bold;">Обязанности</label>
+    </div>
+    <div class="col-md-8 col-6">
+        {{ job.functions }}
+    </div>
+</div>
+<hr/>
