@@ -142,3 +142,4 @@ migrations/
 .vscode/
 
 /hh/templates/resumes/old_revision/
+/hh/media/blog/
