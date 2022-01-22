@@ -37,7 +37,6 @@ class OfferCreateView(LoginRequiredMixin, CreateView):
     """View for creating offer."""
 
     model = models.Offer
-    fields = ('vacancy', 'resume')
 
 
 class OfferDeleteView(LoginRequiredMixin, CreateView):

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'styles/brief.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% for resume in object_list %}
+        <div class="data">
+            <form method="post" action="{% url 'resumes:resume-create' user.id %}">
+                <div class="user-photo"><img src="/media/{{ resume.photo }}" alt="user-photo"></div>
+                <div class="user-profile">
+                    <div class="user-data">
+                        <label class="title" for="{{ resume.personal_info.surname.id_for_label }}">Фамилия:</label>
+                        {{ resume.personal_info.surname }}
+                        <label class="title" for="{{ resume.personal_info.name.id_for_label }}">Имя:</label>
+                        {{ resume.personal_info.name }}
+                        <label class="title" for="{{ resume.personal_info.patronymic.id_for_label }}">Фамилия:</label>
+                        {{ resume.personal_info.patronymic }}
+                    </div>
+                    <div class="self-about">
+                        <label class="title" for="{{ resume.experience.about.id_for_label }}">О себе:</label>
+                        {{ resume.experience.about }}
+                    </div>
+                    <div class="skills-info">
+                        <label class="title" for="{{ resume.experience.skills.id_for_label }}">Опишите свои навыки:</label>
+                        {{ resume.experience.skills }}
+                    </div>
+                </div>
+                <div class="salary">
+                    <label class="title" for="{{ resume.position.salary.id_for_label }}">Желаемый доход после вычета:</label>
+                    {{ resume.position.salary }} руб.
+                </div>
+                <button type='submit' class="create-button">Создать</button>
+            </form>
+        </div>
+    {% endfor %}
+{% endblock %}

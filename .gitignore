@@ -135,8 +135,11 @@ dmypy.json
 migrations/
 
 # Ignore static and media files
-hh/static/
-hh/media/
-
+# hh/static/
+/hh/media/photos/
+/media
 # my
 .vscode/
+
+/hh/templates/resumes/old_revision/
+/hh/media/blog/

@@ -1,0 +1,30 @@
+<div class="menu">
+    <div class="nav-buttons">
+        <a href="{% url 'blog:news' %}" class="menu-link">
+            <div class="menu-button">Новости</div>
+        </a>
+        <a href="#" class="menu-link">
+            <div class="menu-button"><p>Наши партнёры</p></div>
+        </a>
+        <a href="{% url 'resumes:resume_list' %}" class="menu-link">
+            <div class="menu-button">Резюме</div>
+        </a>
+        <a href="{% url 'vacancies:vacancy_list' %}" class="menu-link">
+            <div class="menu-button">Вакансии</div>
+        </a>
+    </div>
+    <div class="profile">
+{#        {% if user %}#}
+        <img src="https://img.icons8.com/ios-glyphs/30/ffffff/checked-user-male.png"/>
+        <a href="#" class="menu-link">
+            <div class="menu-button"><p>{{ user.username }}</p></div>
+        </a>
+{#        {% endif %}#}
+        <a href="{% url 'accounts:Login' %}" class="menu-link">
+            <div class="menu-button"><p>Вход</p></div>
+        </a>
+        <a href="{% url 'accounts:Logout' %}" class="menu-link">
+            <div class="menu-button"><p>Выход</p></div>
+        </a>
+    </div>
+</div>
