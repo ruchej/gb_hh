@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
+
 # Create your models here.
 
 
@@ -30,9 +31,9 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('blog:post', kwargs={'post_slug': self.slug})
 
-    def delete(self, using=None, keep_parents=False):
-        self.is_active = False
-        self.save()
+    # def delete(self, using=None, keep_parents=False):
+    #     #     self.is_active = False
+    #     #     self.save()
 
     class Meta:
         verbose_name = 'Статья'

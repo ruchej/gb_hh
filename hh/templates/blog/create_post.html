@@ -4,7 +4,17 @@
 {% block content %}
     <form action="{% url 'blog:post_create' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <table>{{ form.as_table }}</table>
-        <button type="submit">Создать Новость</button>
+
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+            <div class="invalid-feedback">
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+
+        <button class="btn btn-primary" type="submit">Создать Новость</button>
     </form>
 {% endblock %}
