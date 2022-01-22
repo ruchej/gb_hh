@@ -1,41 +1,55 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from . import models, forms
+from accounts.models import UserStatus
 
 
 class ResumeListView(LoginRequiredMixin, ListView):
     """View for getting list of all resumes."""
 
     model = models.Resume
-    template_name = 'resumes/resume-list.html'
+    extra_context = {'title': 'Мои Резюме'}
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            queryset = queryset.filter(user=self.request.user)
+        return queryset
 
 
 class ResumeDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail info in resume."""
 
     model = models.Resume
-    template_name = 'resumes/resume-detail.html'
+    extra_context = {'title': 'Резюме'}
+    
+    def get_context_data(self, **kwargs):
+        context = super(ResumeDetailView, self).get_context_data()
+        context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
+        return context
 
 
 class ResumeCreateView(LoginRequiredMixin, CreateView):
     """View for creating resume."""
     model = models.Resume
-    template_name = 'resumes/resume-create.html'
+    form_class = forms.PersonalInfoForm
 
 
 class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     """View for updating resume."""
 
     model = models.Resume
-    template_name = 'resumes/resume-update.html'
+    form_class = forms.PersonalInfoForm
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):
     """View for deleting resume."""
 
     model = models.Resume
-    template_name = 'resumes/resume-delete.html'
+    success_url = reverse_lazy('resumes:resume_list')
 
 
 class PersonalInfoDetailView(LoginRequiredMixin, DetailView):

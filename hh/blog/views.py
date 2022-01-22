@@ -7,20 +7,19 @@ from .forms import ArticleCreateForm
 
 class NewsList(ListView):
     model = Article
-    template_name = 'blog/index.html'
     context_object_name = 'news_list'
+    extra_context = {'title': 'Новости'}
+    paginate_by = 3
 
 
 class CreatePost(CreateView):
     model = Article
-    template_name = 'blog/create_post.html'
     form_class = ArticleCreateForm
     success_url = reverse_lazy('blog:news')
 
 
 class UpdatePost(UpdateView):
     model = Article
-    template_name = 'blog/update_post.html'
     form_class = ArticleCreateForm
     slug_url_kwarg = 'post_slug'
     success_url = reverse_lazy('blog:news')
@@ -29,7 +28,6 @@ class UpdatePost(UpdateView):
 class DeletePost(DeleteView):
     model = Article
     slug_url_kwarg = 'post_slug'
-    template_name = 'blog/update_post.html'
     success_url = reverse_lazy('blog:news')
 
 

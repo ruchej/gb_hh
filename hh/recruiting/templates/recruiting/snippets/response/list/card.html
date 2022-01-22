@@ -1,0 +1,27 @@
+<div class="single-post d-flex flex-row">
+    <div class="thumb justify-content-center">
+        <img src="{{ response.resume.photo.url }}" style="object-fit: cover; width: 120px; height: 120px">
+    </div>
+    <div class="details">
+        <div class="title d-flex flex-row justify-content-between">
+            <div class="titles">
+                <a href="{% url 'resumes:resume_detail' response.resume.id %}"><h4>
+                    {{ response.resume.personal_info.surname }}
+                    {{ response.resume.personal_info.name }}
+                    {{ response.resume.personal_info.patronymic }}
+                </h4></a>
+            </div>
+            <ul class="btns">
+                <li><a href="{% url 'recruiting:offer_create' response.vacancy.id response.resume.id %}">
+                    Одобрить
+                </a></li>
+            </ul>
+            <ul class="btns">
+                <li><a href="{% url 'recruiting:response_delete' response.id %}">Отклонить</a></li>
+            </ul>
+        </div>
+        <h5>Опыт: {{ response.resume.experience.about }}</h5>
+        <h5>Навыки: {{ response.resume.experience.skills }}</h5>
+        <h5>Зарплата: {{ response.resume.position.salary }}</h5>
+    </div>
+</div>

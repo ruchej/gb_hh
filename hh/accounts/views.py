@@ -36,7 +36,7 @@ class UserAuthMixin(UserNotAuthMixin):
 class Login(SuccessMessageMixin, UserNotAuthMixin, LoginView):
     success_message = _("Вход в систему выполнен")
     extra_context = {
-        "page_title": _("Login"),
+        "title": _("Вход"),
         "header_class": "hero",
         "content_class": "tab-content",
     }
@@ -53,22 +53,19 @@ class Logout(UserAuthMixin, LogoutView):
 class UserCreate(
     UserNotAuthMixin,
     SuccessMessageMixin,
-    CreateView,
     PasswordResetView,
+    CreateView,
 ):
     model = Account
-    extra_context = {
-        "page_title": _("Форма регистрации"),
-        "header_class": "hero",
-    }
+    extra_context = {"title": _("Регистрация")}
     form_class = UserRegisterForm
     """
     Registration User with send email and post activation (SignUpConfirmView)
     """
     success_url = reverse_lazy("accounts:Login")
     url_redirect = reverse_lazy("accounts:UserDetail")
-    template_name = "registration/registration.html"
-    email_template_name = "accounts/signup_email.html"
+    template_name = 'accounts/account_signup_form.html'
+    email_template_name = 'accounts/signup_email.html'
     success_message = _("Для активации аккаунта выслано письмо")
 
     def get_form_kwargs(self):
@@ -102,11 +99,8 @@ class UserDetail(LoginRequiredMixin, DetailView):
     """
 
     model = Account
-    extra_context = {
-        "page_title": _("Профиль пользователя"),
-        "header_class": "hero",
-    }
-    template_name = '../templates/user-detail.html'
+    extra_context = {"title": _("Профиль")}
+    template_name = 'accounts/detail.html'
 
     def get_object(self, *args, **kwargs):
         return self.request.user

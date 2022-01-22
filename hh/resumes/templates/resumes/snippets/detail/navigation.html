@@ -1,0 +1,35 @@
+<ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="basicInfo-tab" data-toggle="tab"
+           href="#basicInfo" role="tab" aria-controls="basicInfo"
+           aria-selected="true">Персональные данные</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contacts-tab" data-toggle="tab"
+           href="#contacts" role="tab" aria-controls="contacts"
+           aria-selected="false">Контакты</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="experience-tab" data-toggle="tab"
+           href="#experience" role="tab" aria-controls="experience"
+           aria-selected="false">Опыт</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="jobs-tab" data-toggle="tab"
+           href="#jobs" role="tab" aria-controls="jobs"
+           aria-selected="false">Работа</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="jobs-tab" data-toggle="tab"
+           href="#position" role="tab" aria-controls="position"
+           aria-selected="false">Ищу</a>
+    </li>
+
+    {% if user == resume.user %}
+        <li class="nav-item">
+            <a class="nav-link" id="connectedServices-tab" data-toggle="tab"
+               href="#connectedServices" role="tab" aria-controls="connectedServices"
+               aria-selected="false">Подключенные сервисы</a>
+        </li>
+    {% endif %}
+</ul>
