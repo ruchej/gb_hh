@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<<<<<<< HEAD
     <form action="{% url 'blog:post_update' article.slug %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -23,4 +24,14 @@
         <button class="btn btn-danger btn-block">Удалить</button>
     </form>
 
+=======
+    {% csrf_token %}
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Обновить</button>
+        </form>
+    </div>
+>>>>>>> ba84f22d26691b73c916acdc86f07407fc9f0ed1
 {% endblock %}
