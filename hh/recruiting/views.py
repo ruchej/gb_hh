@@ -8,7 +8,11 @@ class ResponseListView(LoginRequiredMixin, ListView):
     """View for getting list of responses for job."""
 
     model = models.Response
-    template = 'response-list.html'
+    extra_context = {'title': 'Отклики'}
+    paginate_by = 10
+
+    def get_queryset(self):
+        return super().get_queryset().filter(vacancy__employer=self.request.user)
 
 
 class ResponseCreateView(LoginRequiredMixin, CreateView):
