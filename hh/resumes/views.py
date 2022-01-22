@@ -8,7 +8,7 @@ class ResumeListView(LoginRequiredMixin, ListView):
     """View for getting list of all resumes."""
 
     model = models.Resume
-    template_name = 'brief-list.html'
+    template_name = 'resumes/list.html'
     extra_context = {'title': 'Резюме'}
 
 
