@@ -20,11 +20,20 @@ class CreatePost(CreateView):
     success_url = reverse_lazy('blog:news')
 
 
-# class UpdatePost(UpdateView):
-#     model = Article
-#     template_name = 'blog/update_post.html'
-#     success_url = reverse_lazy('blog:news')
+class UpdatePost(UpdateView):
+    model = Article
+    template_name = 'blog/update_post.html'
+    form_class = ArticleCreateForm
+    slug_url_kwarg = 'post_slug'
+    success_url = reverse_lazy('blog:news')
+
+
+class DeletePost(DeleteView):
+    model = Article
+    slug_url_kwarg = 'post_slug'
+    template_name = 'blog/update_post.html'
+    success_url = reverse_lazy('blog:news')
 
 
 def show_post(request, post_slug):
-    return HttpResponse(f"Отображение статьи с id = {post_slug}")
+    return HttpResponse(f"Отображение статьи с slug = {post_slug}")
