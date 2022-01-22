@@ -1,0 +1,42 @@
+<header id="header">
+    <div class="container">
+        <div class="row align-items-center justify-content-between d-flex">
+            <div id="naming">
+                <a href="{% url 'blog:news' %}">Job Hunter</a>
+            </div>
+            <nav id="nav-menu-container">
+                <ul class="nav-menu">
+                    <li><a href="{% url 'blog:news' %}">Новости</a></li>
+                    {% if user.username %}
+                        {% if user.status == 1 %}
+                            <li><a href="{% url 'resumes:resume_list' %}">Резюме</a></li>
+                        {% else %}
+                            <li><a href="{% url 'recruiting:response_list' %}">Отклики</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'vacancies:vacancy_list' %}">Вакансии</a></li>
+                    {% else %}
+                        <li><a href="{% url 'vacancies:vacancy_list' %}" data-toggle="modal" data-target="#modal"
+                               data-toolti>
+                            Вакансии
+                        </a></li>
+                    {% endif %}
+                    <li><a href="#">О нас</a></li>
+                    {% if user.username %}
+                        <li><a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
+                            {{ user.username }}
+                        </a></li>
+                        <li><a class="ticker-btn" href="{% url 'accounts:Logout' %}?next={{ request.path|urlencode }}">
+                            Выйти
+                        </a></li>
+                    {% else %}
+                        <li><a class="ticker-btn" href="{% url 'accounts:Login' %}" data-toggle="modal"
+                               data-target="#modal"
+                               data-tooltip>
+                            Войти
+                        </a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
