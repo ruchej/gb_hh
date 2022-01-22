@@ -225,3 +225,10 @@ LOGIN_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+USE_I18N = True
+USE_L10N = False
+
+LANGUAGE_CODE = 'ru-RU'
+
+DATE_FORMAT = 'd E Y'

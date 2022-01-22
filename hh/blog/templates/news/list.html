@@ -7,16 +7,23 @@
             <div class="row">
 
                 <div class="col-lg-8 post-list blog-post-list infinite-container">
-                    {% for article in  news_list %}
+                    {% for news in news_list %}
                         <div class="single-post infinite-item">
                             <img class="img-fluid" src="http://placehold.it/900x300" alt="">
-                            <p class="author">{{ article.author }}, {{ article.created_at }}</p>
-                            <a href="#">
+                            <p class="author">{{ news.author }}, {{ news.created_at|date:"d M Y в H:i" }}</p>
+                            <a href="{{ news.get_absolute_url }}">
                                 <h1>
-                                    {{ article.title }}
+                                    {{ news.title }}
                                 </h1>
                             </a>
-                            <p>{{ article.short_description }}</p>
+                            <p>{{ news.short_description }}</p>
+                            <div class="d-flex flex-row-reverse">
+                                <a href="{{ news.get_absolute_url }}">
+                                    <p>
+                                        Читать далее...
+                                    </p>
+                                </a>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
