@@ -8,66 +8,7 @@
                     <div class="col-lg-8 post-list">
                         <div class="infinite-container">
                             {% for vacancy in vacancy_list %}
-                                <div class="single-post d-flex flex-row infinite-item">
-                                    <div class="thumb justify-content-center">
-                                        <img src="http://placehold.it/119x70" alt="">
-                                        <ul class="tags">
-                                            {% if vacancy.hashtags %}
-                                                <li>
-                                                    <a href="#">{{ vacancy.hashtags }}</a>
-                                                </li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                    <div class="details">
-                                        <div class="title d-flex flex-row justify-content-between">
-                                            <div class="titles">
-                                                <a href="{% url 'vacancies:detail' vacancy.id %}">
-                                                    <h4>{{ vacancy.title }}</h4></a>
-                                                <h6>{{ vacancy.employer.first_name }}</h6>
-                                            </div>
-                                            <ul class="btns">
-                                                {% if user.status == 2 %}
-                                                    <li>
-                                                        <a href="{% url 'vacancies:update' vacancy.id %}">Редактировать</a>
-                                                    </li>
-                                                    <li><a href="{% url 'vacancies:delete' vacancy.id %}">Удалить</a>
-                                                    </li>
-                                                {% else %}
-                                                    <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
-                                                    <li>
-                                                        <form action="#"
-                                                              id="responseForm" method="post">
-                                                            {% csrf_token %}
-                                                            <a href="#" type="submit"
-                                                               onclick="document.getElementById('responseForm').submit();">
-                                                                Подать заявку
-                                                            </a>
-                                                        </form>
-                                                    </li>
-                                                    {#                                                <li><a href="{% url 'recruiting:response_create' vacancy.id %}">Подать заявку</a></li>#}
-                                                {% endif %}
-                                            </ul>
-                                        </div>
-                                        <p>
-                                            {% if vacancy.description %}
-                                                {{ vacancy.description }}
-                                            {% else %}
-                                                Нет описания
-                                            {% endif %}
-                                        </p>
-                                        <h5>Опыт работы: {{ vacancy.get_experience_display }}</h5>
-                                        {% if vacancy.employment_type %}
-                                            <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
-                                        {% endif %}
-                                        {% if vacancy.employer.adress %}
-                                            <p class="address"><span
-                                                    class="lnr lnr-map"></span> {{ vacancy.employer.adress }}</p>
-                                        {% endif %}
-                                        <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}
-                                        </p>
-                                    </div>
-                                </div>
+                                {% include 'vacancies/snippets/list/card.html' %}
                             {% endfor %}
                         </div>
                     </div>
@@ -77,39 +18,7 @@
                                 Создать вакансию
                             </a>
                         {% endif %}
-                        <div class="single-slidebar search-widget">
-                            <form class="example" action="#" style="margin:auto;max-width:300px">
-                                <input type="text" placeholder="Найти вакансию" name="search2">
-                                <button type="submit"><i class="fa fa-search"></i></button>
-                            </form>
-                        </div>
-
-                        <div class="single-slidebar">
-                            <h4>Вакансии по расположению</h4>
-                            <ul class="cat-list">
-                                <li><a class="justify-content-between d-flex" href="#"><p>Москва</p><span>37</span></a>
-                                </li>
-                                <li><a class="justify-content-between d-flex" href="#"><p>Санкт-Петербург</p>
-                                    <span>57</span></a>
-                                </li>
-                                <li><a class="justify-content-between d-flex" href="#"><p>И так далее</p><span>33</span></a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="single-slidebar">
-                            <h4>Вакансии по категориям</h4>
-                            <ul class="cat-list">
-                                <li><a class="justify-content-between d-flex" href="#"><p>Разработчик ПО</p>
-                                    <span>37</span></a>
-                                </li>
-                                <li><a class="justify-content-between d-flex" href="#"><p>Инженер</p><span>57</span></a>
-                                </li>
-                                <li><a class="justify-content-between d-flex" href="#"><p>Кто-то еще</p><span>33</span></a>
-                                </li>
-                            </ul>
-                        </div>
-
+                        {% include 'vacancies/snippets/list/search.html' %}
                         {% include 'snippets/recent_news.html' %}
                     </div>
                 </div>
