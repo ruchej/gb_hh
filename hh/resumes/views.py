@@ -25,7 +25,7 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Resume
     extra_context = {'title': 'Резюме'}
-    
+
     def get_context_data(self, **kwargs):
         context = super(ResumeDetailView, self).get_context_data()
         context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
@@ -57,7 +57,6 @@ class PersonalInfoDetailView(LoginRequiredMixin, DetailView):
 
     model = models.PersonalInfo
     form_class = forms.PersonalInfoForm
-    template_name = 'personal-info-detail.html'
 
 
 class PersonalInfoUpdateView(LoginRequiredMixin, UpdateView):
@@ -65,7 +64,6 @@ class PersonalInfoUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.PersonalInfo
     form_class = forms.PersonalInfoForm
-    template_name = 'personal-info-update.html'
 
 
 class ContactsDetailView(LoginRequiredMixin, DetailView):
@@ -73,7 +71,6 @@ class ContactsDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Contacts
     form_class = forms.ContactsForm
-    template_name = 'contacts-detail.html'
 
 
 class ContactsUpdateView(LoginRequiredMixin, UpdateView):
@@ -81,7 +78,6 @@ class ContactsUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Contacts
     form_class = forms.ContactsForm
-    template_name = 'contacts-update.html'
 
 
 class PositionDetailView(LoginRequiredMixin, DetailView):
@@ -89,7 +85,6 @@ class PositionDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Position
     form_class = forms.PositionForm
-    template_name = 'position-detail.html'
 
 
 class PositionUpdateView(LoginRequiredMixin, UpdateView):
@@ -97,7 +92,6 @@ class PositionUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Position
     form_class = forms.PositionForm
-    template_name = 'position-update.html'
 
 
 class ExperienceDetailView(LoginRequiredMixin, DetailView):
@@ -105,7 +99,6 @@ class ExperienceDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Experience
     form_class = forms.ExperienceForm
-    template_name = 'experience-detail.html'
 
 
 class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
@@ -113,7 +106,6 @@ class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Experience
     form_class = forms.ExperienceForm
-    template_name = 'experience-update.html'
 
 
 class JobDetailView(LoginRequiredMixin, DetailView):
@@ -121,7 +113,6 @@ class JobDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Job
     form_class = forms.JobForm
-    template_name = 'job-detail.html'
 
 
 class JobUpdateView(LoginRequiredMixin, UpdateView):
@@ -129,4 +120,3 @@ class JobUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Job
     form_class = forms.JobForm
-    template_name = 'job-update.html'
