@@ -1,14 +1,23 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from . import models, forms
+from accounts.models import UserStatus
 
 
 class ResumeListView(LoginRequiredMixin, ListView):
     """View for getting list of all resumes."""
 
     model = models.Resume
-    extra_context = {'title': 'Резюме'}
+    extra_context = {'title': 'Мои Резюме'}
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            queryset = queryset.filter(user=self.request.user)
+        return queryset
 
 
 class ResumeDetailView(LoginRequiredMixin, DetailView):
