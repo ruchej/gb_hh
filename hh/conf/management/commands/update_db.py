@@ -21,15 +21,11 @@ class Command(BaseCommand):
         if not User.objects.filter(username='suser').exists():
             User.objects.create_superuser('suser', 'suser@example.local', 'A1234567a')
         if not User.objects.filter(username='employer').exists():
-            User.objects.create_superuser('employer', 'suser@example.local', 'A1234567a')
-        if not User.objects.filter(username='seeker').exists():
-            User.objects.create_superuser('seeker', 'suser@example.local', 'A1234567a')
-
-    @staticmethod
-    def create_users():
-        User.objects.create_superuser('employer', 'employer@employer.employer', 'A1234567a', status=UserStatus.EMPLOYER)
-        User.objects.create_superuser('employee', 'employee@employee.employee', 'A1234567a',
-                                      status=UserStatus.JOBSEEKER)
+            User.objects.create_superuser('employer', 'employer@employer.employer', 'A1234567a',
+                                          status=UserStatus.EMPLOYER)
+        if not User.objects.filter(username='employee').exists():
+            User.objects.create_superuser('employee', 'employee@employee.employee', 'A1234567a',
+                                          status=UserStatus.JOBSEEKER)
 
     @staticmethod
     def create_resumes():
@@ -96,7 +92,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options.get('fill'):
             self.create_suser()
-            self.create_users()
             self.create_resumes()
             self.create_vacancies()
             self.create_blog()
