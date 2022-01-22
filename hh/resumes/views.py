@@ -8,7 +8,6 @@ class ResumeListView(LoginRequiredMixin, ListView):
     """View for getting list of all resumes."""
 
     model = models.Resume
-    template_name = 'resumes/list.html'
     extra_context = {'title': 'Резюме'}
 
 
@@ -16,27 +15,24 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail info in resume."""
 
     model = models.Resume
-    template_name = 'brief-detail.html'
 
 
 class ResumeCreateView(LoginRequiredMixin, CreateView):
     """View for creating resume."""
     model = models.Resume
-    template_name = 'brief-create.html'
+    form_class = forms.PersonalInfoForm
 
 
 class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     """View for updating resume."""
 
     model = models.Resume
-    template_name = 'brief-update.html'
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):
     """View for deleting resume."""
 
     model = models.Resume
-    template_name = 'brief-delete.html'
 
 
 class PersonalInfoDetailView(LoginRequiredMixin, DetailView):
