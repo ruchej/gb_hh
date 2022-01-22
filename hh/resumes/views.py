@@ -24,6 +24,12 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail info in resume."""
 
     model = models.Resume
+    extra_context = {'title': 'Резюме'}
+    
+    def get_context_data(self, **kwargs):
+        context = super(ResumeDetailView, self).get_context_data()
+        context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
+        return context
 
 
 class ResumeCreateView(LoginRequiredMixin, CreateView):
