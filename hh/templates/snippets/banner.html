@@ -7,9 +7,11 @@
                     {{ title }}
                 </h1>
                 <p class="text-white link-nav">
-                    <a href="{% url 'blog:news' %}">Главная </a>
-                    <span class="lnr lnr-arrow-right"></span>
-                    <a href=""> {{ title }}</a>
+                    {% if request.META.HTTP_REFERER %}
+                        <a href="{{ request.META.HTTP_REFERER }}">Вернуться </a>
+                        <span class="lnr lnr-arrow-left"></span>
+                        <a href=""> {{ title }}</a>
+                    {% endif %}
                 </p>
             </div>
         </div>
