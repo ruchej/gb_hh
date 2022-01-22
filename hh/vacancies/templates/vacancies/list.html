@@ -1,16 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    {% if vacancy_list %}
-        <section class="post-area section-gap">
+    <section class="post-area section-gap">
+        {% if vacancy_list %}
             <div class="container">
                 <div class="row justify-content-center d-flex">
                     <div class="col-lg-8 post-list">
-                        {% if user.status == 2 %}
-                            <a class="d-flex flex-row ticker-btn" href="{% url 'vacancies:create' %}">
-                                Создать вакансию
-                            </a>
-                        {% endif %}
                         <div class="infinite-container">
                             {% for vacancy in vacancy_list %}
                                 <div class="single-post d-flex flex-row infinite-item">
@@ -77,6 +72,11 @@
                         </div>
                     </div>
                     <div class="col-lg-4 sidebar">
+                        {% if user.status == 2 %}
+                            <a class="d-flex flex-row ticker-btn" href="{% url 'vacancies:create' %}">
+                                Создать вакансию
+                            </a>
+                        {% endif %}
                         <div class="single-slidebar search-widget">
                             <form class="example" action="#" style="margin:auto;max-width:300px">
                                 <input type="text" placeholder="Найти вакансию" name="search2">
@@ -114,6 +114,15 @@
                     </div>
                 </div>
             </div>
-        </section>
-    {% endif %}
+        {% else %}
+            <div style="height: 50vh; width: 100vw">
+                <div style="margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 50vw">
+                    <p style="text-align: center; font-size: large;">
+                        Вы еще не добавили никаких вакансий!
+                        <a href="{% url 'vacancies:create' %}" class="stretched-link"> Создать?</a>
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </section>
 {% endblock %}
