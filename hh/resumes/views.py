@@ -42,6 +42,7 @@ class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     """View for updating resume."""
 
     model = models.Resume
+    form_class = forms.PersonalInfoForm
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):
