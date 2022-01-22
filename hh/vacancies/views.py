@@ -8,7 +8,7 @@ from accounts.models import UserStatus
 
 
 class VacancyList(LoginRequiredMixin, ListView):
-    template_name = '../templates/vacancy-list.html'
+    template_name = 'vacancies/list.html'
     model = Vacancy
     extra_context = {'title': 'Вакансии'}
     paginate_by = 10
@@ -22,14 +22,14 @@ class VacancyList(LoginRequiredMixin, ListView):
 
 class VacancyDetail(LoginRequiredMixin, DetailView):
     model = Vacancy
-    template_name = 'vacancy-detail.html'
+    template_name = 'vacancies/detail.html'
     extra_context = {'title': 'Детали Вакансии'}
 
 
 class VacancyCreate(LoginRequiredMixin, CreateView):
     model = Vacancy
     form_class = VacancyForm
-    template_name = 'vacancy-create.html'
+    template_name = 'vacancies/create.html'
     extra_context = {'title': 'Создание Вакансии'}
     success_url = reverse_lazy('vacancies:vacancy_list')
 
@@ -41,13 +41,13 @@ class VacancyCreate(LoginRequiredMixin, CreateView):
 class VacancyUpdate(LoginRequiredMixin, UpdateView):
     model = Vacancy
     form_class = VacancyForm
-    template_name = 'vacancy-update.html'
+    template_name = 'vacancies/update.html'
     extra_context = {'title': 'Изменение Вакансии'}
     success_url = reverse_lazy('vacancies:vacancy_list')
 
 
 class VacancyDelete(LoginRequiredMixin, DeleteView):
     model = Vacancy
-    template_name = 'vacancy-delete.html'
+    template_name = 'vacancies/delete.html'
     extra_context = {'title': 'Удаление Вакансии'}
     success_url = reverse_lazy('vacancies:vacancy_list')
