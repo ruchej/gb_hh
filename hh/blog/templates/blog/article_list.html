@@ -8,34 +8,12 @@
 
                 <div class="col-lg-8 post-list blog-post-list infinite-container">
                     {% for news in news_list %}
-                        <div class="single-post infinite-item">
-                            <img class="img-fluid" src="http://placehold.it/900x300" alt="">
-                            <p class="author">{{ news.author }}, {{ news.created_at|date:"d M Y в H:i" }}</p>
-                            <a href="{{ news.get_absolute_url }}">
-                                <h1>
-                                    {{ news.title }}
-                                </h1>
-                            </a>
-                            <p>{{ news.short_description }}</p>
-                            <div class="d-flex flex-row-reverse">
-                                <a href="{{ news.get_absolute_url }}">
-                                    <p>
-                                        Читать далее...
-                                    </p>
-                                </a>
-                            </div>
-                        </div>
+                        {% include 'blog/snippets/list/card.html' %}
                     {% endfor %}
                 </div>
 
                 <div class="col-lg-4 sidebar">
-                    <div class="single-slidebar search-widget">
-                        <form class="example" action="#" style="margin:auto;max-width:300px">
-                            <input type="text" placeholder="Найти новость" name="search2">
-                            <button type="submit"><i class="fa fa-search"></i></button>
-                        </form>
-                    </div>
-
+                    {% include 'blog/snippets/list/news_search.html' %}
                     {% include 'snippets/recent_news.html' %}
                 </div>
             </div>
