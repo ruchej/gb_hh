@@ -20,6 +20,10 @@ class Command(BaseCommand):
     def create_suser():
         if not User.objects.filter(username='suser').exists():
             User.objects.create_superuser('suser', 'suser@example.local', 'A1234567a')
+        if not User.objects.filter(username='employer').exists():
+            User.objects.create_superuser('employer', 'suser@example.local', 'A1234567a')
+        if not User.objects.filter(username='seeker').exists():
+            User.objects.create_superuser('seeker', 'suser@example.local', 'A1234567a')
 
     @staticmethod
     def create_users():
