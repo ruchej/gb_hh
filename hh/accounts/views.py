@@ -34,7 +34,7 @@ class UserAuthMixin(UserNotAuthMixin):
 
 
 class Login(SuccessMessageMixin, UserNotAuthMixin, LoginView):
-    template_name = '../templates/login.html'
+    template_name = 'registration/login.html'
     success_message = _("Вход в систему выполнен")
     extra_context = {
         "title": _("Вход"),
@@ -65,8 +65,8 @@ class UserCreate(
     """
     success_url = reverse_lazy("accounts:Login")
     url_redirect = reverse_lazy("accounts:UserDetail")
-    template_name = "../templates/user-register.html"
-    email_template_name = "../templates/user-signup-email.html"
+    template_name = "registration/signup.html"
+    email_template_name = "registration/signup_email.html"
     success_message = _("Для активации аккаунта выслано письмо")
 
     def get_form_kwargs(self):
@@ -87,7 +87,7 @@ class UserConfirm(PasswordResetConfirmView):
     }
 
     success_url = reverse_lazy("accounts:Login")
-    template_name = "accounts/signup_confirm.html"
+    template_name = "registration/signup_confirm.html"
     form_class = UserActivationRegisterForm
     post_reset_login = True
     post_reset_login_backend = "django.contrib.auth.backends.ModelBackend"
@@ -101,7 +101,7 @@ class UserDetail(LoginRequiredMixin, DetailView):
 
     model = Account
     extra_context = {"title": _("Профиль")}
-    template_name = '../templates/user-detail.html'
+    template_name = 'accounts/detail.html'
 
     def get_object(self, *args, **kwargs):
         return self.request.user
