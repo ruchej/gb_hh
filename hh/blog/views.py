@@ -23,6 +23,7 @@ class UpdatePost(UpdateView):
     form_class = ArticleCreateForm
     slug_url_kwarg = 'post_slug'
     success_url = reverse_lazy('blog:news')
+    template_name = 'blog/article_update.html'
 
 
 class DeletePost(DeleteView):
