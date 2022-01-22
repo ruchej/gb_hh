@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block content %}
+
     {% if news_list %}
         {% for news in news_list %}
             <div class="news-block">
-                <a class="title" href="{% url 'blog:post' news.id %}">{{ news.title }}</a>
+                <a class="title" href="{% url 'blog:post_update' news.slug %}">{{ news.title }}</a>
                 <div class="small-info">
                     {{ news.author }} - {{ news.created_at }}
                 </div>
@@ -17,7 +18,7 @@
                         {{ news.short_description }}
                     </p>
                     <p>
-                        <a class="small-info" href="{% url 'blog:post' news.id %}">Читать далее...</a>
+                        <a class="small-info" href="{% url 'blog:post_update' news.slug %}">Читать далее...</a>
                     </p>
                 </div>
             </div>
@@ -32,4 +33,9 @@
             </div>
         </div>
     {% endif %}
+    <div class="data">
+        <a href="{% url 'blog:post_create' %}">
+            <button class="btn btn-primary btn-lg btn-block" type="button">Создать Новость</button>
+        </a>
+    </div>
 {% endblock %}
