@@ -19,21 +19,18 @@ class ResponseCreateView(LoginRequiredMixin, CreateView):
     """View for creating response for job."""
 
     model = models.Response
-    template = 'response-create.html'
 
 
 class ResponseDeleteView(LoginRequiredMixin, CreateView):
     """View for deleting response for job."""
 
     model = models.Response
-    template = 'response-delete.html'
 
 
 class OfferListView(LoginRequiredMixin, ListView):
     """View for getting list of offers."""
 
     model = models.Offer
-    template = 'offer-list.html'
 
 
 class OfferCreateView(LoginRequiredMixin, CreateView):
@@ -47,4 +44,3 @@ class OfferDeleteView(LoginRequiredMixin, CreateView):
     """View for deleting offer."""
 
     model = models.Offer
-    template = 'offer-delete.html'
