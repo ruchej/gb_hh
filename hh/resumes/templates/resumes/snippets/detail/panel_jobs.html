@@ -10,20 +10,9 @@
     {% endif %}
 
     {% if user == resume.user %}
-        {% if jobs %}
-            <div class="d-flex justify-content-between">
-                <a class="ticker-btn" href="{% url 'resumes:job_update' resume.personal_info.id %}">
-                    Изменить
-                </a>
-                <a class="ticker-btn" href="#">
-                    Добавить
-                </a>
-            </div>
-        {% else %}
-            <a class="ticker-btn" href="#">
-                Добавить
-            </a>
-        {% endif %}
+        <a class="ticker-btn" href="#">
+            Добавить
+        </a>
     {% endif %}
 
 </div>
