@@ -49,6 +49,7 @@ class ResumeDeleteView(LoginRequiredMixin, DeleteView):
     """View for deleting resume."""
 
     model = models.Resume
+    success_url = reverse_lazy('resumes:resume_list')
 
 
 class PersonalInfoDetailView(LoginRequiredMixin, DetailView):
