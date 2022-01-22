@@ -41,7 +41,7 @@
                                                 {% else %}
                                                     <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
                                                     <li>
-                                                        <form action="{% url 'recruiting:response_create' u_id=user.id v_id=vacancy.id %}"
+                                                        <form action="#"
                                                               id="responseForm" method="post">
                                                             {% csrf_token %}
                                                             <a href="#" type="submit"
