@@ -4,13 +4,11 @@ from django.contrib.auth.forms import PasswordResetForm, UserCreationForm
 from .models import Account
 
 
-class UserRegisterForm(UserCreationForm, PasswordResetForm):
+class UserRegisterForm(UserCreationForm):
     class Meta:
         model = Account
         fields = (
             "username",
-            "first_name",
-            "last_name",
             "email",
             "password1",
             "password2",
@@ -30,7 +28,6 @@ class UserRegisterForm(UserCreationForm, PasswordResetForm):
         if not user.id:
             user.active = False
             user = super().save()
-            PasswordResetForm.save(self, **kwargs)
         return user
 
 

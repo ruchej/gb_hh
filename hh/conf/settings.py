@@ -43,9 +43,8 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     # custom
-    'conf',
     'accounts.apps.AccountsConfig',
-    'blog',
+    'blog.apps.BlogConfig',
     'resumes.apps.ResumesConfig',
     'vacancies.apps.VacanciesConfig',
     'recruiting.apps.RecruitingConfig',
