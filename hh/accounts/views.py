@@ -10,8 +10,9 @@ from django.contrib.auth.mixins import (
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView
+from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView, PasswordContextMixin
 from .forms import UserRegisterForm, UserActivationRegisterForm
+from django.views.generic.edit import FormView
 
 
 class UserNotAuthMixin(UserPassesTestMixin):
@@ -53,19 +54,15 @@ class Logout(UserAuthMixin, LogoutView):
 class UserCreate(
     UserNotAuthMixin,
     SuccessMessageMixin,
-    PasswordResetView,
+    # PasswordResetView,
     CreateView,
 ):
     model = Account
     extra_context = {"title": _("Регистрация")}
     form_class = UserRegisterForm
-    """
-    Registration User with send email and post activation (SignUpConfirmView)
-    """
-    success_url = reverse_lazy("accounts:Login")
-    url_redirect = reverse_lazy("accounts:UserDetail")
+    success_url = reverse_lazy("blog:news")
+    #url_redirect = reverse_lazy("accounts:UserDetail")
     template_name = 'accounts/account_signup_form.html'
-    email_template_name = 'accounts/signup_email.html'
     success_message = _("Для активации аккаунта выслано письмо")
 
     def get_form_kwargs(self):
