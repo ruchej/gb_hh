@@ -114,8 +114,13 @@ class Employer(models.Model):
     user = models.OneToOneField(
         Account, related_name="employer", on_delete=models.PROTECT, verbose_name=_("Работодатель")
     )
+    name = models.TextField(
+        blank=True, null=True, verbose_name=_("название компании"))
     description = models.TextField(
         blank=True, null=True, verbose_name=_("Описание"))
+    phone = models.CharField(max_length=20, blank=True,
+                             verbose_name=_("телефон"))
+    address = models.TextField(blank=True, verbose_name=_("штаб квартира"))
     objects = EmployerManager()
 
     class Meta:
