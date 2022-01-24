@@ -128,4 +128,4 @@ class Employer(models.Model):
         verbose_name_plural = _("Работодатели")
 
     def __str__(self):
-        return str(self.user)
+        return self.name if self.name else str(self.user)
