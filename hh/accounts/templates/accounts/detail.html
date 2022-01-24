@@ -11,12 +11,12 @@
                             <div class="card-title mb-4">
                                 <div class="row d-flex justify-content-start">
                                     <div class="image-container d-flex flex-row">
-                                        <img src="http://placehold.it/150x150" id="imgProfile"
+                                        <img src="{{ object.avatar.url }}" id="imgProfile"
                                              style="width: 150px; height: 150px" class="img-thumbnail"/>
                                     </div>
                                     <div class="userData ml-2 flex-row">
                                         <h2 class="d-block mb-3" style="font-size: 2rem; font-weight: bold">
-                                            {{ user }}
+                                            {{ object }}
                                         </h2>
                                         <a class="ticker-btn" href="#">
                                             Редактировать
@@ -25,132 +25,11 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-12">
-                                    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="basicInfo-tab" data-toggle="tab"
-                                               href="#basicInfo" role="tab" aria-controls="basicInfo"
-                                               aria-selected="true">Персональные данные</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="connectedServices-tab" data-toggle="tab"
-                                               href="#connectedServices" role="tab" aria-controls="connectedServices"
-                                               aria-selected="false">Подключенные сервисы</a>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content ml-1" id="myTabContent">
-                                        <div class="tab-pane fade show active" id="basicInfo" role="tabpanel"
-                                             aria-labelledby="basicInfo-tab">
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Логин</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    {{ user.username }}
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Email</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    {{ user.email }}
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Имя</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    {{ user.first_name }}
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Отчество</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    {{ user.patronymic }}
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Фамилия</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    {{ user.last_name }}
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Дата рождения</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    {{ user.birthday }}
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Адрес</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    {{ user.adress }}
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Телефон</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    {{ user.phone }}
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-                                        </div>
-                                        <div class="tab-pane fade" id="connectedServices" role="tabpanel"
-                                             aria-labelledby="ConnectedServices-tab">
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">Google</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    Тут будут данные гугла
-                                                </div>
-                                            </div>
-                                            <hr/>
-
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-5">
-                                                    <label style="font-weight:bold;">VK</label>
-                                                </div>
-                                                <div class="col-md-8 col-6">
-                                                    Тут будут данные вк
-                                                </div>
-                                            </div>
-                                            <hr/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% if user.status == 1 %}
+                                {% include 'accounts/snippets/detail/jobseeker_card.html' %}
+                            {% elif user.status == 2 %}
+                                {% include 'accounts/snippets/detail/employer_card.html' %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
