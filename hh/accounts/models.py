@@ -63,11 +63,13 @@ class Account(AbstractUser):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.status == UserStatus.EMPLOYER:
-            employer = Employer(user=self)
-            employer.save()
+            if not Employer.objects.filter(user=self).exists():
+                employer = Employer(user=self)
+                employer.save()
         elif self.status == UserStatus.JOBSEEKER:
-            seeker = JobSeeker(user=self)
-            seeker.save()
+            if not JobSeeker.objects.filter(user=self).exists():
+                seeker = JobSeeker(user=self)
+                seeker.save()
 
 
 class JobSeeker(models.Model):
