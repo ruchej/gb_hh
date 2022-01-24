@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     # custom
+    'conf',
     'accounts.apps.AccountsConfig',
     'blog.apps.BlogConfig',
     'resumes.apps.ResumesConfig',
