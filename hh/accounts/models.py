@@ -79,8 +79,8 @@ class JobSeeker(models.Model):
         WOMAN = 0, "Женщина"
         MAN = 1, "Мужчина"
 
-    user = models.ForeignKey(
-        Account, related_name="sekeer", on_delete=models.PROTECT, verbose_name=_('Пользователь'))
+    user = models.OneToOneField(
+        Account, related_name="seeker", on_delete=models.PROTECT, verbose_name=_('Пользователь'))
     first_name = models.CharField(
         max_length=150, blank=True, verbose_name=_('Имя'))
     patronymic = models.CharField(
