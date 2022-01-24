@@ -94,12 +94,12 @@ class JobSeeker(models.Model):
         choices=Sex.choices, null=True, blank=True, verbose_name=_("Пол"))
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("Телефон"))
-    adress = models.TextField(blank=True, verbose_name=_("Район поиска"))
+    address = models.TextField(blank=True, verbose_name=_("Район поиска"))
     objects = JobSeekerManager()
 
     class Meta:
 
-        verbose_name = _("сосискателя")
+        verbose_name = _("соискателя")
         verbose_name_plural = _("Соискатели")
 
     def __str__(self):
