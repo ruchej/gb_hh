@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView, DetailView
 from django.utils.translation import gettext_lazy as _
-from .models import Account, UserStatus
+from .models import Account, UserStatus, JobSeeker, Employer
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
@@ -100,4 +100,11 @@ class UserDetail(LoginRequiredMixin, DetailView):
     template_name = 'accounts/detail.html'
 
     def get_object(self, *args, **kwargs):
-        return self.request.user
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            account = JobSeeker.objects.get(user=self.request.user)
+        elif self.request.user.status == UserStatus.EMPLOYER:
+            account = Employer.objects.get(user=self.request.user)
+        else:
+            raise Exception('Undefined user status')
+        return account
+
