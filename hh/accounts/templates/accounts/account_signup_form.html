@@ -6,7 +6,7 @@
         <div class="container col-3">
             <form action="{% url 'accounts:UserCreate' %}" method="post">
             {% csrf_token %}
-            {{form}}
+            {{form|crispy}}
             <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
             </form>
         </div>
