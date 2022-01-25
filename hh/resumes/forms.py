@@ -3,13 +3,6 @@ from django import forms
 from . import models
 
 
-class PersonalInfoForm(forms.ModelForm):
-    """Form for processing information about personal information in resume."""
-    class Meta:
-        model = models.PersonalInfo
-        fields = ('name', 'patronymic', 'surname', 'birthday', 'gender', 'location', 'relocation', 'business_trip')
-
-
 class ContactsForm(forms.ModelForm):
     """Form for processing information about contacts in resume."""
 
@@ -23,7 +16,7 @@ class PositionForm(forms.ModelForm):
 
     class Meta:
         model = models.Position
-        fields = ('title', 'salary', 'employment', 'schedule')
+        fields = ('title', 'salary', 'employment', 'schedule', 'relocation', 'business_trip')
 
 
 class ExperienceForm(forms.ModelForm):

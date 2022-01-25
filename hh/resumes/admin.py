@@ -3,14 +3,6 @@ from django.contrib import admin
 from . import models
 
 
-@admin.register(models.PersonalInfo)
-class PersonalInfoAdmin(admin.ModelAdmin):
-    list_display = ('display_full_name', 'birthday', 'gender', 'location', 'relocation', 'business_trip')
-    list_filter = ('birthday', 'gender',)
-    list_per_page = 15
-    search_fields = ('surname', )
-
-
 @admin.register(models.Contacts)
 class ContactsAdmin(admin.ModelAdmin):
     list_display = ('email', 'phone', 'telegram',)
@@ -20,7 +12,7 @@ class ContactsAdmin(admin.ModelAdmin):
 
 @admin.register(models.Position)
 class PositionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'salary', 'employment', 'schedule',)
+    list_display = ('title', 'salary', 'employment', 'schedule', 'relocation', 'business_trip',)
     list_filter = ('salary',)
     list_per_page = 15
     search_fields = ('title', )

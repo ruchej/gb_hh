@@ -35,14 +35,14 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
 class ResumeCreateView(LoginRequiredMixin, CreateView):
     """View for creating resume."""
     model = models.Resume
-    form_class = forms.PersonalInfoForm
+    # form_class = forms.PersonalInfoForm
 
 
 class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     """View for updating resume."""
 
     model = models.Resume
-    form_class = forms.PersonalInfoForm
+    # form_class = forms.PersonalInfoForm
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):
@@ -50,20 +50,6 @@ class ResumeDeleteView(LoginRequiredMixin, DeleteView):
 
     model = models.Resume
     success_url = reverse_lazy('resumes:resume_list')
-
-
-class PersonalInfoDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about personal info in resume."""
-
-    model = models.PersonalInfo
-    form_class = forms.PersonalInfoForm
-
-
-class PersonalInfoUpdateView(LoginRequiredMixin, UpdateView):
-    """View for updating personal info in resume."""
-
-    model = models.PersonalInfo
-    form_class = forms.PersonalInfoForm
 
 
 class ContactsDetailView(LoginRequiredMixin, DetailView):
