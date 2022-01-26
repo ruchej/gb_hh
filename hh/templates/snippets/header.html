@@ -21,6 +21,9 @@
                         </a></li>
                     {% endif %}
                     <li><a href="#">О нас</a></li>
+                    <li>
+                        <a href="{% url 'rules' %}">Правила</a>
+                    </li>
                     {% if user.username %}
                         <li><a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
                             {{ user.username }}
