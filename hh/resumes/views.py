@@ -17,7 +17,13 @@ class ResumeListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResumeListView, self).get_context_data(object_list=object_list, **kwargs)
-        context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
+        else:
+            jobseekers = []
+            for resume in context['resume_list']:
+                jobseekers.append(JobSeeker.objects.get(user=resume.user))
+            context['jobseekers_resume_list'] = list(zip(jobseekers, context['resume_list']))
         return context
 
     def get_queryset(self):

@@ -1,0 +1,28 @@
+<div class="single-post d-flex flex-row">
+    <div class="thumb justify-content-center">
+    {% if resume.photo %}
+        <img src="{{ resume.photo.url }}" style="object-fit: cover; width: 120px; height: 120px">
+    {% endif %}
+    </div>
+    <div class="details">
+        <div class="title d-flex flex-row justify-content-between">
+            <div class="titles">
+                <a href="{% url 'resumes:resume_detail' resume.id %}"><h4>
+                    {{ jobseeker.first_name }}
+                    {{ jobseeker.patronymic }}
+                    {{ jobseeker.last_name }}
+                </h4></a>
+            </div>
+            <ul class="btns">
+                {% if user.status != 1 %}
+                {% else %}
+                <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
+                <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <h5>Опыт: {{ resume.experience.about }}</h5>
+        <h5>Навыки: {{ resume.experience.skills }}</h5>
+        <h5>Зарплата: {{ resume.position.salary }}</h5>
+    </div>
+</div>

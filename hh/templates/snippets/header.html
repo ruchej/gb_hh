@@ -8,9 +8,8 @@
                 <ul class="nav-menu">
                     <li><a href="{% url 'blog:news' %}">Новости</a></li>
                     {% if user.username %}
-                        {% if user.status == 1 %}
-                            <li><a href="{% url 'resumes:resume_list' %}">Резюме</a></li>
-                        {% else %}
+                        <li><a href="{% url 'resumes:resume_list' %}">Резюме</a></li>
+                        {% if user.status == 2 %}
                             <li><a href="{% url 'recruiting:response_list' %}">Отклики</a></li>
                         {% endif %}
                         <li><a href="{% url 'vacancies:vacancy_list' %}">Вакансии</a></li>
