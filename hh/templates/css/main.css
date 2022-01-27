@@ -4088,3 +4088,28 @@ body.mobile-nav-active #mobile-nav-toggle {
                End Blog Details  Page style
 ################
 */
+
+.post-image {
+  min-height: 150px;
+  max-width: 900px;
+  max-height: 300px;
+  width: auto;
+  height: auto;
+}
+
+.resume-image {
+  min-width: 100px;
+  min-height: 100px;
+  max-width: 150px;
+  max-height: 150px;
+  width: auto;
+  height: auto;
+}
+
+.vacancy-image {
+  min-width: 70px;
+  max-width: 120px;
+  max-height: 70px;
+  width: auto;
+  height: auto;
+}
