@@ -56,7 +56,6 @@ class ContactsDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail information about contacts in resume."""
 
     model = models.Contacts
-    form_class = forms.ContactsForm
 
 
 class ContactsUpdateView(LoginRequiredMixin, UpdateView):
@@ -64,13 +63,13 @@ class ContactsUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Contacts
     form_class = forms.ContactsForm
+    success_url = reverse_lazy('resumes:resume_list')
 
 
 class PositionDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail information about position in resume."""
 
     model = models.Position
-    form_class = forms.PositionForm
 
 
 class PositionUpdateView(LoginRequiredMixin, UpdateView):
@@ -78,13 +77,13 @@ class PositionUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Position
     form_class = forms.PositionForm
+    success_url = reverse_lazy('resumes:resume_list')
 
 
 class ExperienceDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail information about experience in resume."""
 
     model = models.Experience
-    form_class = forms.ExperienceForm
 
 
 class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
@@ -92,13 +91,13 @@ class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Experience
     form_class = forms.ExperienceForm
+    success_url = reverse_lazy('resumes:resume_list')
 
 
 class JobDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail information about jobs in resume."""
 
     model = models.Job
-    form_class = forms.JobForm
 
 
 class JobUpdateView(LoginRequiredMixin, UpdateView):
@@ -106,3 +105,4 @@ class JobUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Job
     form_class = forms.JobForm
+    success_url = reverse_lazy('resumes:resume_list')
