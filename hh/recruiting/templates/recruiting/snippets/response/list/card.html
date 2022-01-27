@@ -6,9 +6,9 @@
         <div class="title d-flex flex-row justify-content-between">
             <div class="titles">
                 <a href="{% url 'resumes:resume_detail' response.resume.id %}"><h4>
-                    {{ response.resume.personal_info.surname }}
-                    {{ response.resume.personal_info.name }}
-                    {{ response.resume.personal_info.patronymic }}
+                    {{ jobseeker.first_name }}
+                    {{ jobseeker.patronymic }}
+                    {{ jobseeker.last_name }}
                 </h4></a>
             </div>
             <ul class="btns">
