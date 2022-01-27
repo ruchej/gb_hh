@@ -114,8 +114,8 @@ class Employer(models.Model):
     user = models.OneToOneField(
         Account, related_name="employer", on_delete=models.PROTECT, verbose_name=_("Работодатель")
     )
-    name = models.TextField(
-        blank=True, null=True, verbose_name=_("название компании"))
+    name = models.CharField(
+        blank=True, null=True, max_length=50, verbose_name=_("название компании"))
     description = models.TextField(
         blank=True, null=True, verbose_name=_("Описание"))
     phone = models.CharField(max_length=20, blank=True,
