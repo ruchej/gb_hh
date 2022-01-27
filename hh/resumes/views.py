@@ -20,6 +20,7 @@ class ResumeListView(LoginRequiredMixin, ListView):
         if self.request.user.status == UserStatus.JOBSEEKER:
             context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
         else:
+            context['title'] = 'Резюме Соискателей'
             jobseekers = []
             for resume in context['resume_list']:
                 jobseekers.append(JobSeeker.objects.get(user=resume.user))
