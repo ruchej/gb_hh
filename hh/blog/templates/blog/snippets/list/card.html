@@ -1,11 +1,14 @@
 <div class="single-post infinite-item">
-    <img class="img-fluid" src="http://placehold.it/900x300" alt="">
-    <p class="author">{{ news.author }}, {{ news.created_at|date:"d M Y в H:i" }}</p>
     <a href="{{ news.get_absolute_url }}">
-        <h1>
+        <h1 class="title">
             {{ news.title }}
         </h1>
     </a>
+    {% if news.image %}
+        <img class="img-fluid" src="{{ news.image }}" alt="">
+    {% endif %}
+    <p class="author">{{ news.author }}, {{ news.created_at|date:"d M Y в H:i" }}</p>
+
     <p>{{ news.short_description }}</p>
     <div class="d-flex flex-row-reverse">
         <a href="{{ news.get_absolute_url }}">
