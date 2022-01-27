@@ -4,13 +4,21 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from .forms import VacancyForm
 from .models import Vacancy
-from accounts.models import UserStatus
+from accounts.models import UserStatus, Employer
 
 
 class VacancyList(LoginRequiredMixin, ListView):
     model = Vacancy
     extra_context = {'title': 'Вакансии'}
     paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(VacancyList, self).get_context_data(object_list=object_list, **kwargs)
+        employers = []
+        for vacancy in context['vacancy_list']:
+            employers.append(Employer.objects.get(user=vacancy.employer))
+        context['employers_vac_list'] = list(zip(employers, context['vacancy_list']))
+        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()

@@ -7,7 +7,7 @@
                 <div class="row justify-content-center d-flex">
                     <div class="col-lg-8 post-list">
                         <div class="infinite-container">
-                            {% for vacancy in vacancy_list %}
+                            {% for employer, vacancy in employers_vac_list %}
                                 {% include 'vacancies/snippets/list/card.html' %}
                             {% endfor %}
                         </div>
