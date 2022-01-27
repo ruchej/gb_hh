@@ -4,47 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
-class PersonalInfo(models.Model):
-    """Model for keeping personal info of employee."""
-
-    GENDER_CHOICES = (
-        ('ML', _('мужской')),
-        ('FML', _('женский')),
-        ('OTH', _('другой')),
-    )
-    RELOCATION_CHOICES = (
-        ('NOT', _('невозможен')),
-        ('RDY', _('возможен')),
-        ('WISH', _('желателен')),
-    )
-    TRIP_CHOICES = (
-        ('NOT', _('никогда')),
-        ('RDY', _('готов')),
-        ('SMT', _('иногда')),
-    )
-    name = models.CharField(verbose_name=_('имя'), max_length=32)
-    patronymic = models.CharField(verbose_name=_('отчество'), blank=True, max_length=32)
-    surname = models.CharField(verbose_name=_('фамилия'), max_length=32)
-    birthday = models.DateField(verbose_name=_('дата рождения'), blank=True)
-    gender = models.CharField(verbose_name=_('пол'), blank=True, max_length=3, choices=GENDER_CHOICES)
-    # TODO: Connect cities database to fields 'location', 'relocation'.
-    location = models.CharField(verbose_name=_('город проживания'), blank=True, max_length=32)
-    relocation = models.CharField(verbose_name=_('переезд'), blank=True, max_length=4, choices=RELOCATION_CHOICES)
-    business_trip = models.CharField(verbose_name=_('командировки'), blank=True, max_length=3, choices=TRIP_CHOICES)
-
-    def display_full_name(self):
-        """Return employee's full name."""
-
-        return f'{self.surname} {self.name} {self.patronymic}' if self.patronymic else f'{self.surname} {self.name}'
-
-    def __str__(self):
-        return self.display_full_name()
-
-    class Meta:
-        ordering = ('surname',)
-        verbose_name = _('персональная информация')
-        verbose_name_plural = _('персональная информация')
-
 
 class Contacts(models.Model):
     """Model for keeping contacts of employee."""
@@ -66,10 +25,22 @@ class Contacts(models.Model):
 class Position(models.Model):
     """Model for keeping info about wishing position."""
 
+    RELOCATION_CHOICES = (
+        ('NOT', _('невозможен')),
+        ('RDY', _('возможен')),
+        ('WISH', _('желателен')),
+    )
+    TRIP_CHOICES = (
+        ('NOT', _('никогда')),
+        ('RDY', _('готов')),
+        ('SMT', _('иногда')),
+    )
     title = models.CharField(verbose_name=_('название должности'), max_length=64)
     salary = models.PositiveIntegerField(verbose_name=_('зарплата'), default=0)
     employment = models.CharField(verbose_name=_('занятость'), max_length=10)
     schedule = models.CharField(verbose_name=_('график работы'), max_length=10)
+    relocation = models.CharField(verbose_name=_('переезд'), blank=True, max_length=4, choices=RELOCATION_CHOICES)
+    business_trip = models.CharField(verbose_name=_('командировки'), blank=True, max_length=3, choices=TRIP_CHOICES)
 
     def __str__(self):
         return self.title
@@ -126,7 +97,6 @@ class Resume(models.Model):
     user = models.ForeignKey(User, verbose_name=_('пользователь'), on_delete=models.CASCADE)
     title = models.CharField(verbose_name=_('название'), max_length=128)
     photo = models.ImageField(verbose_name=_('фотография'), blank=True, upload_to='photos/')
-    personal_info = models.OneToOneField(PersonalInfo, verbose_name=_('личная информация'), on_delete=models.CASCADE)
     contacts = models.OneToOneField(Contacts, verbose_name=_('контакты'), on_delete=models.CASCADE)
     position = models.OneToOneField(Position, verbose_name=_('должность/зарплата'), on_delete=models.CASCADE)
     experience = models.OneToOneField(Experience, verbose_name=_('опыт работы'), on_delete=models.CASCADE)

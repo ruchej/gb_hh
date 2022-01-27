@@ -21,12 +21,10 @@ app_name = 'resumes'
 
 urlpatterns = [
     path('', views.ResumeListView.as_view(), name='resume_list'),
-    path('detail/<int:pk>/', views.ResumeDetailView.as_view(), name='resume_detail'),
-    path('create/', views.ResumeCreateView.as_view(), name='resume_create'),
+    path('<int:pk>/', views.ResumeDetailView.as_view(), name='resume_detail'),
+    path('create/', views.resume_create, name='resume_create'),
     path('update/<int:pk>/', views.ResumeUpdateView.as_view(), name='resume_update'),
     path('delete/<int:pk>/', views.ResumeDeleteView.as_view(), name='resume_delete'),
-    path('personal-info/<int:pk>/', views.PersonalInfoDetailView.as_view(), name='personal_info_detail'),
-    path('personal-info/update/<int:pk>/', views.PersonalInfoUpdateView.as_view(), name='personal_info_update'),
     path('contacts/<int:pk>/', views.ContactsDetailView.as_view(), name='contacts_detail'),
     path('contacts/update/<int:pk>/', views.ContactsUpdateView.as_view(), name='contacts_update'),
     path('position/<int:pk>/', views.PositionDetailView.as_view(), name='position_detail'),
