@@ -1,5 +1,5 @@
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from django.utils.translation import gettext_lazy as _
 from .models import Account, UserStatus, JobSeeker, Employer
 from django.urls import reverse_lazy
@@ -11,8 +11,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView, PasswordContextMixin
-from .forms import UserRegisterForm, UserActivationRegisterForm
-from django.views.generic.edit import FormView
+from .forms import UserRegisterForm, UserActivationRegisterForm, JobSeekerFormUpdate
 
 
 class UserNotAuthMixin(UserPassesTestMixin):
@@ -104,7 +103,20 @@ class UserDetail(LoginRequiredMixin, DetailView):
             account = JobSeeker.objects.get(user=self.request.user)
         elif self.request.user.status == UserStatus.EMPLOYER:
             account = Employer.objects.get(user=self.request.user)
+        elif self.request.user.status == UserStatus.MODERATOR:
+            account = Account.objects.get(user=self.request.user)
         else:
             raise Exception('Undefined user status')
         return account
 
+
+class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = JobSeeker
+    succes_url = reverse_lazy("accounts:UserDetail")
+    success_message = _('Профиль изменен')
+    template_name = 'accounts/profile_update.html'
+    form_class = JobSeekerFormUpdate
+
+    def get_object(self, queryset=None):
+        account = JobSeeker.objects.get(user=self.request.user)
+        return account
