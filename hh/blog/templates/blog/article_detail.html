@@ -2,5 +2,24 @@
 {% load static %}
 
 {% block content %}
+    <div class="container">
+        <hr>
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="single-title">{{ post.title }}</h1>
+                <p class="lead"><i class="fa fa-user"></i> by <a href="#">{{ post.author }}</a>
+                </p>
+                <hr>
+                <p><i class="fa fa-calendar"></i> Posted on {{ post.created_at|date:'Y-m-d H:i' }}</p>
+                {% if post.image %}
+                <hr>
+                    <img src="{{ post.image }}" alt="" class="img-responsive">
+                <hr>
+                {% endif %}
+                <p class="lead">{{ post.description }}</p>
+                <br/>
+            </div>
+        </div>
 
+    </div>
 {% endblock %}

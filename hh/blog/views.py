@@ -32,5 +32,8 @@ class DeletePost(DeleteView):
     success_url = reverse_lazy('blog:news')
 
 
-def show_post(request, post_slug):
-    return HttpResponse(f"Отображение статьи с slug = {post_slug}")
+class DetailPost(DetailView):
+    model = Article
+    slug_url_kwarg = 'post_slug'
+    template_name = 'blog/article_detail.html'
+    context_object_name = 'post'
