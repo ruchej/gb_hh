@@ -6,7 +6,7 @@
             {% include 'resumes/snippets/detail/job_card.html' %}
         {% endfor %}
     {% else %}
-        Опыт работы отсутствует
+        <p>Опыт работы отсутствует</p>
     {% endif %}
 
     {% if user == resume.user %}

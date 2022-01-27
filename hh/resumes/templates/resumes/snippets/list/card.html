@@ -1,14 +1,16 @@
 <div class="single-post d-flex flex-row">
     <div class="thumb justify-content-center">
+    {% if resume.photo %}
         <img src="{{ resume.photo.url }}" style="object-fit: cover; width: 120px; height: 120px">
+    {% endif %}
     </div>
     <div class="details">
         <div class="title d-flex flex-row justify-content-between">
             <div class="titles">
                 <a href="{% url 'resumes:resume_detail' resume.id %}"><h4>
-                    {{ resume.personal_info.surname }}
-                    {{ resume.personal_info.name }}
-                    {{ resume.personal_info.patronymic }}
+                    {{ jobseeker.first_name }}
+                    {{ jobseeker.patronymic }}
+                    {{ jobseeker.last_name }}
                 </h4></a>
             </div>
             <ul class="btns">

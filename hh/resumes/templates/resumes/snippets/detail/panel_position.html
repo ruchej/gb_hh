@@ -41,6 +41,26 @@
     </div>
     <hr/>
 
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Переезд</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.position.get_relocation_display }}
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Командировки</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.position.get_business_trip_display }}
+        </div>
+    </div>
+    <hr/>
+
     {% if user == resume.user %}
         <a class="ticker-btn" href="{% url 'resumes:position_update' resume.position.id %}">
             Изменить

@@ -1,7 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import PasswordResetForm, UserCreationForm
+from django.contrib.auth.forms import PasswordResetForm, UserCreationForm, UserChangeForm
+from django.forms import DateInput
 
-from .models import Account
+from .models import Account, JobSeeker, Employer
 
 
 class UserRegisterForm(UserCreationForm):
@@ -44,3 +45,42 @@ class UserActivationRegisterForm(forms.Form):
         if commit:
             self.user.save()
         return self.user
+
+
+class AccountFormUpdate(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = (
+            'username',
+            'email',
+            'password',
+            'avatar'
+        )
+
+
+class JobSeekerFormUpdate(forms.ModelForm):
+    class Meta:
+        model = JobSeeker
+        fields = (
+            'first_name',
+            'patronymic',
+            'last_name',
+            'sex',
+            'date_birth',
+            'phone',
+            'address'
+        )
+        widgets = {
+            'date_birth': DateInput(attrs={'type': 'date'})
+        }
+
+
+class EmployerFormUpdate(forms.ModelForm):
+    class Meta:
+        model = Employer
+        fields = (
+            'name',
+            'description',
+            'phone',
+            'address'
+        )

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <p>Title: {{ object.title }}</p>
+    <p>Salary: {{ object.salary }}</p>
+    <p>Employment: {{ object.employment }}</p>
+    <p>Schedule: {{ object.schedule }}</p>
+    <p>Relocation: {{ object.relocation }}</p>
+    <p>Business trip: {{ object.business_trip }}</p>
+{% endblock %}
