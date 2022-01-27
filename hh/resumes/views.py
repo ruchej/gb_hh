@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from . import models, forms
-from accounts.models import UserStatus
+from accounts.models import UserStatus, JobSeeker
 
 
 class ResumeListView(LoginRequiredMixin, ListView):
@@ -14,6 +14,11 @@ class ResumeListView(LoginRequiredMixin, ListView):
     model = models.Resume
     extra_context = {'title': 'Мои Резюме'}
     paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ResumeListView, self).get_context_data(object_list=object_list, **kwargs)
+        context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
+        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -31,6 +36,7 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(ResumeDetailView, self).get_context_data()
         context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
+        context['jobseeker'] = JobSeeker.objects.get(user=context['resume'].user)
         return context
 
 

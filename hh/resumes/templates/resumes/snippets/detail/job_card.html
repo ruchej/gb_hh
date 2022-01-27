@@ -51,7 +51,9 @@
         {{ job.functions }}
     </div>
 </div>
-<a class="ticker-btn" href="{% url 'resumes:job_update' job.id %}">
-    Изменить
-</a>
+{% if user == resume.user %}
+    <a class="ticker-btn" href="{% url 'resumes:job_update' job.id %}">
+        Изменить
+    </a>
+{% endif %}
 <hr/>
