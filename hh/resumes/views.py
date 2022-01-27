@@ -1,41 +1,55 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from . import models, forms
+from accounts.models import UserStatus
 
 
 class ResumeListView(LoginRequiredMixin, ListView):
     """View for getting list of all resumes."""
 
     model = models.Resume
-    template_name = 'brief-list.html'
+    extra_context = {'title': 'Мои Резюме'}
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            queryset = queryset.filter(user=self.request.user)
+        return queryset
 
 
 class ResumeDetailView(LoginRequiredMixin, DetailView):
     """View for getting detail info in resume."""
 
     model = models.Resume
-    template_name = 'brief-detail.html'
+    extra_context = {'title': 'Резюме'}
+
+    def get_context_data(self, **kwargs):
+        context = super(ResumeDetailView, self).get_context_data()
+        context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
+        return context
 
 
 class ResumeCreateView(LoginRequiredMixin, CreateView):
     """View for creating resume."""
     model = models.Resume
-    template_name = 'brief-create.html'
+    form_class = forms.PersonalInfoForm
 
 
 class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     """View for updating resume."""
 
     model = models.Resume
-    template_name = 'brief-update.html'
+    form_class = forms.PersonalInfoForm
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):
     """View for deleting resume."""
 
     model = models.Resume
-    template_name = 'brief-delete.html'
+    success_url = reverse_lazy('resumes:resume_list')
 
 
 class PersonalInfoDetailView(LoginRequiredMixin, DetailView):
@@ -43,7 +57,6 @@ class PersonalInfoDetailView(LoginRequiredMixin, DetailView):
 
     model = models.PersonalInfo
     form_class = forms.PersonalInfoForm
-    template_name = 'personal-info-detail.html'
 
 
 class PersonalInfoUpdateView(LoginRequiredMixin, UpdateView):
@@ -51,7 +64,6 @@ class PersonalInfoUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.PersonalInfo
     form_class = forms.PersonalInfoForm
-    template_name = 'personal-info-update.html'
 
 
 class ContactsDetailView(LoginRequiredMixin, DetailView):
@@ -59,7 +71,6 @@ class ContactsDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Contacts
     form_class = forms.ContactsForm
-    template_name = 'contacts-detail.html'
 
 
 class ContactsUpdateView(LoginRequiredMixin, UpdateView):
@@ -67,7 +78,6 @@ class ContactsUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Contacts
     form_class = forms.ContactsForm
-    template_name = 'contacts-update.html'
 
 
 class PositionDetailView(LoginRequiredMixin, DetailView):
@@ -75,7 +85,6 @@ class PositionDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Position
     form_class = forms.PositionForm
-    template_name = 'position-detail.html'
 
 
 class PositionUpdateView(LoginRequiredMixin, UpdateView):
@@ -83,7 +92,6 @@ class PositionUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Position
     form_class = forms.PositionForm
-    template_name = 'position-update.html'
 
 
 class ExperienceDetailView(LoginRequiredMixin, DetailView):
@@ -91,7 +99,6 @@ class ExperienceDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Experience
     form_class = forms.ExperienceForm
-    template_name = 'experience-detail.html'
 
 
 class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
@@ -99,7 +106,6 @@ class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Experience
     form_class = forms.ExperienceForm
-    template_name = 'experience-update.html'
 
 
 class JobDetailView(LoginRequiredMixin, DetailView):
@@ -107,7 +113,6 @@ class JobDetailView(LoginRequiredMixin, DetailView):
 
     model = models.Job
     form_class = forms.JobForm
-    template_name = 'job-detail.html'
 
 
 class JobUpdateView(LoginRequiredMixin, UpdateView):
@@ -115,4 +120,3 @@ class JobUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Job
     form_class = forms.JobForm
-    template_name = 'job-update.html'

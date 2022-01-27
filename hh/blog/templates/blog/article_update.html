@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <form action="{% url 'blog:post_update' article.slug %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+            <div class="invalid-feedback">
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+        <br>
+        <button class="btn btn-primary" type="submit">Сохранить</button>
+    </form>
+    <br>
+    <form action="{% url 'blog:post_delete' article.slug %}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger btn-block">Удалить</button>
+    </form>
+
+{% endblock %}

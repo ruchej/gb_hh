@@ -1,7 +1,7 @@
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from django.utils.translation import gettext_lazy as _
-from .models import Account, UserStatus
+from .models import Account, UserStatus, JobSeeker, Employer
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
@@ -10,8 +10,8 @@ from django.contrib.auth.mixins import (
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView
-from .forms import UserRegisterForm, UserActivationRegisterForm
+from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView, PasswordContextMixin
+from .forms import UserRegisterForm, UserActivationRegisterForm, JobSeekerFormUpdate
 
 
 class UserNotAuthMixin(UserPassesTestMixin):
@@ -36,7 +36,7 @@ class UserAuthMixin(UserNotAuthMixin):
 class Login(SuccessMessageMixin, UserNotAuthMixin, LoginView):
     success_message = _("Вход в систему выполнен")
     extra_context = {
-        "page_title": _("Login"),
+        "title": _("Вход"),
         "header_class": "hero",
         "content_class": "tab-content",
     }
@@ -53,22 +53,15 @@ class Logout(UserAuthMixin, LogoutView):
 class UserCreate(
     UserNotAuthMixin,
     SuccessMessageMixin,
+    # PasswordResetView,
     CreateView,
-    PasswordResetView,
 ):
     model = Account
-    extra_context = {
-        "page_title": _("Форма регистрации"),
-        "header_class": "hero",
-    }
+    extra_context = {"title": _("Регистрация")}
     form_class = UserRegisterForm
-    """
-    Registration User with send email and post activation (SignUpConfirmView)
-    """
-    success_url = reverse_lazy("accounts:Login")
-    url_redirect = reverse_lazy("accounts:UserDetail")
-    template_name = "registration/registration.html"
-    email_template_name = "accounts/signup_email.html"
+    success_url = reverse_lazy("blog:news")
+    #url_redirect = reverse_lazy("accounts:UserDetail")
+    template_name = 'accounts/account_signup_form.html'
     success_message = _("Для активации аккаунта выслано письмо")
 
     def get_form_kwargs(self):
@@ -102,11 +95,28 @@ class UserDetail(LoginRequiredMixin, DetailView):
     """
 
     model = Account
-    extra_context = {
-        "page_title": _("Профиль пользователя"),
-        "header_class": "hero",
-    }
-    template_name = '../templates/user-detail.html'
+    extra_context = {"title": _("Профиль")}
+    template_name = 'accounts/detail.html'
 
     def get_object(self, *args, **kwargs):
-        return self.request.user
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            account = JobSeeker.objects.get(user=self.request.user)
+        elif self.request.user.status == UserStatus.EMPLOYER:
+            account = Employer.objects.get(user=self.request.user)
+        elif self.request.user.status == UserStatus.MODERATOR:
+            account = Account.objects.get(user=self.request.user)
+        else:
+            raise Exception('Undefined user status')
+        return account
+
+
+class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = JobSeeker
+    succes_url = reverse_lazy("accounts:UserDetail")
+    success_message = _('Профиль изменен')
+    template_name = 'accounts/profile_update.html'
+    form_class = JobSeekerFormUpdate
+
+    def get_object(self, queryset=None):
+        account = JobSeeker.objects.get(user=self.request.user)
+        return account

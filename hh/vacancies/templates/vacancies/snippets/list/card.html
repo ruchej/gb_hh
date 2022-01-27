@@ -1,0 +1,60 @@
+<div class="single-post d-flex flex-row infinite-item">
+    <div class="thumb justify-content-center">
+        <img src="http://placehold.it/119x70" alt="">
+        <ul class="tags">
+            {% if vacancy.hashtags %}
+                <li>
+                    <a href="#">{{ vacancy.hashtags }}</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="details">
+        <div class="title d-flex flex-row justify-content-between">
+            <div class="titles">
+                <a href="{% url 'vacancies:detail' vacancy.id %}">
+                    <h4>{{ vacancy.title }}</h4></a>
+                <h6>{{ vacancy.employer.first_name }}</h6>
+            </div>
+            <ul class="btns">
+                {% if user.status == 2 %}
+                    <li>
+                        <a href="{% url 'vacancies:update' vacancy.id %}">Редактировать</a>
+                    </li>
+                    <li><a href="{% url 'vacancies:delete' vacancy.id %}">Удалить</a>
+                    </li>
+                {% else %}
+                    <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
+                    <li>
+                        <form action="#"
+                              id="responseForm" method="post">
+                            {% csrf_token %}
+                            <a href="#" type="submit"
+                               onclick="document.getElementById('responseForm').submit();">
+                                Подать заявку
+                            </a>
+                        </form>
+                    </li>
+                    {# <li><a href="{% url 'recruiting:response_create' vacancy.id %}">Подать заявку</a></li>#}
+                {% endif %}
+            </ul>
+        </div>
+        <p>
+            {% if vacancy.description %}
+                {{ vacancy.description }}
+            {% else %}
+                Нет описания
+            {% endif %}
+        </p>
+        <h5>Опыт работы: {{ vacancy.get_experience_display }}</h5>
+        {% if vacancy.employment_type %}
+            <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
+        {% endif %}
+        {% if vacancy.employer.adress %}
+            <p class="address"><span
+                    class="lnr lnr-map"></span> {{ vacancy.employer.adress }}</p>
+        {% endif %}
+        <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}
+        </p>
+    </div>
+</div>

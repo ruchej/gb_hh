@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+    <section class="post-area section-gap">
+        <div class="container">
+            <form method="post" action="{% url 'resumes:resume_create' %}">
+                {% csrf_token %}
+                {{ form.name|as_crispy_field }}
+                {{ form.patronymic|as_crispy_field }}
+                {{ form.surname|as_crispy_field }}
+                {{ form.birthday|as_crispy_field }}
+                {{ form.gender|as_crispy_field }}
+                {{ form.location|as_crispy_field }}
+                {{ form.relocation|as_crispy_field }}
+                {{ form.business_trip|as_crispy_field }}
+                <button type="submit" class="btn btn-primary">Создать</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

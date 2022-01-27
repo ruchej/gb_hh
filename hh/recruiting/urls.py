@@ -20,10 +20,10 @@ from . import views
 app_name = 'recruiting'
 
 urlpatterns = [
-    path('response-list/', views.ResponseListView.as_view(), name='response_list'),
-    path('response-create/<int:pk>/', views.ResponseCreateView.as_view(), name='response_create'),
-    path('response-delete/<int:pk>/', views.ResponseDeleteView.as_view(), name='response_delete'),
-    path('offer-list/', views.OfferListView.as_view(), name='offer_list'),
-    path('offer-create/<int:pk>/', views.OfferCreateView.as_view(), name='offer_create'),
-    path('offer-delete/<int:pk>/', views.OfferDeleteView.as_view(), name='offer_delete'),
+    path('responses/', views.ResponseListView.as_view(), name='response_list'),
+    path('responses/create/<int:r_pk>/<int:v_pk>/', views.ResponseCreateView.as_view(), name='response_create'),
+    path('responses/delete/<int:pk>/', views.ResponseDeleteView.as_view(), name='response_delete'),
+    path('offers/', views.OfferListView.as_view(), name='offer_list'),
+    path('offers/create/<int:v_pk>/<int:r_pk>/', views.OfferCreateView.as_view(), name='offer_create'),
+    path('offers/delete/<int:pk>/', views.OfferDeleteView.as_view(), name='offer_delete'),
 ]

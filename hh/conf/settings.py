@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     # custom
     'conf',
     'accounts.apps.AccountsConfig',
-    'blog',
+    'blog.apps.BlogConfig',
     'resumes.apps.ResumesConfig',
     'vacancies.apps.VacanciesConfig',
     'recruiting.apps.RecruitingConfig',
@@ -128,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATIC_URL = "/static/"
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'templates'),
 )
 
 # Media files
@@ -217,8 +217,15 @@ LOGGING = {
 }
 
 
-LOGIN_REDIRECT_URL = 'index'
-LOGIN_URL = 'index'
-LOGOUT_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+USE_I18N = True
+USE_L10N = False
+
+LANGUAGE_CODE = 'ru-RU'
+
+DATE_FORMAT = 'd E Y'

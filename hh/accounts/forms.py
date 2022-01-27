@@ -1,16 +1,14 @@
 from django import forms
-from django.contrib.auth.forms import PasswordResetForm, UserCreationForm
+from django.contrib.auth.forms import PasswordResetForm, UserCreationForm, UserChangeForm
 
-from .models import Account
+from .models import Account, JobSeeker
 
 
-class UserRegisterForm(UserCreationForm, PasswordResetForm):
+class UserRegisterForm(UserCreationForm):
     class Meta:
         model = Account
         fields = (
             "username",
-            "first_name",
-            "last_name",
             "email",
             "password1",
             "password2",
@@ -30,7 +28,6 @@ class UserRegisterForm(UserCreationForm, PasswordResetForm):
         if not user.id:
             user.active = False
             user = super().save()
-            PasswordResetForm.save(self, **kwargs)
         return user
 
 
@@ -47,3 +44,20 @@ class UserActivationRegisterForm(forms.Form):
         if commit:
             self.user.save()
         return self.user
+
+
+class JobSeekerFormUpdate(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user'].disabled = True
+    class Meta:
+        model = JobSeeker
+        fields = (
+            'user',
+            'first_name',
+            'last_name',
+            'patronymic',
+            'sex',
+            'date_birth',
+        )

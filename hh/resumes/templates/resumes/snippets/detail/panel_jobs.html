@@ -1,0 +1,18 @@
+<div class="tab-pane fade" id="jobs" role="tabpanel"
+     aria-labelledby="jobs-tab">
+    {% if jobs %}
+        {% for job in jobs %}
+            <h4 class="mb-5">{{ job.position }} в {{ job.organization }}:</h4>
+            {% include 'resumes/snippets/detail/job_card.html' %}
+        {% endfor %}
+    {% else %}
+        Опыт работы отсутствует
+    {% endif %}
+
+    {% if user == resume.user %}
+        <a class="ticker-btn" href="#">
+            Добавить
+        </a>
+    {% endif %}
+
+</div>

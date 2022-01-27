@@ -1,0 +1,50 @@
+<div class="tab-pane fade" id="position" role="tabpanel"
+     aria-labelledby="position-tab">
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Должность</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.position.title }}
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Зарплата</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.position.salary }}
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Занятость</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.position.employment }}
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">График</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ resume.position.schedule }}
+        </div>
+    </div>
+    <hr/>
+
+    {% if user == resume.user %}
+        <a class="ticker-btn" href="{% url 'resumes:position_update' resume.position.id %}">
+            Изменить
+        </a>
+    {% endif %}
+
+</div>
