@@ -1,4 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -32,17 +34,40 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ResumeCreateView(LoginRequiredMixin, CreateView):
-    """View for creating resume."""
-    model = models.Resume
-    # form_class = forms.PersonalInfoForm
-
+@login_required
+def resume_create(request):
+    if request.method == 'POST':
+        resume_form = forms.ResumeForm(request.POST)
+        contacts_form = forms.ContactsForm(request.POST)
+        position_form = forms.PositionForm(request.POST)
+        experience_form = forms.ExperienceForm(request.POST)
+        job_form = forms.JobForm(request.POST)
+        view_forms = (resume_form, contacts_form, position_form, experience_form, job_form)
+        if all([item.is_valid() for item in view_forms]):
+            resume_form.form.save(commit=False)
+            resume_form.user = request.user
+            for item in view_forms[1:]:
+                item.save()
+        return render(request, 'resumes/resume_create.html')
+    else:
+        resume_form = forms.ResumeForm()
+        contacts_form = forms.ContactsForm()
+        position_form = forms.PositionForm()
+        experience_form = forms.ExperienceForm()
+        job_form = forms.JobForm()
+    return render(request, 'resumes/resume_create.html', {
+        'resume_form': resume_form,
+        'contacts_form': contacts_form,
+        'position_form': position_form,
+        'experience_form': experience_form,
+        'job_form': job_form,
+    })
 
 class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     """View for updating resume."""
 
     model = models.Resume
-    # form_class = forms.PersonalInfoForm
+    form_class = forms.ResumeForm
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):

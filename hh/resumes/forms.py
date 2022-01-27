@@ -3,6 +3,14 @@ from django import forms
 from . import models
 
 
+class ResumeForm(forms.ModelForm):
+    """Form for processing information about resume."""
+
+    class Meta:
+        model = models.Resume
+        fields = ('title', 'photo')
+
+
 class ContactsForm(forms.ModelForm):
     """Form for processing information about contacts in resume."""
 
