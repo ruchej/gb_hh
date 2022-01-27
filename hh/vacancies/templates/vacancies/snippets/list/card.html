@@ -16,7 +16,7 @@
             <div class="titles">
                 <a href="{% url 'vacancies:detail' vacancy.id %}">
                     <h4>{{ vacancy.title }}</h4></a>
-                <h6>{{ vacancy.employer.first_name }}</h6>
+                <h6>{{ vacancy.employer.name }}</h6>
             </div>
             <ul class="btns">
                 {% if user.status == 2 %}
