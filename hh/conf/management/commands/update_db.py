@@ -29,10 +29,10 @@ class Command(BaseCommand):
 
     @staticmethod
     def create_resumes():
-        for _ in range(random.randint(10, 100)):
-            mixer.blend(resumes_models.Resume)
         employee = User.objects.get(username='employee')
         mixer.blend(resumes_models.Resume, user=employee)
+        for _ in range(random.randint(10, 100)):
+            mixer.blend(resumes_models.Resume)
 
     @staticmethod
     def create_jobs():
