@@ -1,9 +1,10 @@
-<div class="tab-pane fade" id="jobs" role="tabpanel"
-     aria-labelledby="jobs-tab">
+<section>
     {% if jobs %}
         {% for job in jobs %}
-            <h4 class="mb-5">{{ job.position }} в {{ job.organization }}:</h4>
-            {% include 'resumes/snippets/detail/job_card.html' %}
+            <h3 class="mt-10 mb-3">{{ job.position }} в {{ job.organization }}:</h3>
+            <div class="pb-30">
+                {% include 'resumes/snippets/detail/job_card.html' %}
+            </div>
         {% endfor %}
     {% else %}
         <p>Опыт работы отсутствует</p>
@@ -14,5 +15,4 @@
             Добавить
         </a>
     {% endif %}
-
-</div>
+</section>

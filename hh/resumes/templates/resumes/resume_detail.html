@@ -5,26 +5,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
-
-                        <div class="card-body">
-                            {% include 'resumes/snippets/detail/card.html' %}
-
-                            <div class="row">
-                                <div class="col-12">
-                                    {% include 'resumes/snippets/detail/navigation.html' %}
-                                    <div class="tab-content ml-1" id="myTabContent">
-                                        {% include 'resumes/snippets/detail/panel_personal_data.html' %}
-                                        {% include 'resumes/snippets/detail/panel_contacts.html' %}
-                                        {% include 'resumes/snippets/detail/panel_experience.html' %}
-                                        {% include 'resumes/snippets/detail/panel_con_services.html' %}
-                                        {% include 'resumes/snippets/detail/panel_jobs.html' %}
-                                        {% include 'resumes/snippets/detail/panel_position.html' %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% include 'resumes/snippets/detail/card.html' %}
+                    <h1 class="pt-30 pb-20">Ищет</h1>
+                    {% include 'resumes/snippets/detail/panel_position.html' %}
+                    <h1 class="pt-30 pb-20">Опыт работы</h1>
+                    {% include 'resumes/snippets/detail/panel_jobs.html' %}
+                    <h1 class="pt-30 pb-20">Дополнительно</h1>
+                    {% include 'resumes/snippets/detail/panel_experience.html' %}
                 </div>
             </div>
         </div>
