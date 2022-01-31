@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Article
@@ -10,6 +9,9 @@ class NewsList(ListView):
     context_object_name = 'news_list'
     extra_context = {'title': 'Новости'}
     paginate_by = 3
+
+    def get_queryset(self):
+        return Article.objects.filter(is_active=True)
 
 
 class CreatePost(CreateView):

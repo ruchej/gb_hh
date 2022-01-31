@@ -5,7 +5,9 @@
         </h1>
     </a>
     {% if news.image %}
-        <img class="img-fluid post-image" src="{{ news.image.url }}" alt="">
+        <div class="text-center">
+            <img class="img-fluid post-image " src="{{ news.image.url }}" alt="">
+        </div>
     {% endif %}
     <p class="author">{{ news.author }}, {{ news.created_at|date:"d M Y в H:i" }}</p>
 
