@@ -6,27 +6,38 @@
             </div>
             <nav id="nav-menu-container">
                 <ul class="nav-menu">
-                    <li><a href="{% url 'blog:news' %}">Новости</a></li>
+                    <li {% if request.resolver_match.view_name == 'blog:news' %} class="active" {% endif %}><a
+                            href="{% url 'blog:news' %}">Новости</a></li>
                     {% if user.username %}
-                        <li><a href="{% url 'resumes:resume_list' %}">Резюме</a></li>
+                        <li {% if request.resolver_match.view_name == 'resumes:resume_list' %}class="active"{% endif %}>
+                            <a
+                                    href="{% url 'resumes:resume_list' %}">Резюме</a></li>
                         {% if user.status == 2 %}
-                            <li><a href="{% url 'recruiting:response_list' %}">Отклики</a></li>
+                            <li {% if request.resolver_match.view_name == 'recruiting:response_list' %}class="active"{% endif %}>
+                                <a
+                                        href="{% url 'recruiting:response_list' %}">Отклики</a></li>
                         {% endif %}
-                        <li><a href="{% url 'vacancies:vacancy_list' %}">Вакансии</a></li>
+                        <li {% if request.resolver_match.view_name == 'vacancies:vacancy_list' %}class="active"{% endif %}>
+                            <a
+                                    href="{% url 'vacancies:vacancy_list' %}">Вакансии</a></li>
                     {% else %}
-                        <li><a href="{% url 'vacancies:vacancy_list' %}" data-toggle="modal" data-target="#modal"
-                               data-toolti>
-                            Вакансии
-                        </a></li>
+                        <li {% if request.resolver_match.view_name == 'vacancies:vacancy_list' %}class="active"{% endif %}>
+                            <a
+                                    href="{% url 'vacancies:vacancy_list' %}" data-toggle="modal" data-target="#modal"
+                                    data-toolti>
+                                Вакансии
+                            </a></li>
                     {% endif %}
-                    <li><a href="#">О нас</a></li>
-                    <li>
+                    <li {% if request.resolver_match.view_name == 'about_us' %}class="active"{% endif %}><a href="#">О
+                        нас</a>
+                    </li>
+                    <li {% if request.resolver_match.view_name == 'rules' %}class="active"{% endif %}>
                         <a href="{% url 'rules' %}">Правила</a>
                     </li>
                     {% if user.username %}
-                        <li><a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
-                            {{ user.username }}
-                        </a></li>
+                        <li {% if request.resolver_match.view_name == 'accounts:UserDetail' %}class="active"{% endif %}><a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
+                        {{ user.username }}
+                    </a></li>
                         <li><a class="ticker-btn" href="{% url 'accounts:Logout' %}?next={{ request.path|urlencode }}">
                             Выйти
                         </a></li>
