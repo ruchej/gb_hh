@@ -12,3 +12,7 @@
         </div>
     </section>
 {% endblock %}
+{% block js %}
+    {{ block.super }}
+    {% include 'snippets/pagination.html' %}
+{% endblock %}

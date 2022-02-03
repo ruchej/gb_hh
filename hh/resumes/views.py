@@ -2,21 +2,23 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from el_pagination.views import AjaxListView
 
 from . import models, forms
 from accounts.models import UserStatus, JobSeeker
 
 
-class ResumeListView(LoginRequiredMixin, ListView):
+class ResumeListView(LoginRequiredMixin, AjaxListView):
     """View for getting list of all resumes."""
 
     model = models.Resume
-    extra_context = {'title': 'Мои Резюме'}
-    paginate_by = 10
+    page_templates = ['resumes/snippets/list/employee_card.html',
+                      'resumes/snippets/list/employer_card.html']
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResumeListView, self).get_context_data(object_list=object_list, **kwargs)
+        context.update({'title': 'Мои Резюме'})
         if self.request.user.status == UserStatus.JOBSEEKER:
             context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
         else:
@@ -32,6 +34,11 @@ class ResumeListView(LoginRequiredMixin, ListView):
         if self.request.user.status == UserStatus.JOBSEEKER:
             queryset = queryset.filter(user=self.request.user)
         return queryset
+
+    def get_page_template(self, **kwargs):
+        self.page_template = self.page_templates[0] if self.request.user.status == UserStatus.JOBSEEKER else \
+            self.page_templates[1]
+        return self.page_template
 
 
 class ResumeDetailView(LoginRequiredMixin, DetailView):
@@ -75,6 +82,7 @@ def resume_create(request):
         'experience_form': experience_form,
         'job_form': job_form,
     })
+
 
 class ResumeUpdateView(LoginRequiredMixin, UpdateView):
     """View for updating resume."""
