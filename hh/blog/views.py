@@ -1,14 +1,21 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+
+from el_pagination.views import AjaxListView
+
 from .models import Article
 from .forms import ArticleCreateForm
 
 
-class NewsList(ListView):
+class NewsList(AjaxListView):
     model = Article
     context_object_name = 'news_list'
-    extra_context = {'title': 'Новости'}
-    paginate_by = 3
+    page_template = 'blog/snippets/list/cards.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(NewsList, self).get_context_data(**kwargs)
+        context.update({'title': 'Новости'})
+        return context
 
     def get_queryset(self):
         return Article.objects.filter(is_active=True)

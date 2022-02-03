@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block content %}
     <section class="blog-posts-area section-gap">
@@ -7,9 +6,7 @@
             <div class="row">
 
                 <div class="col-lg-8 post-list blog-post-list infinite-container">
-                    {% for news in news_list %}
-                        {% include 'blog/snippets/list/card.html' %}
-                    {% endfor %}
+                    {% include page_template %}
                 </div>
 
                 <div class="col-lg-4 sidebar">
@@ -19,4 +16,8 @@
             </div>
         </div>
     </section>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    {% include 'snippets/pagination.html' %}
 {% endblock %}
