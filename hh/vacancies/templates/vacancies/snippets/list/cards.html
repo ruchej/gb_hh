@@ -1,0 +1,90 @@
+{% load el_pagination_tags %}
+
+{% if employers_vac_list %}
+    {% lazy_paginate employers_vac_list %}
+    {% for employer, vacancy in employers_vac_list %}
+        {% if user.status == 2 %}
+            <div class="justify-content-start d-flex flex-row">
+                <div class="default-select" id="default-select">
+                    <select>
+                        {% if vacancy.status != 'WTG' %}
+                            <option>{{ vacancy.get_status_display }}</option>
+                            {% if vacancy.status == 'DF' %}
+                                <option>Опубликовать</option>
+                                <option>Удалить</option>
+                            {% elif vacancy.status == 'PBL' %}
+                                <option>Архивировать</option>
+                            {% endif %}
+                        {% endif %}
+                    </select>
+                </div>
+                <a href="{% url 'vacancies:update' vacancy.id %}"
+                   class="genric-btn default radius" style="filter: brightness(98%)">
+                    Редактировать
+                </a>
+            </div>
+        {% endif %}
+        <div class="single-post d-flex flex-row infinite-item">
+            <div class="thumb justify-content-center">
+                <img src="{{ vacancy.employer.user.avatar }}" alt=""
+                     class="vacancy-image">
+                <img src="http://placehold.it/119x70" alt="">
+                <ul class="tags">
+                    {% if vacancy.hashtags %}
+                        <li>
+                            <a href="#">{{ vacancy.hashtags }}</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="details">
+                <div class="title d-flex flex-row justify-content-between">
+                    <div class="titles">
+                        <a href="{% url 'vacancies:detail' vacancy.id %}">
+                            <h4>{{ vacancy.title }}</h4></a>
+                        <h6>{{ employer.name }}</h6>
+                    </div>
+                    <ul class="btns">
+                        {% if user.status == 1 %}
+                            <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
+                            <li>
+                                <form action="#"
+                                      id="responseForm" method="post">
+                                    {% csrf_token %}
+                                    <a href="#" type="submit"
+                                       onclick="document.getElementById('responseForm').submit();">
+                                        Подать заявку
+                                    </a>
+                                </form>
+                            </li>
+                            {#                         <li><a href="{% url 'recruiting:response_create' vacancy.id %}">Подать заявку</a></li>#}
+                        {% endif %}
+                    </ul>
+                </div>
+                <p>
+                    {% if vacancy.description %}
+                        {{ vacancy.description }}
+                    {% else %}
+                        Нет описания
+                    {% endif %}
+                </p>
+                <h5>Опыт работы: {{ vacancy.get_experience_display }}</h5>
+                {% if vacancy.employment_type %}
+                    <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
+                {% endif %}
+                {% if employer.city %}
+                    <p class="address">
+                        <span class="lnr lnr-map"></span> {{ employer.city.name }}
+                    </p>
+                {% endif %}
+                <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+    {% show_more %}
+{% else %}
+    <p style="text-align: center; font-size: large;" class="mt-10">
+        Ничего не найдено :(
+    </p>
+{% endif %}
