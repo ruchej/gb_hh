@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from cities_light.models import Country
+from cities_light.models import City
+from smart_selects.db_fields import ChainedForeignKey
 
 
 class UserStatus(models.IntegerChoices):
@@ -112,7 +115,7 @@ class Employer(models.Model):
     """Работодатель"""
 
     user = models.OneToOneField(
-        Account, related_name="employer", on_delete=models.PROTECT, verbose_name=_("Работодатель")
+        Account, related_name="employer", on_delete=models.CASCADE, verbose_name=_("Работодатель")
     )
     name = models.CharField(
         blank=True, null=True, max_length=50, verbose_name=_("название компании"))
@@ -120,6 +123,10 @@ class Employer(models.Model):
         blank=True, null=True, verbose_name=_("Описание"))
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("телефон"))
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True,
+                                verbose_name=_("страна"))
+    city = ChainedForeignKey(City, chained_field="country", chained_model_field="country",
+                             null=True, blank=True, verbose_name=_("город"))
     address = models.TextField(blank=True, verbose_name=_("штаб квартира"))
     objects = EmployerManager()
 
