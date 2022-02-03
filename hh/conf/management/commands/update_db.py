@@ -2,6 +2,8 @@ import random
 
 from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
+from cities_light.models import Country
+from cities_light.models import City
 
 from accounts.models import UserStatus, Employer, JobSeeker
 from resumes import models as resumes_models
@@ -11,6 +13,11 @@ from recruiting import models as recruiting_models
 from mixer.backend.django import mixer
 
 User = get_user_model()
+
+russia = Country.objects.get(name='Russia')
+moscow = City.objects.get(name='Moscow')
+st_peter = City.objects.get(name='Saint Petersburg')
+chelyabinsk = City.objects.get(name='Chelyabinsk')
 
 
 class Command(BaseCommand):
@@ -25,7 +32,10 @@ class Command(BaseCommand):
                                                      status=UserStatus.EMPLOYER)
             Employer.objects.get(user=employer).delete()
             mixer.blend(Employer, user=employer, name='Google', description=mixer.RANDOM,
-                        phone=mixer.RANDOM, address=mixer.RANDOM)
+                        phone=mixer.RANDOM, country=russia, city=moscow)
+            mixer.blend(vacancies_models.Vacancy, employer=employer,
+                        title='Python Developer', description='Разработчик на питоне (Django)',
+                        hashtags='Python, Django', salary='500000')
         else:
             employer = User.objects.get(username='employer')
 
@@ -52,7 +62,8 @@ class Command(BaseCommand):
             elif user.status == UserStatus.EMPLOYER:
                 Employer.objects.get(user=user).delete()
                 mixer.blend(Employer, user=user, name=mixer.RANDOM, description=mixer.RANDOM,
-                            phone=mixer.RANDOM, address=mixer.RANDOM)
+                            phone=mixer.RANDOM, country=russia,
+                            city=random.choice([moscow, st_peter, chelyabinsk]))
 
     @staticmethod
     def create_resumes():
@@ -89,9 +100,14 @@ class Command(BaseCommand):
 
     @staticmethod
     def clear_db():
-        User.objects.all().delete()
+        recruiting_models.Offer.objects.all().delete()
+        recruiting_models.Response.objects.all().delete()
         resumes_models.Resume.objects.all().delete()
         vacancies_models.Vacancy.objects.all().delete()
+        Employer.objects.all().delete()
+        JobSeeker.objects.all().delete()
+        User.objects.all().delete()
+        blog_models.Article.objects.all().delete()
 
     def add_arguments(self, parser):
         parser.add_argument(
