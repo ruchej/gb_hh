@@ -41,6 +41,9 @@ INSTALLED_APPS = [
 
     # installed
     'crispy_forms',
+    'cities_light',
+    'smart_selects',
+    'el_pagination',
 
     # custom
     'conf',
@@ -74,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',  # For EL-pagination
             ],
         },
     },
@@ -230,3 +234,7 @@ USE_L10N = False
 LANGUAGE_CODE = 'ru-RU'
 
 DATE_FORMAT = 'd E Y'
+
+CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru', 'en']
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['RU']
+CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC', 'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT',]
