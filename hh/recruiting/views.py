@@ -1,8 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView
+from django.shortcuts import redirect
+from django.views.generic import ListView, CreateView, TemplateView
 
 from . import models
-from accounts.models import JobSeeker
+from accounts.models import JobSeeker, Employer, UserStatus
+from resumes.models import Resume
+from vacancies.models import Vacancy
 
 
 class ResponseListView(LoginRequiredMixin, ListView):
@@ -23,11 +26,38 @@ class ResponseListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return super().get_queryset().filter(vacancy__employer=self.request.user)
 
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            return redirect('blog:news')
+        return super(ResponseListView, self).render_to_response(context, **response_kwargs)
 
-class ResponseCreateView(LoginRequiredMixin, CreateView):
+
+class ResponseCreateView(LoginRequiredMixin, TemplateView):
     """View for creating response for job."""
-
+    template_name = 'recruiting/response_create.html'
     model = models.Response
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(ResponseCreateView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ResponseCreateView, self).get_context_data(object_list=object_list, **kwargs)
+        context['vacancy'] = Vacancy.objects.get(id=context['v_pk'])
+        context['employer'] = Employer.objects.get(user=context['vacancy'].employer)
+        context['resumes'] = Resume.objects.filter(user=self.request.user)
+        context['title'] = f'Подача резюме в {context["employer"].name}'
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        if models.Response.objects.filter(resume__user=self.request.user, vacancy=context['vacancy']).exists():
+            return redirect('vacancies:vacancy_list')
+        if 'v_pk' in context and 'r_pk' in context:
+            resume = Resume.objects.get(id=context['r_pk'])
+            if not models.Response.objects.filter(resume=resume, vacancy=context['vacancy']).exists() and \
+                    resume.user == self.request.user:
+                models.Response.objects.create(resume=resume, vacancy=context['vacancy'])
+            return redirect('vacancies:vacancy_list')
+        return super(ResponseCreateView, self).render_to_response(context, **response_kwargs)
 
 
 class ResponseDeleteView(LoginRequiredMixin, CreateView):
@@ -40,6 +70,10 @@ class OfferListView(LoginRequiredMixin, ListView):
     """View for getting list of offers."""
 
     model = models.Offer
+
+
+def offer_create(v_pk, r_pk=None):
+    models.Offer.objects.create(resume__id=r_pk, vacancy__id=v_pk)
 
 
 class OfferCreateView(LoginRequiredMixin, CreateView):

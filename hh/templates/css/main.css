@@ -6,6 +6,16 @@
 /* =================================== */
 /*  Basic Style 
 /* =================================== */
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 ::-moz-selection {
   /* Code for Firefox */
   background-color: #49e4fa;
@@ -2617,6 +2627,14 @@ body.mobile-nav-active #mobile-nav-toggle {
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
   transition: all 0.3s ease 0s;
+}
+
+.post-list .single-post .btns .btns-success {
+  background-color: #49e4fa;
+}
+
+.post-list .single-post .btns .btns-success a {
+  color: #fff;
 }
 
 .post-list .single-post .btns li i, .post-list .single-post .btns li a, .dropdown-status {

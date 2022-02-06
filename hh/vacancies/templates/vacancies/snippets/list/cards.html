@@ -2,7 +2,7 @@
 
 {% if employers_vac_list %}
     {% lazy_paginate employers_vac_list %}
-    {% for employer, vacancy in employers_vac_list %}
+    {% for employer, vacancy, response_sent in employers_vac_list %}
         {% if user.status == 2 %}
             <div class="justify-content-start d-flex flex-row">
                 <div class="default-select" id="default-select">
@@ -47,17 +47,11 @@
                     <ul class="btns">
                         {% if user.status == 1 %}
                             <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
-                            <li>
-                                <form action="#"
-                                      id="responseForm" method="post">
-                                    {% csrf_token %}
-                                    <a href="#" type="submit"
-                                       onclick="document.getElementById('responseForm').submit();">
-                                        Подать заявку
-                                    </a>
-                                </form>
-                            </li>
-                            {#                         <li><a href="{% url 'recruiting:response_create' vacancy.id %}">Подать заявку</a></li>#}
+                            {% if response_sent %}
+                                <li class="btns-success"><a class="noselect">Заявка подана</a></li>
+                            {% else %}
+                                <li><a href="{% url 'recruiting:response_create' vacancy.id %}">Подать заявку</a></li>
+                            {% endif %}
                         {% endif %}
                     </ul>
                 </div>

@@ -21,7 +21,8 @@ app_name = 'recruiting'
 
 urlpatterns = [
     path('responses/', views.ResponseListView.as_view(), name='response_list'),
-    path('responses/create/<int:r_pk>/<int:v_pk>/', views.ResponseCreateView.as_view(), name='response_create'),
+    path('responses/create/<int:v_pk>/', views.ResponseCreateView.as_view(), name='response_create'),
+    path('responses/create/<int:r_pk>/<int:v_pk>/', views.ResponseCreateView.as_view(), name='response_create_submit'),
     path('responses/delete/<int:pk>/', views.ResponseDeleteView.as_view(), name='response_delete'),
     path('offers/', views.OfferListView.as_view(), name='offer_list'),
     path('offers/create/<int:v_pk>/<int:r_pk>/', views.OfferCreateView.as_view(), name='offer_create'),
