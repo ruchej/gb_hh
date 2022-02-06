@@ -5,7 +5,7 @@
             <div class="container">
                 <div class="row justify-content-sm-center d-flex ">
                     <div class="col-lg-8 post-list">
-                        {% for jobseeker, response in jobseekers_resp_list %}
+                        {% for jobseeker, response, is_new in jobseekers_resp_list %}
                             {% include 'recruiting/snippets/response/list/card.html' %}
                         {% endfor %}
                     </div>

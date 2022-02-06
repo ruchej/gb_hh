@@ -44,6 +44,11 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
         context = super(ResumeDetailView, self).get_context_data()
         context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
         context['jobseeker'] = JobSeeker.objects.get(user=context['resume'].user)
+        if self.request.user.status == UserStatus.EMPLOYER:
+            notifs = [notif for notif in self.request.user.notifications.unread()]
+            notifs_resumes = [notif.target for notif in notifs]
+            if (resume := context['object']) in notifs_resumes:
+                notifs[notifs_resumes.index(resume)].mark_as_read()
         return context
 
 

@@ -1,11 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, TemplateView
+from notifications.signals import notify
 
 from . import models
 from accounts.models import JobSeeker, Employer, UserStatus
 from resumes.models import Resume
 from vacancies.models import Vacancy
+
+NEW_RESUME_NOTIF = 'New resume'
 
 
 class ResponseListView(LoginRequiredMixin, ListView):
@@ -18,9 +21,15 @@ class ResponseListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResponseListView, self).get_context_data(object_list=object_list, **kwargs)
         jobseekers = []
+        new_resumes = []
+        for notif in self.request.user.notifications.unread():
+            if notif.verb == NEW_RESUME_NOTIF:
+                new_resumes.append(notif.target)
+        is_new = []
         for response in context['response_list']:
+            is_new.append(True if response.resume in new_resumes else False)
             jobseekers.append(JobSeeker.objects.get(user=response.resume.user))
-        context['jobseekers_resp_list'] = list(zip(jobseekers, context['response_list']))
+        context['jobseekers_resp_list'] = list(zip(jobseekers, context['response_list'], is_new))
         return context
 
     def get_queryset(self):
@@ -55,6 +64,8 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
             resume = Resume.objects.get(id=context['r_pk'])
             if not models.Response.objects.filter(resume=resume, vacancy=context['vacancy']).exists() and \
                     resume.user == self.request.user:
+                notify.send(self.request.user, recipient=context['vacancy'].employer,
+                            verb=NEW_RESUME_NOTIF, target=resume)
                 models.Response.objects.create(resume=resume, vacancy=context['vacancy'])
             return redirect('vacancies:vacancy_list')
         return super(ResponseCreateView, self).render_to_response(context, **response_kwargs)

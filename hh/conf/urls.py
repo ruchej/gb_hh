@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+import notifications.urls
 
 from . import views
 
@@ -36,6 +37,7 @@ urlpatterns = [
          TemplateView.as_view(template_name='rules.html',
                               extra_context={'title': 'Правила портала'}),
          name='rules'),
+    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
 if settings.DEBUG:

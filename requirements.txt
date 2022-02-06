@@ -3,6 +3,7 @@ Django==3.2.10
 django-cities-light==3.9.0
 django-crispy-forms==1.13.0
 django-el-pagination==3.3.0
+django-notifications-hq==1.6.0
 django-smart-selects==1.5.9
 environs==9.3.5
 Faker==11.3.0
