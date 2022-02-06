@@ -1,3 +1,9 @@
+function reloadSelect() {
+    if (document.getElementById("default-select")) {
+        $('select').niceSelect();
+    }
+}
+
 function cityAjax(event) {
     let link = event.target.href ?? event.target.parentNode.href;
     let data = $('.vacancy-search-input').serialize() ?? {};
@@ -8,6 +14,7 @@ function cityAjax(event) {
         success: (data) => {
             if (data.hasOwnProperty('result')) {
                 $('.vacancies-ajax').html(data.result);
+                reloadSelect();
                 $.endlessPaginate({paginateOnScroll: true})
             }
         },
@@ -26,6 +33,7 @@ function searchAjax(link) {
         success: (data) => {
             if (data.hasOwnProperty('result')) {
                 $('.vacancies-ajax').html(data.result);
+                reloadSelect();
                 $.endlessPaginate({paginateOnScroll: true})
             }
         },
