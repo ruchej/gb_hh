@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import PasswordResetForm, UserCreationForm, UserChangeForm
 from django.forms import DateInput
+from cities_light.models import Country, City
+import floppyforms
 
 from .models import Account, JobSeeker, Employer
 
@@ -82,5 +84,15 @@ class EmployerFormUpdate(forms.ModelForm):
             'name',
             'description',
             'phone',
+            'country',
+            'city',
             'address'
         )
+        widgets = {
+            'country': floppyforms.widgets.Input(
+                datalist=Country.objects.all
+            ),
+            'city': floppyforms.widgets.Input(
+                datalist=City.objects.all
+            )
+        }

@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'cities_light',
     'smart_selects',
     'el_pagination',
+    'notifications',
+    'floppyforms',
 
     # custom
     'conf',
