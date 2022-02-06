@@ -1,8 +1,6 @@
 {% if object_list %}
     <div class="col-lg-8 post-list">
-        {% for resume in object_list %}
-            {% include 'resumes/snippets/list/employee_card.html' %}
-        {% endfor %}
+        {% include page_template %}
     </div>
 
     <div class="col-lg-4 sidebar">
