@@ -1,3 +1,10 @@
+{% if is_new %}
+    <div class="justify-content-end d-flex flex-row" style="pointer-events: none;">
+        <a class="genric-btn info noselect">
+            Новое
+        </a>
+    </div>
+{% endif %}
 <div class="single-post d-flex flex-row">
     <div class="thumb justify-content-center">
         <img src="{{ response.resume.photo.url }}" style="object-fit: cover; width: 120px; height: 120px">
@@ -13,7 +20,7 @@
             </div>
             <ul class="btns">
                 <li><a href="{% url 'recruiting:offer_create' response.vacancy.id response.resume.id %}">
-                    Одобрить
+                    Откликнуться
                 </a></li>
             </ul>
             <ul class="btns">

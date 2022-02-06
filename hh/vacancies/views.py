@@ -13,6 +13,7 @@ from el_pagination.views import AjaxListView
 from .forms import VacancyForm
 from .models import Vacancy
 from accounts.models import UserStatus, Employer
+from recruiting.models import Response
 
 
 class VacancyList(LoginRequiredMixin, AjaxListView):
@@ -25,7 +26,13 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         context.update({'title': 'Вакансии'})
         vacancies = self.filter(context, object_list)
         # Get employers and link them to vacancies
-        context['employers_vac_list'] = [[Employer.objects.get(user=vac.employer), vac] for vac in vacancies]
+        context['employers_vac_list'] = []
+        for vacancy in vacancies:
+            resume_sent = False
+            if self.request.user.status == UserStatus.JOBSEEKER and \
+                    Response.objects.filter(vacancy=vacancy, resume__user=self.request.user).exists():
+                resume_sent = True
+            context['employers_vac_list'].append([Employer.objects.get(user=vacancy.employer), vacancy, resume_sent])
 
         return context
 

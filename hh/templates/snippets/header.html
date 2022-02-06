@@ -1,3 +1,5 @@
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
 <header id="header">
     <div class="container">
         <div class="row align-items-center justify-content-between d-flex">
@@ -14,8 +16,10 @@
                                     href="{% url 'resumes:resume_list' %}">Резюме</a></li>
                         {% if user.status == 2 %}
                             <li {% if request.resolver_match.view_name == 'recruiting:response_list' %}class="active"{% endif %}>
-                                <a
-                                        href="{% url 'recruiting:response_list' %}">Отклики</a></li>
+                                <a class="notification"
+                                        href="{% url 'recruiting:response_list' %}">
+                                    <span>Отклики</span><span class="badge badge-danger">{% if unread_count %}{{ unread_count }}{% endif %}</span>
+                                </a></li>
                         {% endif %}
                         <li {% if request.resolver_match.view_name == 'vacancies:vacancy_list' %}class="active"{% endif %}>
                             <a

@@ -1,0 +1,22 @@
+<div class="single-post d-flex flex-row">
+    <div class="thumb justify-content-center">
+        {% if resume.photo %}
+            <img src="{{ resume.photo.url }}" style="object-fit: cover; width: 120px; height: 120px">
+        {% endif %}
+    </div>
+    <div class="details">
+        <div class="title d-flex flex-row justify-content-between">
+            <div class="titles">
+                <a href="{% url 'resumes:resume_detail' resume.id %}"><h4>
+                    {{ resume.title }}
+                </h4></a>
+            </div>
+            <ul class="btns justify-content-end">
+                <li><a href="{% url 'recruiting:response_create_submit' resume.id vacancy.id %}">Подать</a></li>
+            </ul>
+        </div>
+        <h5>Опыт: {{ resume.experience.about }}</h5>
+        <h5>Навыки: {{ resume.experience.skills }}</h5>
+        <h5>Зарплата: {{ resume.position.salary }}</h5>
+    </div>
+</div>
