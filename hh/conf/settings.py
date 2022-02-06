@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'smart_selects',
     'el_pagination',
     'notifications',
+    'floppyforms',
 
     # custom
     'conf',

@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView, PasswordContextMixin
 from .forms import UserRegisterForm, UserActivationRegisterForm, JobSeekerFormUpdate, AccountFormUpdate, \
     EmployerFormUpdate
+from cities_light.models import Country, City
 
 
 class UserNotAuthMixin(UserPassesTestMixin):
@@ -144,8 +145,11 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         except Exception:
             pass
         try:
+            data = self.request.POST.copy()
+            data['country'] = Country.objects.filter(name__contains=data["country"])[0].id
+            data['city'] = City.objects.filter(display_name__contains=data["city"])[0].id
             employer_form = EmployerFormUpdate(
-                data=self.request.POST,
+                data=data,
                 instance=Employer.objects.get(user=self.request.user)
             )
         except Exception:

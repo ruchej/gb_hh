@@ -1,8 +1,7 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from cities_light.models import Country
-from cities_light.models import City
+from cities_light.models import Country, City
 from smart_selects.db_fields import ChainedForeignKey
 
 
