@@ -1,4 +1,6 @@
 {% load static %}
-<script src="{% static 'js/vacancies.js' %}"></script>
 <script src="{% static 'js/vendor/el-pagination.js' %}"></script>
-<script>$.endlessPaginate({paginateOnScroll: true});</script>
+<script>$.endlessPaginate({
+    paginateOnScroll: true,
+    onCompleted: onPaginationFinished
+});</script>

@@ -31,6 +31,8 @@
     </section>
 {% endblock %}
 {% block js %}
+    {% load static %}
     {{ block.super }}
+    <script src="{% static 'js/vacancies.js' %}"></script>
     {% include 'snippets/pagination.html' %}
 {% endblock %}

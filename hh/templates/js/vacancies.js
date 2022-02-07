@@ -57,10 +57,15 @@ function searchClear(event) {
     searchAjax(link);
 }
 
+function onPaginationFinished() {
+    reloadSelect();
+}
+
 window.onload = () => {
     $('.city-list').on('click', 'a', cityAjax);
     $('.vacancy-search').submit(searchSubmit);
     // Too laggy
     // $('.vacancy-search-input').on('input', searchSubmit);
     $('.clear-link').on('click', searchClear);
+    $.endlessPaginate({paginateOnScroll: true});
 }
