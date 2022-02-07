@@ -1,9 +1,9 @@
 {% load el_pagination_tags %}
 <div class="sticky-search">
     <div class="single-slidebar search-widget">
-        <form class="example vacancy-search" action="{% url 'vacancies:vacancy_list_search' %}"
+        <form class="example ajax-search" action="{% url 'vacancies:vacancy_list_search' %}"
               style="margin:auto;max-width:300px">
-            <input type="text" placeholder="Найти вакансию" name="search" class="vacancy-search-input">
+            <input type="text" placeholder="Найти вакансию" name="search" class="search-input-ajax">
             <button type="submit"><i class="fa fa-search"></i></button>
         </form>
         <a href="{% url 'vacancies:vacancy_list_search' %}"
@@ -17,8 +17,8 @@
 
 <div class="single-slidebar">
     <h4>Вакансии по расположению</h4>
-    <ul class="cat-list city-list">
-        <div class="vacancy-cities-ajax">
+    <ul class="cat-list">
+        <div class="search-cities-ajax">
             {% include 'vacancies/snippets/list/cities_page.html' %}
         </div>
         <a href="#" class="mt-0 mb-0 pt-0 pb-0">

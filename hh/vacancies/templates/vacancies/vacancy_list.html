@@ -4,7 +4,7 @@
         {% if vacancy_list %}
             <div class="container">
                 <div class="row justify-content-center d-flex">
-                    <div class="col-lg-8 post-list vacancies-ajax">
+                    <div class="col-lg-8 post-list data-ajax">
                         {% include page_template %}
                     </div>
                     <div class="col-lg-4 sidebar">
@@ -31,8 +31,6 @@
     </section>
 {% endblock %}
 {% block js %}
-    {% load static %}
     {{ block.super }}
-    <script src="{% static 'js/vacancies.js' %}"></script>
     {% include 'snippets/pagination.html' %}
 {% endblock %}

@@ -1,21 +1,32 @@
 function reloadSelect() {
-    if (document.getElementById("default-select")) {
+    if (document.getElementById('default-select')) {
         $('select').niceSelect();
     }
 }
 
+function onPaginationFinished() {
+    reloadSelect();
+}
+
+function initEndlessPagination() {
+    $.endlessPaginate({
+        paginateOnScroll: true,
+        onCompleted: onPaginationFinished
+    });
+}
+
 function cityAjax(event) {
     let link = event.target.href ?? event.target.parentNode.href;
-    let data = $('.vacancy-search-input').serialize() ?? {};
+    let data = $('.search-input-ajax').serialize() ?? {};
 
     $.ajax({
         url: link,
         data,
         success: (data) => {
             if (data.hasOwnProperty('result')) {
-                $('.vacancies-ajax').html(data.result);
+                $('.data-ajax').html(data.result);
                 reloadSelect();
-                $.endlessPaginate({paginateOnScroll: true})
+                initEndlessPagination();
             }
         },
         error: (e) => {
@@ -29,12 +40,12 @@ function cityAjax(event) {
 function searchAjax(link) {
     $.ajax({
         url: link,
-        data: $('.vacancy-search-input').serialize(),
+        data: $('.search-input-ajax').serialize(),
         success: (data) => {
             if (data.hasOwnProperty('result')) {
-                $('.vacancies-ajax').html(data.result);
+                $('.data-ajax').html(data.result);
                 reloadSelect();
-                $.endlessPaginate({paginateOnScroll: true})
+                initEndlessPagination();
             }
         },
         error: (e) => {
@@ -53,19 +64,15 @@ function searchSubmit(event) {
 function searchClear(event) {
     let link = event.target.href ?? event.target.parentNode.href;
     event.preventDefault();
-    $('.vacancy-search-input').val('')
+    $('.search-input-ajax').val('')
     searchAjax(link);
 }
 
-function onPaginationFinished() {
-    reloadSelect();
-}
-
 window.onload = () => {
-    $('.city-list').on('click', 'a', cityAjax);
-    $('.vacancy-search').submit(searchSubmit);
+    $('.search-cities-ajax').on('click', 'a', cityAjax);
+    $('.ajax-search').submit(searchSubmit);
     // Too laggy
-    // $('.vacancy-search-input').on('input', searchSubmit);
+    // $('.search-input-ajax').on('input', searchSubmit);
     $('.clear-link').on('click', searchClear);
-    $.endlessPaginate({paginateOnScroll: true});
+    initEndlessPagination();
 }
