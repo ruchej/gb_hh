@@ -1,5 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from django.utils.translation import gettext_lazy as _
 from .models import Account, UserStatus, JobSeeker, Employer
@@ -15,6 +17,8 @@ from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetVie
 from .forms import UserRegisterForm, UserActivationRegisterForm, JobSeekerFormUpdate, AccountFormUpdate, \
     EmployerFormUpdate
 from cities_light.models import Country, City
+from resumes.models import Resume
+from vacancies.models import Vacancy
 
 
 class UserNotAuthMixin(UserPassesTestMixin):
@@ -63,7 +67,7 @@ class UserCreate(
     extra_context = {"title": _("Регистрация")}
     form_class = UserRegisterForm
     success_url = reverse_lazy("blog:news")
-    #url_redirect = reverse_lazy("accounts:UserDetail")
+    # url_redirect = reverse_lazy("accounts:UserDetail")
     template_name = 'accounts/account_signup_form.html'
     success_message = _("Для активации аккаунта выслано письмо")
 
@@ -167,3 +171,25 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+@login_required
+def favourites_add(request, id):
+    user = Account.objects.get(username=request.user)
+    if user.status == UserStatus.EMPLOYER:
+        resume = get_object_or_404(Resume, id=id)
+        if resume.favourites.filter(id=request.user.id).exists():
+            resume.favourites.remove(request.user)
+            print('delete')
+        else:
+            resume.favourites.add(request.user)
+            print('add')
+    elif user.status == UserStatus.JOBSEEKER:
+        vacancy = get_object_or_404(Vacancy, id=id)
+        if vacancy.favourites.filter(id=request.user.id).exists():
+            vacancy.favourites.remove(request.user)
+            print('delete')
+        else:
+            vacancy.favourites.add(request.user)
+            print('add')
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])

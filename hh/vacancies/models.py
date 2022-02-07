@@ -85,6 +85,7 @@ class Vacancy(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     published_at = models.DateTimeField(auto_now_add=True)
+    favourites = models.ManyToManyField(User, related_name='favourites_vacancies', blank=True, default=None)
 
     class Meta:
         verbose_name = _('Вакансия')

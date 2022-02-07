@@ -100,6 +100,7 @@ class Resume(models.Model):
     contacts = models.OneToOneField(Contacts, verbose_name=_('контакты'), on_delete=models.CASCADE)
     position = models.OneToOneField(Position, verbose_name=_('должность/зарплата'), on_delete=models.CASCADE)
     experience = models.OneToOneField(Experience, verbose_name=_('опыт работы'), on_delete=models.CASCADE)
+    favourites = models.ManyToManyField(User, related_name='favourites_resumes', blank=True, default=None)
 
     def __str__(self):
         return self.title

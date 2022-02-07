@@ -46,7 +46,7 @@
                     </div>
                     <ul class="btns">
                         {% if user.status == 1 %}
-                            <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
+                            <li><a href="{% url 'accounts:favourite_add' vacancy.id %}"><span class="lnr lnr-heart"></span></a></li>
                             {% if response_sent %}
                                 <li class="btns-success"><a class="noselect">Заявка подана</a></li>
                             {% else %}

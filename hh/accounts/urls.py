@@ -1,6 +1,6 @@
 from django.urls import path, reverse_lazy
 
-from .views import Login, Logout, UserCreate, UserConfirm, UserDetail, ProfileUpdateView
+from .views import Login, Logout, UserCreate, UserConfirm, UserDetail, ProfileUpdateView, favourites_add
 
 
 app_name = "accounts"
@@ -12,4 +12,5 @@ urlpatterns = [
     path("confirm/<uidb64>/<token>/", UserConfirm.as_view(), name="UserConfirm"),
     path("editeprof/", ProfileUpdateView.as_view(), name="ProfileUpdate"),
     path("", UserDetail.as_view(), name="UserDetail"),
+    path("fav/<int:id>/", favourites_add, name="favourite_add"),
 ]
