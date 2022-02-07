@@ -21,7 +21,6 @@ app_name = 'vacancies'
 
 urlpatterns = [
     path('', VacancyList.as_view(), name='vacancy_list'),
-    path('city/<int:city_id>', VacancyList.as_view(), name='vacancy_list_city'),
     path('search/', VacancyList.as_view(), name='vacancy_list_search'),
     path('<int:pk>/detail/', VacancyDetail.as_view(), name='detail'),
     path('create/', VacancyCreate.as_view(), name='create'),

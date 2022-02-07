@@ -2231,7 +2231,9 @@ body.mobile-nav-active #mobile-nav-toggle {
   }
 }
 
-.p1-gradient-bg, .banner-area .overlay-bg, .sidebar .single-slidebar .cat-list li:hover, .single-blog:hover, .callto-action-area, .single-price:hover .price-bottom, .single-service:hover, .submit-right, .submit-left, .contact-btns, .form-area .primary-btn {
+.p1-gradient-bg, .banner-area .overlay-bg, .sidebar .single-slidebar .cat-list li:hover, .single-blog:hover,
+.callto-action-area, .single-price:hover .price-bottom, .single-service:hover, .submit-right, .submit-left,
+.contact-btns, .form-area .primary-btn, .sidebar .single-slidebar .cat-list .search-selected {
   background-image: -moz-linear-gradient(0deg, #bfacff 0%, #795fff 100%);
   background-image: -webkit-linear-gradient(0deg, #bfacff 0%, #795fff 100%);
   background-image: -ms-linear-gradient(0deg, #bfacff 0%, #795fff 100%);
@@ -2564,7 +2566,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   color: #222;
 }
 
-.post-list .cat-list li:hover {
+.post-list .cat-list li:hover, .search-selected li {
   background-color: #49e4fa;
 }
 
@@ -2782,7 +2784,7 @@ body.mobile-nav-active #mobile-nav-toggle {
   transition: all 0.3s ease 0s;
 }
 
-.sidebar .single-slidebar .cat-list li:hover a {
+.sidebar .single-slidebar .cat-list li:hover a, .sidebar .single-slidebar .cat-list .search-selected a {
   color: #fff;
 }
 

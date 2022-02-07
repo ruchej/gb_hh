@@ -19,7 +19,7 @@ from recruiting.models import Response
 class VacancyList(LoginRequiredMixin, AjaxListView):
     model = Vacancy
     page_template = 'vacancies/snippets/list/cards.html'
-    TOTAL_K = _('Всего')
+    TOTAL_K = _('Все')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyList, self).get_context_data(object_list=object_list, **kwargs)
@@ -51,9 +51,9 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
     def filter(self, context, object_list):
         city_id = 0
         # Check if search by city was invoked
-        if 'city_id' in self.kwargs:
-            city_id = self.kwargs['city_id']
-            vacancies_city, employers = filter_by_city(object_list, self.kwargs['city_id'])
+        if 'city_id' in self.request.GET:
+            city_id = int(self.request.GET['city_id'])
+            vacancies_city, employers = filter_by_city(object_list, city_id)
         else:
             vacancies_city, employers = filter_by_city(object_list, 0)
             context['vacancy_cities'] = get_vacancy_cities(vacancies_city)

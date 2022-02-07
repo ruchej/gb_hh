@@ -15,32 +15,10 @@ function initEndlessPagination() {
     });
 }
 
-function cityAjax(event) {
-    let link = event.target.href ?? event.target.parentNode.href;
-    let data = $('.search-input-ajax').serialize() ?? {};
-
-    $.ajax({
-        url: link,
-        data,
-        success: (data) => {
-            if (data.hasOwnProperty('result')) {
-                $('.data-ajax').html(data.result);
-                reloadSelect();
-                initEndlessPagination();
-            }
-        },
-        error: (e) => {
-            console.error(eval(e))
-        }
-    });
-
-    event.preventDefault();
-}
-
 function searchAjax(link) {
     $.ajax({
         url: link,
-        data: $('.search-input-ajax').serialize(),
+        data: $('#search-form').serialize(),
         success: (data) => {
             if (data.hasOwnProperty('result')) {
                 $('.data-ajax').html(data.result);
@@ -55,10 +33,19 @@ function searchAjax(link) {
 }
 
 function searchSubmit(event) {
-    let $form = $(this)
+    let $form = $('#search-form');
     let link = $form.attr('action');
     event.preventDefault();
     searchAjax(link);
+}
+
+function cityAjax(event) {
+    let link = event.target.href ?? event.target.parentNode.href;
+    let cityId = link.split('city_id=')[1];
+    $('.search-selected').removeClass('search-selected');
+    $(this).closest('li').addClass('search-selected');
+    $('#city-id-input-ajax').val(cityId);
+    searchSubmit(event);
 }
 
 function searchClear(event) {
