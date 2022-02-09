@@ -1,7 +1,13 @@
+from collections import Counter
+
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.views.generic import ListView, CreateView, TemplateView
 from notifications.signals import notify
+from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 
 from . import models
 from accounts.models import JobSeeker, Employer, UserStatus
@@ -17,19 +23,11 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
 
     model = models.Response
     page_template = 'recruiting/snippets/response/list/cards.html'
+    TOTAL_K = _('Все')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResponseListView, self).get_context_data(object_list=object_list, **kwargs)
-        jobseekers = []
-        new_resumes = []
-        for notif in self.request.user.notifications.unread():
-            if notif.verb == NEW_RESUME_NOTIF:
-                new_resumes.append(notif.target)
-        is_new = []
-        for response in context['response_list']:
-            is_new.append(True if response.resume in new_resumes else False)
-            jobseekers.append(JobSeeker.objects.get(user=response.resume.user))
-        context['jobseekers_resp_list'] = list(zip(jobseekers, context['response_list'], is_new))
+        self.filter(context, object_list)
         context['title'] = 'Отклики'
         return context
 
@@ -39,7 +37,68 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
     def render_to_response(self, context, **response_kwargs):
         if self.request.user.status == UserStatus.JOBSEEKER:
             return redirect('blog:news')
+        if self.request.is_ajax() and 'page' not in self.request.GET:
+            result = render_to_string(self.page_template, context=context, request=self.request)
+            return JsonResponse({'result': result})
         return super(ResponseListView, self).render_to_response(context, **response_kwargs)
+
+    def filter(self, context, object_list):
+        jobseekers, new_resumes, vacancies, is_new = [], [], [], []
+        for notif in self.request.user.notifications.unread():
+            if notif.verb == NEW_RESUME_NOTIF:
+                new_resumes.append(notif.target)
+        vac_id = 0
+        # Check if search by city was invoked
+        if 'vac_id' in self.request.GET:
+            vac_id = int(self.request.GET['vac_id'])
+            responses = object_list.filter(vacancy__id=vac_id) if vac_id else object_list
+        else:
+            responses = object_list
+
+        # Check if normal search was invoked
+        if 'search' in self.request.GET and (text := self.request.GET['search']):
+            jobseekers = JobSeeker.objects.filter(
+                Q(first_name__contains=text) |
+                Q(last_name__contains=text)
+            )
+            if text.isnumeric():
+                resumes = Resume.objects.filter(position__salary=int(text))
+            else:
+                resumes = Resume.objects.filter(
+                    Q(experience__skills=text) |
+                    Q(position__title=text) |
+                    Q(position__employment=text) |
+                    Q(position__schedule=text) |
+                    Q(position__relocation=text) |
+                    Q(position__business_trip=text)
+                )
+            if jobseekers:
+                new_responses = []
+                for jobseeker in jobseekers:
+                    js_resumes = list(Resume.objects.filter(user=jobseeker.user))
+                    for resume in js_resumes:
+                        if js_responses := responses.filter(resume=resume):
+                            new_responses.extend(list(js_responses))
+                responses = new_responses
+            elif resumes:
+                new_responses = []
+                for resume in resumes:
+                    if res_responses := responses.filter(resume=resume):
+                        new_responses.extend(list(res_responses))
+                responses = new_responses
+            jobseekers = []
+
+
+        for response in responses:
+            is_new.append(True if response.resume in new_resumes else False)
+            jobseekers.append(JobSeeker.objects.get(user=response.resume.user))
+            vacancies.append(response.vacancy)
+
+        context['responses_vacancies'] = sorted(Counter(vacancies).items(), key=lambda x: x[1], reverse=True)[:4]
+        context['responses_vacancies'].insert(0, (self.TOTAL_K, len(object_list)))
+        context['jobseekers_resp_list'] = list(zip(jobseekers, responses, is_new))
+
+        return jobseekers, responses, is_new
 
 
 class ResponseCreateView(LoginRequiredMixin, TemplateView):

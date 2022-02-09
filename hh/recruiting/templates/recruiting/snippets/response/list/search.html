@@ -1,0 +1,42 @@
+<div class="sticky-search">
+    <div class="single-slidebar search-widget">
+        <form id="search-form" class="example ajax-search"
+              action="{% url 'recruiting:response_list_search' %}"
+              style="margin:auto;max-width:300px">
+            <input type="text" placeholder="Найти резюме" name="search" class="search-input-ajax">
+            <input id="vac-id-input-ajax" type="text" name="vac_id" value="0" style="display: none"/>
+            <input id="city-id-input-ajax" type="text" name="city_id" value="0" style="display: none"/>
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        <a href="{% url 'recruiting:response_list_search' %}"
+           class="clear-link">
+            <p class="ml-2 mt-0 mb-0 pt-0 pb-0">
+                Очистить
+            </p>
+        </a>
+    </div>
+</div>
+
+<div class="single-slidebar">
+    <h4>Резюме по вакансиям</h4>
+    {% if responses_vacancies %}
+        <ul class="cat-list search-vacancies-ajax">
+            {% include 'recruiting/snippets/response/list/vacancies_page.html' %}
+        </ul>
+        <a href="#" class="mt-0 mb-0 pt-0 pb-0">
+            Показать больше (Пока не работает)
+        </a>
+    {% endif %}
+</div>
+
+<div class="single-slidebar">
+    <h4>Резюме по расположению</h4>
+    {% if resume_cities %}
+        <ul class="cat-list search-cities-ajax">
+            {% include 'vacancies/snippets/list/cities_page.html' %}
+        </ul>
+        <a href="#" class="mt-0 mb-0 pt-0 pb-0">
+            Показать больше (Пока не работает)
+        </a>
+    {% endif %}
+</div>

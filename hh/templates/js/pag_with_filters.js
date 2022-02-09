@@ -48,6 +48,15 @@ function cityAjax(event) {
     searchSubmit(event);
 }
 
+function vacanciesAjax(event) {
+    let link = event.target.href ?? event.target.parentNode.href;
+    let vacId = link.split('vac_id=')[1];
+    $('.search-selected').removeClass('search-selected');
+    $(this).closest('li').addClass('search-selected');
+    $('#vac-id-input-ajax').val(vacId);
+    searchSubmit(event);
+}
+
 function searchClear(event) {
     let link = event.target.href ?? event.target.parentNode.href;
     event.preventDefault();
@@ -57,6 +66,7 @@ function searchClear(event) {
 
 window.onload = () => {
     $('.search-cities-ajax').on('click', 'a', cityAjax);
+    $('.search-vacancies-ajax').on('click', 'a', vacanciesAjax);
     $('.ajax-search').submit(searchSubmit);
     // Too laggy
     // $('.search-input-ajax').on('input', searchSubmit);
