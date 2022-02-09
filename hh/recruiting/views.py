@@ -7,16 +7,16 @@ from . import models
 from accounts.models import JobSeeker, Employer, UserStatus
 from resumes.models import Resume
 from vacancies.models import Vacancy
+from el_pagination.views import AjaxListView
 
 NEW_RESUME_NOTIF = 'New resume'
 
 
-class ResponseListView(LoginRequiredMixin, ListView):
+class ResponseListView(LoginRequiredMixin, AjaxListView):
     """View for getting list of responses for job."""
 
     model = models.Response
-    extra_context = {'title': 'Отклики'}
-    paginate_by = 10
+    page_template = 'recruiting/snippets/response/list/cards.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResponseListView, self).get_context_data(object_list=object_list, **kwargs)
@@ -30,6 +30,7 @@ class ResponseListView(LoginRequiredMixin, ListView):
             is_new.append(True if response.resume in new_resumes else False)
             jobseekers.append(JobSeeker.objects.get(user=response.resume.user))
         context['jobseekers_resp_list'] = list(zip(jobseekers, context['response_list'], is_new))
+        context['title'] = 'Отклики'
         return context
 
     def get_queryset(self):
