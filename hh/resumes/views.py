@@ -1,9 +1,15 @@
+from collections import Counter
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from el_pagination.views import AjaxListView
+from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 
 from . import models, forms
 from accounts.models import UserStatus, JobSeeker
@@ -15,6 +21,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
     model = models.Resume
     page_templates = ['resumes/snippets/list/employee_card.html',
                       'resumes/snippets/list/employer_card.html']
+    TOTAL_K = _('Все')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResumeListView, self).get_context_data(object_list=object_list, **kwargs)
@@ -23,10 +30,8 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
             context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
         else:
             context['title'] = 'Резюме Соискателей'
-            jobseekers = []
-            for resume in context['resume_list']:
-                jobseekers.append(JobSeeker.objects.get(user=resume.user))
-            context['jobseekers_resume_list'] = list(zip(jobseekers, context['resume_list']))
+            resumes, jobseekers, context['resumes_cities'] = self.filter(context, object_list)
+            context['jobseekers_resume_list'] = list(zip(jobseekers, resumes))
         return context
 
     def get_queryset(self):
@@ -35,10 +40,71 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
             queryset = queryset.filter(user=self.request.user)
         return queryset
 
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.is_ajax() and 'page' not in self.request.GET:
+            result = render_to_string(self.page_template, context=context, request=self.request)
+            return JsonResponse({'result': result})
+        return super(ResumeListView, self).render_to_response(context, **response_kwargs)
+
     def get_page_template(self, **kwargs):
         self.page_template = self.page_templates[0] if self.request.user.status == UserStatus.JOBSEEKER else \
             self.page_templates[1]
         return self.page_template
+
+    def filter(self, context, object_list):
+        # Check if search by city was invoked
+        if 'city_id' in self.request.GET and self.request.GET['city_id']:
+            city_id = int(self.request.GET['city_id'])
+            jobseekers_cities = JobSeeker.objects.filter(city__id=city_id)
+        else:
+            jobseekers_cities = JobSeeker.objects.all()
+
+        # Check if normal search was invoked
+        if 'search' in self.request.GET and (text := self.request.GET['search']):
+            jobseekers = jobseekers_cities.filter(
+                Q(first_name__contains=text) |
+                Q(last_name__contains=text)
+            )
+            if text.isnumeric():
+                resumes = self.model.objects.filter(position__salary=int(text))
+            else:
+                resumes = self.model.objects.filter(
+                    Q(experience__skills=text) |
+                    Q(position__title=text) |
+                    Q(position__employment=text) |
+                    Q(position__schedule=text) |
+                    Q(position__relocation=text) |
+                    Q(position__business_trip=text)
+                )
+            if jobseekers:
+                new_resumes = []
+                for jobseeker in jobseekers:
+                    js_resumes = list(self.model.objects.filter(user=jobseeker.user))
+                    new_resumes.extend(js_resumes)
+                resumes = new_resumes
+            elif resumes:
+                new_resumes = []
+                for resume in resumes:
+                    if jobseekers_cities.filter(user=resume.user).exists():
+                        new_resumes.extend(resume)
+                resumes = new_resumes
+        else:
+            new_resumes = []
+            for jobseeker in jobseekers_cities:
+                js_resumes = list(self.model.objects.filter(user=jobseeker.user))
+                new_resumes.extend(js_resumes)
+            resumes = new_resumes
+
+        jobseekers, cities = [], []
+        for resume in resumes:
+            jobseeker = JobSeeker.objects.get(user=resume.user)
+            jobseekers.append(jobseeker)
+            cities.append(jobseeker.city)
+
+        responses_cities = sorted(Counter(cities).items(), key=lambda x: x[1], reverse=True)[:4]
+        responses_cities.insert(0, (self.TOTAL_K, len(object_list)))
+
+        return resumes, jobseekers, responses_cities
 
 
 class ResumeDetailView(LoginRequiredMixin, DetailView):

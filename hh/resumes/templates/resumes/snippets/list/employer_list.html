@@ -1,9 +1,10 @@
 {% if object_list %}
-    <div class="col-lg-8 post-list">
+    <div class="col-lg-8 post-list data-ajax">
         {% include page_template %}
     </div>
 
     <div class="col-lg-4 sidebar">
+        {% include 'resumes/snippets/list/search.html' %}
         {% include 'snippets/recent_news.html' %}
     </div>
 {% else %}

@@ -21,6 +21,7 @@ app_name = 'resumes'
 
 urlpatterns = [
     path('', views.ResumeListView.as_view(), name='resume_list'),
+    path('search/', views.ResumeListView.as_view(), name='resume_list_search'),
     path('<int:pk>/', views.ResumeDetailView.as_view(), name='resume_detail'),
     path('create/', views.resume_create, name='resume_create'),
     path('update/<int:pk>/', views.ResumeUpdateView.as_view(), name='resume_update'),
