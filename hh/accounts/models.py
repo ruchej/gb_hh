@@ -96,7 +96,11 @@ class JobSeeker(models.Model):
         choices=Sex.choices, null=True, blank=True, verbose_name=_("Пол"))
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("Телефон"))
-    address = models.TextField(blank=True, verbose_name=_("Район поиска"))
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True,
+                                verbose_name=_("страна проживания"))
+    city = ChainedForeignKey(City, chained_field="country", chained_model_field="country",
+                             null=True, blank=True, verbose_name=_("город проживания"))
+    address = models.TextField(blank=True, verbose_name=_("адрес"))
     objects = JobSeekerManager()
 
     class Meta:

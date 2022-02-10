@@ -70,10 +70,18 @@ class JobSeekerFormUpdate(forms.ModelForm):
             'sex',
             'date_birth',
             'phone',
+            'country',
+            'city',
             'address'
         )
         widgets = {
-            'date_birth': DateInput(attrs={'type': 'date'})
+            'date_birth': DateInput(attrs={'type': 'date'}),
+            'country': floppyforms.widgets.Input(
+                datalist=Country.objects.all
+            ),
+            'city': floppyforms.widgets.Input(
+                datalist=City.objects.all
+            )
         }
 
 

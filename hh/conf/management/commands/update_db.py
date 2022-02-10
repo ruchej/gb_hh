@@ -44,7 +44,8 @@ class Command(BaseCommand):
                                                      status=UserStatus.JOBSEEKER)
             JobSeeker.objects.get(user=employee).delete()
             mixer.blend(JobSeeker, user=employee, first_name='Василий', patronymic='Васильевич',
-                        last_name='Пупкин', date_birth=mixer.RANDOM, sex=JobSeeker.Sex.MAN)
+                        last_name='Пупкин', date_birth=mixer.RANDOM, sex=JobSeeker.Sex.MAN,
+                        country=russia, city=moscow)
             resume = mixer.blend(resumes_models.Resume, user=employee)
             mixer.cycle(5).blend(resumes_models.Job, experience=resume.experience)
         else:
@@ -58,7 +59,9 @@ class Command(BaseCommand):
             if user.status == UserStatus.JOBSEEKER:
                 JobSeeker.objects.get(user=user).delete()
                 mixer.blend(JobSeeker, user=user, date_birth=mixer.RANDOM,
-                            sex=random.choice([JobSeeker.Sex.MAN, JobSeeker.Sex.WOMAN]))
+                            sex=random.choice([JobSeeker.Sex.MAN, JobSeeker.Sex.WOMAN]),
+                            country=russia,
+                            city=random.choice([moscow, st_peter, chelyabinsk]))
             elif user.status == UserStatus.EMPLOYER:
                 Employer.objects.get(user=user).delete()
                 mixer.blend(Employer, user=user, name=mixer.RANDOM, description=mixer.RANDOM,
