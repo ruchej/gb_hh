@@ -94,6 +94,8 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
                             jobseekers_cities.filter(user=resume.user).exists():
                         new_responses.extend(list(res_responses))
                 responses = new_responses
+            else:
+                responses = []
         else:
             new_responses = []
             for jobseeker in jobseekers_cities:
