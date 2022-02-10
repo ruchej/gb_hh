@@ -31,6 +31,11 @@
                                 Вакансии
                             </a>
                         </li>
+                        <li {% if request.resolver_match.view_name == 'chat:list' %}class="active"{% endif %}>
+                            <a href="{% url 'chat:list' %}">
+                                Чат
+                            </a>
+                        </li>
                     {% else %}
                         <li {% if request.resolver_match.view_name == 'vacancies:vacancy_list' %}class="active"{% endif %}>
                             <a

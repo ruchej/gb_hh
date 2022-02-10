@@ -1,0 +1,23 @@
+{% load humanize %}
+{% if message.contact.user == user %}
+    <div class="outgoing_msg">
+        <div class="sent_msg">
+            <p>{{ message.content }}</p>
+            <span class="time_date">{{ message.timestamp|naturaltime }}</span></div>
+    </div>
+{% else %}
+    <div class="incoming_msg">
+        <div class="incoming_msg_img">
+            {% if message.contact.user.avatar %}
+                <img src="{{ message.contact.user.avatar.url }}" alt="sunil">
+            {% else %}
+                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+            {% endif %}
+        </div>
+        <div class="received_msg">
+            <div class="received_withd_msg">
+                <p>{{ message.content }}</p>
+                <span class="time_date">{{ message.timestamp|naturaltime }}</span></div>
+        </div>
+    </div>
+{% endif %}

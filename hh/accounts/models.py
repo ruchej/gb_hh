@@ -64,6 +64,10 @@ class Account(AbstractUser):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        from chat.models import Contact
+        if not Contact.objects.filter(user=self).exists():
+            contact = Contact(user=self)
+            contact.save()
         if self.status == UserStatus.EMPLOYER:
             if not Employer.objects.filter(user=self).exists():
                 employer = Employer(user=self)

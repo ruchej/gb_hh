@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<section class="post-area section-gap">
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.title|as_crispy_field }}
+            {{ form.description|as_crispy_field }}
+            {{ form.hashtags|as_crispy_field }}
+            {{ form.employment_type|as_crispy_field }}
+            {{ form.experience|as_crispy_field }}
+            {{ form.salary|as_crispy_field }}
+            {% if user.status == 0 %}
+                {{ form.status|as_crispy_field }}
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Изменить</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

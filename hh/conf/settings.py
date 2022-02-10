@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'el_pagination',
     'notifications',
     'floppyforms',
+    'channels',
 
     # custom
     'conf',
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'resumes.apps.ResumesConfig',
     'vacancies.apps.VacanciesConfig',
     'recruiting.apps.RecruitingConfig',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -120,9 +122,7 @@ else:
         },
     ]
 
-
 AUTH_USER_MODEL = 'accounts.Account'
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -227,7 +227,6 @@ LOGGING = {
     },
 }
 
-
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -247,4 +246,24 @@ DATE_FORMAT = 'd E Y'
 
 CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru', 'en']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['RU']
-CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC', 'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT',]
+CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC', 'PPLF', 'PPLG', 'PPLL', 'PPLR',
+                                   'PPLS', 'STLMT', ]
+
+# Channels
+ASGI_APPLICATION = "conf.asgi.application"
+
+if DEBUG:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("127.0.0.1", 6379)],
+            },
+        },
+    }

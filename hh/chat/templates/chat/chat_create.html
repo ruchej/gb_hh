@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="post-area section-gap">
+        <div class="container">
+            <div class="row justify-content-center d-flex">
+                <p style="text-align: center; font-size: large;">
+                    Нажмите на кнопку :)
+                    <a href="{% url 'chat:create' 31 %}">Создать</a>
+                </p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    {% include 'snippets/pagination.html' %}
+{% endblock %}
