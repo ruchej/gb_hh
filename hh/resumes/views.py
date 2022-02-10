@@ -27,10 +27,11 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
         context = super(ResumeListView, self).get_context_data(object_list=object_list, **kwargs)
         context.update({'title': 'Мои Резюме'})
         if self.request.user.status == UserStatus.JOBSEEKER:
+            context['object_list'] = self.employee_filter(context, object_list)
             context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
         else:
             context['title'] = 'Резюме Соискателей'
-            resumes, jobseekers, context['resumes_cities'] = self.filter(context, object_list)
+            resumes, jobseekers, context['resumes_cities'] = self.employer_filter(context, object_list)
             context['jobseekers_resume_list'] = list(zip(jobseekers, resumes))
         return context
 
@@ -51,7 +52,24 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
             self.page_templates[1]
         return self.page_template
 
-    def filter(self, context, object_list):
+    def employee_filter(self, context, object_list):
+        if 'search' in self.request.GET and (text := self.request.GET['search']):
+            if text.isnumeric():
+                object_list = object_list.filter(position__salary=int(text))
+            else:
+                object_list = object_list.filter(
+                    Q(title__contains=text) |
+                    Q(experience__skills__contains=text) |
+                    Q(experience__about__contains=text) |
+                    Q(position__title__contains=text) |
+                    Q(position__employment__contains=text) |
+                    Q(position__schedule__contains=text) |
+                    Q(position__relocation__contains=text) |
+                    Q(position__business_trip__contains=text)
+                )
+        return object_list
+
+    def employer_filter(self, context, object_list):
         # Check if search by city was invoked
         if 'city_id' in self.request.GET and self.request.GET['city_id']:
             city_id = int(self.request.GET['city_id'])

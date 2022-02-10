@@ -1,5 +1,5 @@
 {% if object_list %}
-    <div class="col-lg-8 post-list">
+    <div class="col-lg-8 post-list data-ajax">
         {% include page_template %}
     </div>
 
@@ -9,6 +9,7 @@
                 Создать резюме
             </a>
         {% endif %}
+        {% include 'resumes/snippets/list/search.html' %}
         {% include 'snippets/recent_news.html' %}
     </div>
 {% else %}
