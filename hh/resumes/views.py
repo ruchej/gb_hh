@@ -88,6 +88,8 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
                     if jobseekers_cities.filter(user=resume.user).exists():
                         new_resumes.extend(resume)
                 resumes = new_resumes
+            else:
+                resumes = []
         else:
             new_resumes = []
             for jobseeker in jobseekers_cities:
