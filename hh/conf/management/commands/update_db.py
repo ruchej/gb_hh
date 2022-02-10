@@ -26,7 +26,8 @@ class Command(BaseCommand):
     @staticmethod
     def create_suser():
         if not User.objects.filter(username='suser').exists():
-            User.objects.create_superuser('suser', 'suser@example.local', 'A1234567a')
+            User.objects.create_superuser('suser', 'suser@example.local', 'A1234567a',
+                                          status=UserStatus.MODERATOR)
         if not User.objects.filter(username='employer').exists():
             employer = User.objects.create_superuser('employer', 'employer@employer.employer', 'A1234567a',
                                                      status=UserStatus.EMPLOYER)
