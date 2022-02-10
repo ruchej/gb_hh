@@ -43,21 +43,28 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
         return super(ResponseListView, self).render_to_response(context, **response_kwargs)
 
     def filter(self, context, object_list):
-        jobseekers, new_resumes, vacancies, is_new = [], [], [], []
+        jobseekers, new_resumes, vacancies, is_new, cities = [], [], [], [], []
         for notif in self.request.user.notifications.unread():
             if notif.verb == NEW_RESUME_NOTIF:
                 new_resumes.append(notif.target)
         vac_id = 0
-        # Check if search by city was invoked
-        if 'vac_id' in self.request.GET:
+        # Check if search by vacancy was invoked
+        if 'vac_id' in self.request.GET and self.request.GET['vac_id']:
             vac_id = int(self.request.GET['vac_id'])
-            responses = object_list.filter(vacancy__id=vac_id) if vac_id else object_list
+            responses = object_list.filter(vacancy__id=vac_id)
         else:
             responses = object_list
 
+        # Check if search by city was invoked
+        if 'city_id' in self.request.GET and self.request.GET['city_id']:
+            city_id = int(self.request.GET['city_id'])
+            jobseekers_cities = JobSeeker.objects.filter(city__id=city_id)
+        else:
+            jobseekers_cities = JobSeeker.objects.all()
+
         # Check if normal search was invoked
         if 'search' in self.request.GET and (text := self.request.GET['search']):
-            jobseekers = JobSeeker.objects.filter(
+            jobseekers = jobseekers_cities.filter(
                 Q(first_name__contains=text) |
                 Q(last_name__contains=text)
             )
@@ -83,19 +90,33 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
             elif resumes:
                 new_responses = []
                 for resume in resumes:
-                    if res_responses := responses.filter(resume=resume):
+                    if (res_responses := responses.filter(resume=resume)) and \
+                            jobseekers_cities.filter(user=resume.user).exists():
                         new_responses.extend(list(res_responses))
                 responses = new_responses
-            jobseekers = []
-
+        else:
+            new_responses = []
+            for jobseeker in jobseekers_cities:
+                js_resumes = list(Resume.objects.filter(user=jobseeker.user))
+                for resume in js_resumes:
+                    if js_responses := responses.filter(resume=resume):
+                        new_responses.extend(list(js_responses))
+            responses = new_responses
+        jobseekers = []
 
         for response in responses:
             is_new.append(True if response.resume in new_resumes else False)
-            jobseekers.append(JobSeeker.objects.get(user=response.resume.user))
+            jobseeker = JobSeeker.objects.get(user=response.resume.user)
+            jobseekers.append(jobseeker)
+            cities.append(jobseeker.city)
             vacancies.append(response.vacancy)
 
         context['responses_vacancies'] = sorted(Counter(vacancies).items(), key=lambda x: x[1], reverse=True)[:4]
         context['responses_vacancies'].insert(0, (self.TOTAL_K, len(object_list)))
+
+        context['responses_cities'] = sorted(Counter(cities).items(), key=lambda x: x[1], reverse=True)[:4]
+        context['responses_cities'].insert(0, (self.TOTAL_K, len(object_list)))
+
         context['jobseekers_resp_list'] = list(zip(jobseekers, responses, is_new))
 
         return jobseekers, responses, is_new
