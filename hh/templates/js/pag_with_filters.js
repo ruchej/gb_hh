@@ -42,7 +42,7 @@ function searchSubmit(event) {
 function cityAjax(event) {
     let link = event.target.href ?? event.target.parentNode.href;
     let cityId = link.split('city_id=')[1];
-    $('.search-selected').removeClass('search-selected');
+    $('.search-cities-ajax .search-selected').removeClass('search-selected');
     $(this).closest('li').addClass('search-selected');
     $('#city-id-input-ajax').val(cityId);
     searchSubmit(event);
@@ -51,7 +51,7 @@ function cityAjax(event) {
 function vacanciesAjax(event) {
     let link = event.target.href ?? event.target.parentNode.href;
     let vacId = link.split('vac_id=')[1];
-    $('.search-selected').removeClass('search-selected');
+    $('.search-vacancies-ajax .search-selected').removeClass('search-selected');
     $(this).closest('li').addClass('search-selected');
     $('#vac-id-input-ajax').val(vacId);
     searchSubmit(event);
