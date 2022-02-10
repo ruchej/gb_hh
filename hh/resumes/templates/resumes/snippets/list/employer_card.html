@@ -22,6 +22,9 @@
                         <li><a href="#">
                             Откликнуться
                         </a></li>
+                        <li><a href="{% url 'accounts:favourite_add' resume.id %}">
+                            <span class="lnr lnr-heart"></span>
+                        </a></li>
                     </ul>
                 </div>
                 <h5>Опыт: {{ resume.experience.about }}</h5>

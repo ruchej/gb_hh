@@ -29,10 +29,15 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         context['employers_vac_list'] = []
         for vacancy in vacancies:
             resume_sent = False
+            fav = False
+            if self.request.user.status == UserStatus.JOBSEEKER and \
+                    self.request.user in vacancy.favourites.all():
+                fav = True
             if self.request.user.status == UserStatus.JOBSEEKER and \
                     Response.objects.filter(vacancy=vacancy, resume__user=self.request.user).exists():
                 resume_sent = True
-            context['employers_vac_list'].append([Employer.objects.get(user=vacancy.employer), vacancy, resume_sent])
+            context['employers_vac_list'].append(
+                [Employer.objects.get(user=vacancy.employer), vacancy, resume_sent, fav])
 
         return context
 

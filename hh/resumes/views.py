@@ -33,6 +33,10 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
             context['title'] = 'Резюме Соискателей'
             resumes, jobseekers, context['resumes_cities'] = self.employer_filter(context, object_list)
             context['jobseekers_resume_list'] = list(zip(jobseekers, resumes))
+            for resume in resumes:
+                fav = False
+                if self.request.user.status == UserStatus.EMPLOYER and self.request.user in resume.favourites.all():
+                    fav = True
         return context
 
     def get_queryset(self):

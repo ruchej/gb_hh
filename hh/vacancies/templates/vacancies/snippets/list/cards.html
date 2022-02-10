@@ -2,7 +2,7 @@
 
 {% if employers_vac_list %}
     {% lazy_paginate employers_vac_list %}
-    {% for employer, vacancy, response_sent in employers_vac_list %}
+    {% for employer, vacancy, response_sent, fav in employers_vac_list %}
         {% if user.status == 2 %}
             <div class="justify-content-start d-flex flex-row">
                 <div class="default-select" id="default-select">
@@ -46,7 +46,13 @@
                     </div>
                     <ul class="btns">
                         {% if user.status == 1 %}
-                            <li><a href="{% url 'accounts:favourite_add' vacancy.id %}"><span class="lnr lnr-heart"></span></a></li>
+                            <li><a href="{% url 'accounts:favourite_add' vacancy.id %}">
+                                {% if fav %}
+                                    <span class="lnr lnr-trash"></span>
+                                {% else %}
+                                    <span class="lnr lnr-star"></span>
+                                {% endif %}
+                            </a></li>
                             {% if response_sent %}
                                 <li class="btns-success"><a class="noselect">Заявка подана</a></li>
                             {% else %}
