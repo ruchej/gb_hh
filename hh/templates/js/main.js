@@ -123,4 +123,18 @@ $(document).ready(function () {
             $('#header').removeClass('header-scrolled');
         }
     })
+
+    $('.favorite-icon').on('click', (event) => {
+        let iconSpan = event.target.localName === 'span' ? event.target : event.target.querySelector('span');
+        let url = iconSpan.closest('a').href;
+        event.preventDefault();
+        if (iconSpan.className.includes('lnr-star')) {
+            iconSpan.classList.remove('lnr-star');
+            iconSpan.classList.add('lnr-trash');
+        } else {
+            iconSpan.classList.remove('lnr-trash');
+            iconSpan.classList.add('lnr-star');
+        }
+        $.ajax({url});
+    });
 });

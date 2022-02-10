@@ -8,7 +8,7 @@
         {% endfor %}
     {% elif user.status == 2 %}
         {% lazy_paginate jobseekers_resume_list %}
-        {% for jobseeker, resume in jobseekers_resume_list %}
+        {% for jobseeker, resume, fav in jobseekers_resume_list %}
             {% include 'resumes/snippets/list/card.html' %}
         {% endfor %}
     {% endif %}

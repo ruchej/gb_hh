@@ -47,13 +47,15 @@
                     </div>
                     <ul class="btns">
                         {% if user.status == 1 %}
-                            <li><a href="{% url 'accounts:favourite_add' vacancy.id %}">
-                                {% if fav %}
-                                    <span class="lnr lnr-trash"></span>
-                                {% else %}
-                                    <span class="lnr lnr-star"></span>
-                                {% endif %}
-                            </a></li>
+                            <li class="favorite-icon">
+                                <a href="{% url 'accounts:favourite_add' vacancy.id %}">
+                                    {% if fav %}
+                                        <span class="lnr lnr-trash"></span>
+                                    {% else %}
+                                        <span class="lnr lnr-star"></span>
+                                    {% endif %}
+                                </a>
+                            </li>
                             {% if response_sent %}
                                 <li class="btns-success"><a class="noselect">Заявка подана</a></li>
                             {% else %}

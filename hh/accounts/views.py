@@ -175,21 +175,17 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
 @login_required
 def favourites_add(request, id):
-    user = Account.objects.get(username=request.user)
+    user = request.user
     if user.status == UserStatus.EMPLOYER:
         resume = get_object_or_404(Resume, id=id)
         if resume.favourites.filter(id=request.user.id).exists():
             resume.favourites.remove(request.user)
-            print('delete')
         else:
             resume.favourites.add(request.user)
-            print('add')
     elif user.status == UserStatus.JOBSEEKER:
         vacancy = get_object_or_404(Vacancy, id=id)
         if vacancy.favourites.filter(id=request.user.id).exists():
             vacancy.favourites.remove(request.user)
-            print('delete')
         else:
             vacancy.favourites.add(request.user)
-            print('add')
     return HttpResponseRedirect(request.META['HTTP_REFERER'])

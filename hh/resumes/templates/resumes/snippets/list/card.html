@@ -34,6 +34,15 @@
                     <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
                     <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
                 {% elif user.status == 2 %}
+                    <li class="favorite-icon">
+                        <a href="{% url 'accounts:favourite_add' resume.id %}">
+                            {% if fav %}
+                                <span class="lnr lnr-trash"></span>
+                            {% else %}
+                                <span class="lnr lnr-star"></span>
+                            {% endif %}
+                        </a>
+                    </li>
                     <li>
                         <a href="#">
                             Откликнуться
