@@ -26,9 +26,10 @@
         {% endif %}
         <div class="single-post d-flex flex-row infinite-item">
             <div class="thumb justify-content-center">
-                <img src="{{ vacancy.employer.user.avatar }}" alt=""
-                     class="vacancy-image">
-                <img src="http://placehold.it/119x70" alt="">
+                {% if vacancy.employer.avatar %}
+                    <img src="{{ vacancy.employer.avatar.url }}" alt=""
+                         class="vacancy-image">
+                {% endif %}
                 <ul class="tags">
                     {% if vacancy.hashtags %}
                         <li>
@@ -46,7 +47,8 @@
                     </div>
                     <ul class="btns">
                         {% if user.status == 1 %}
-                            <li><a href="{% url 'accounts:favourite_add' vacancy.id %}"><span class="lnr lnr-heart"></span></a></li>
+                            <li><a href="{% url 'accounts:favourite_add' vacancy.id %}"><span
+                                    class="lnr lnr-heart"></span></a></li>
                             {% if response_sent %}
                                 <li class="btns-success"><a class="noselect">Заявка подана</a></li>
                             {% else %}

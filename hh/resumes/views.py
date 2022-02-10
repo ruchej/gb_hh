@@ -19,8 +19,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
     """View for getting list of all resumes."""
 
     model = models.Resume
-    page_templates = ['resumes/snippets/list/employee_card.html',
-                      'resumes/snippets/list/employer_card.html']
+    page_template = 'resumes/snippets/list/resume_card.html'
     TOTAL_K = _('Все')
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -46,11 +45,6 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
             result = render_to_string(self.page_template, context=context, request=self.request)
             return JsonResponse({'result': result})
         return super(ResumeListView, self).render_to_response(context, **response_kwargs)
-
-    def get_page_template(self, **kwargs):
-        self.page_template = self.page_templates[0] if self.request.user.status == UserStatus.JOBSEEKER else \
-            self.page_templates[1]
-        return self.page_template
 
     def employee_filter(self, context, object_list):
         if 'search' in self.request.GET and (text := self.request.GET['search']):
