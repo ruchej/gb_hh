@@ -18,11 +18,9 @@
                     </h4></a>
                 </div>
                 <ul class="btns">
-                    {% if user.status != 1 %}
-                    {% else %}
-                        <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
-                        <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
-                    {% endif %}
+                    <li><a href="#">
+                        Откликнуться
+                    </a></li>
                 </ul>
             </div>
             <h5>Опыт: {{ resume.experience.about }}</h5>
