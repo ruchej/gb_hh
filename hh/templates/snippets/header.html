@@ -8,22 +8,29 @@
             </div>
             <nav id="nav-menu-container">
                 <ul class="nav-menu">
-                    <li {% if request.resolver_match.view_name == 'blog:news' %} class="active" {% endif %}><a
-                            href="{% url 'blog:news' %}">Новости</a></li>
+                    <li {% if request.resolver_match.view_name == 'blog:news' %} class="active" {% endif %}>
+                        <a href="{% url 'blog:news' %}">
+                            Новости
+                        </a>
+                    </li>
                     {% if user.username %}
                         <li {% if request.resolver_match.view_name == 'resumes:resume_list' %}class="active"{% endif %}>
-                            <a
-                                    href="{% url 'resumes:resume_list' %}">Резюме</a></li>
+                            <a href="{% url 'resumes:resume_list' %}">
+                                Резюме
+                            </a>
+                        </li>
                         {% if user.status == 2 %}
                             <li {% if request.resolver_match.view_name == 'recruiting:response_list' %}class="active"{% endif %}>
-                                <a class="notification"
-                                        href="{% url 'recruiting:response_list' %}">
+                                <a class="notification" href="{% url 'recruiting:response_list' %}">
                                     <span>Отклики</span><span class="badge badge-danger">{% if unread_count %}{{ unread_count }}{% endif %}</span>
-                                </a></li>
+                                </a>
+                            </li>
                         {% endif %}
                         <li {% if request.resolver_match.view_name == 'vacancies:vacancy_list' %}class="active"{% endif %}>
-                            <a
-                                    href="{% url 'vacancies:vacancy_list' %}">Вакансии</a></li>
+                            <a href="{% url 'vacancies:vacancy_list' %}">
+                                Вакансии
+                            </a>
+                        </li>
                     {% else %}
                         <li {% if request.resolver_match.view_name == 'vacancies:vacancy_list' %}class="active"{% endif %}>
                             <a
@@ -38,19 +45,33 @@
                     <li {% if request.resolver_match.view_name == 'rules' %}class="active"{% endif %}>
                         <a href="{% url 'rules' %}">Правила</a>
                     </li>
+{#                    Пример выпадающего окна#}
+{#                    <li class="menu-has-children"><a href="">Pages</a>#}
+{#                        <ul>#}
+{#                            <li><a href="elements.html">elements</a></li>#}
+{#                            <li><a href="search.html">search</a></li>#}
+{#                            <li><a href="single.html">single</a></li>#}
+{#                        </ul>#}
+{#                    </li>#}
                     {% if user.username %}
-                        <li {% if request.resolver_match.view_name == 'accounts:UserDetail' %}class="active"{% endif %}><a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
-                        {{ user.username }}
-                    </a></li>
-                        <li><a class="ticker-btn" href="{% url 'accounts:Logout' %}?next={{ request.path|urlencode }}">
-                            Выйти
-                        </a></li>
+                        <li {% if request.resolver_match.view_name == 'accounts:UserDetail' %}class="active"{% endif %}>
+                            <a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
+                                {{ user.username }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="ticker-btn" href="{% url 'accounts:Logout' %}?next={{ request.path|urlencode }}">
+                                Выйти
+                            </a>
+                        </li>
                     {% else %}
-                        <li><a class="ticker-btn" href="{% url 'accounts:Login' %}" data-toggle="modal"
+                        <li>
+                            <a class="ticker-btn" href="{% url 'accounts:Login' %}" data-toggle="modal"
                                data-target="#modal"
                                data-tooltip>
-                            Войти
-                        </a></li>
+                                Войти
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </nav>
