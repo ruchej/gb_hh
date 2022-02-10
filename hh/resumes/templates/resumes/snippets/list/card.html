@@ -1,0 +1,58 @@
+{% if is_new %}
+    <div class="justify-content-end d-flex flex-row" style="pointer-events: none;">
+        <a class="genric-btn info noselect">
+            Новое
+        </a>
+    </div>
+{% endif %}
+<div class="single-post d-flex flex-row">
+    <div class="thumb justify-content-center">
+        {% if resume.photo %}
+            <img src="{{ resume.photo.url }}" style="object-fit: cover; width: 120px; height: 120px">
+        {% endif %}
+    </div>
+    <div class="details">
+        <div class="title d-flex flex-row justify-content-between">
+            <div class="titles">
+                {% if user.status == 1 %}
+                    <a href="{% url 'resumes:resume_detail' resume.id %}">
+                        <h4>
+                            {{ resume.title }}
+                        </h4>
+                    </a>
+                {% elif user.status == 2 %}
+                    <a href="{% url 'resumes:resume_detail' resume.id %}">
+                        <h4>
+                            {{ jobseeker.first_name }}
+                            {{ jobseeker.last_name }}
+                        </h4>
+                    </a>
+                {% endif %}
+            </div>
+            <ul class="btns">
+                {% if user.status == 1 %}
+                    <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
+                    <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
+                {% elif user.status == 2 %}
+                    <li>
+                        <a href="#">
+                            Откликнуться
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            {% if response %}
+                <ul class="btns">
+                    <li><a href="{% url 'recruiting:response_delete' response.id %}">Отклонить</a></li>
+                </ul>
+            {% endif %}
+        </div>
+        <h5>Опыт: {{ resume.experience.about }}</h5>
+        <h5>Навыки: {{ resume.experience.skills }}</h5>
+        <h5>Зарплата: {{ resume.position.salary }}</h5>
+        <h5>Занятость: {{ resume.position.employment }}</h5>
+        <h5>График: {{ resume.position.schedule }}</h5>
+        <h5>Переезд: {{ resume.position.get_relocation_display }}</h5>
+        <h5>Командировки: {{ resume.position.get_business_trip_display }}</h5>
+    </div>
+</div>

@@ -3,11 +3,43 @@
     <section class="post-area section-gap">
         <div class="container">
             <div class="row justify-content-sm-center d-flex">
-                {% if user.status == 1 %}
-                    {% include 'resumes/snippets/list/employee_list.html' %}
+                {% if object_list %}
+                    <div class="col-lg-8 post-list data-ajax">
+                        {% include page_template %}
+                    </div>
+
+                    <div class="col-lg-4 sidebar">
+                        {% if user.status == 1 %}
+                            <a class="d-flex flex-row ticker-btn" href="{% url 'resumes:resume_create' %}">
+                                Создать резюме
+                            </a>
+                        {% endif %}
+                        {% include 'resumes/snippets/list/search.html' %}
+                        {% include 'snippets/recent_news.html' %}
+                    </div>
                 {% else %}
-                    {% include 'resumes/snippets/list/employer_list.html' %}
+                    <div style="height: 50vh; width: 100vw">
+                        <div style="margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 50vw">
+                            <p style="text-align: center; font-size: large;">
+                                {% if user.status == 1 %}
+                                    Вы еще не добавили никаких резюме!
+                                    <a href="{% url 'resumes:resume_create' %}" class="stretched-link"> Создать?</a>
+                                {% else %}
+                                    Отсутствуют резюме...
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
                 {% endif %}
+
+
+
+
+                {#                {% if user.status == 1 %}#}
+                {#                    {% include 'resumes/snippets/list/employee_list.html' %}#}
+                {#                {% else %}#}
+                {#                    {% include 'resumes/snippets/list/employer_list.html' %}#}
+                {#                {% endif %}#}
             </div>
         </div>
     </section>

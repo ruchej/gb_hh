@@ -26,9 +26,10 @@
         {% endif %}
         <div class="single-post d-flex flex-row infinite-item">
             <div class="thumb justify-content-center">
-                <img src="{{ vacancy.employer.user.avatar }}" alt=""
-                     class="vacancy-image">
-                <img src="http://placehold.it/119x70" alt="">
+                {% if vacancy.employer.avatar %}
+                    <img src="{{ vacancy.employer.avatar.url }}" alt=""
+                         class="vacancy-image">
+                {% endif %}
                 <ul class="tags">
                     {% if vacancy.hashtags %}
                         <li>
