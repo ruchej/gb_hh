@@ -1,54 +1,39 @@
-{% load static %}
-<div class="inbox_people">
-    <div class="headind_srch justify-content-end d-flex">
-        <div class="srch_bar">
-            <div class="stylish-input-group">
-                <input type="text" class="search-bar" placeholder="Поиск">
-                <span class="input-group-addon">
-                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
-                </span>
+{% for chat, contact, resume, response, last_message, timestamp in chat_contacts %}
+    {% if response %}
+        <p class="ml-15" style="margin-bottom: -25px">
+            <a href="{% url 'vacancies:detail' response.vacancy.id %}">
+                Вакансия: {{ response.vacancy.title }}
+            </a>
+        </p>
+    {% else %}
+        <p class="ml-15" style="margin-bottom: -25px">
+            Отклик на резюме
+        </p>
+    {% endif %}
+    <a class="chat-link" href="{% url 'chat:open' chat.id %}">
+        <div class="chat_list">
+            <div class="chat_people">
+                <div class="chat_img">
+                    {% if contact.user.avatar %}
+                        <img src="{{ contact.user.avatar.url }}" alt="sunil"
+                             style="width: 50px">
+                    {% else %}
+                        <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"
+                             style="width: 50px">
+                    {% endif %}
+                </div>
+                <div class="chat_ib">
+                    <h5>
+                        {% if contact.user.status == 1 %}
+                            {{ contact.first_name }} {{ contact.last_name }}
+                        {% elif contact.user.status == 2 %}
+                            {{ contact.name }}
+                        {% endif %}
+                        {% include 'chat/snippets/msg_time.html' %}
+                    </h5>
+                    <p class="chat-{{ chat.id }}-last">{{ last_message }}</p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="inbox_chat" style="margin-left: 8px">
-        {% for chat, contact, resume, response, last_message, timestamp in chat_contacts %}
-            {% if response %}
-                <p class="ml-15" style="margin-bottom: -25px">
-                    <a href="{% url 'vacancies:detail' response.vacancy.id %}">
-                        Вакансия: {{ response.vacancy.title }}
-                    </a>
-                </p>
-            {% else %}
-                <p class="ml-15" style="margin-bottom: -25px">
-                    Отклик на резюме
-                </p>
-            {% endif %}
-            <a class="chat-link" href="{% url 'chat:open' chat.id %}">
-                <div class="chat_list">
-                    <div class="chat_people">
-                        <div class="chat_img">
-                            {% if contact.user.avatar %}
-                                <img src="{{ contact.user.avatar.url }}" alt="sunil"
-                                     style="width: 50px">
-                            {% else %}
-                                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"
-                                     style="width: 50px">
-                            {% endif %}
-                        </div>
-                        <div class="chat_ib">
-                            <h5>
-                                {% if contact.user.status == 1 %}
-                                    {{ contact.first_name }} {{ contact.last_name }}
-                                {% elif contact.user.status == 2 %}
-                                    {{ contact.name }}
-                                {% endif %}
-                                {% include 'chat/snippets/msg_time.html' %}
-                            </h5>
-                            <p class="chat-{{ chat.id }}-last">{{ last_message }}</p>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
-</div>
+    </a>
+{% endfor %}

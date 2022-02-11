@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import ChatListView, ChatCreateView, create_chat, open_chat, receive_message
+from .views import ChatListView, ChatCreateView, create_chat, open_chat, receive_message, search_contact
 
 app_name = 'chat'
 
@@ -23,6 +23,7 @@ urlpatterns = [
     path('', ChatListView.as_view(), name='list'),
     path('resume-invite/<int:resume_id>', ChatCreateView.as_view(), name='start_resume'),
     path('response-invite/<int:response_id>', ChatCreateView.as_view(), name='start_response'),
+    path('search-contact/', search_contact, name='search_contact'),
     path('create/<int:user_id>/', create_chat, name='create'),
     path('open/<int:chat_id>/', open_chat, name='open'),
     path('receive/<int:chat_id>/', receive_message, name='receive'),

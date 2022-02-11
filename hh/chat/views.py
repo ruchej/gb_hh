@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, TemplateView
+from django.db.models import Q
 
 from .models import Chat, Contact, Message
 from accounts.models import UserStatus, JobSeeker, Employer
@@ -20,35 +21,7 @@ class ChatListView(ListView, LoginRequiredMixin):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ChatListView, self).get_context_data(object_list=object_list, **kwargs)
-        employers, jobseekers = [], []
-        resumes, responses = [], []
-        last_messages, last_timestamps = [], []
-
-        for chat in context['chat_list']:
-            if self.request.user.status == UserStatus.EMPLOYER:
-                contact = chat.participants.all()[1]
-                jobseekers.append(JobSeeker.objects.get(user=contact.user))
-            elif self.request.user.status == UserStatus.JOBSEEKER:
-                contact = chat.participants.all()[0]
-                employers.append(Employer.objects.get(user=contact.user))
-            last_message = chat.messages.all().last()
-            last_message_text = get_last_message_text(self.request, last_message.contact.user, last_message.content)
-            last_messages.append(last_message_text)
-            last_timestamps.append(last_message.timestamp)
-            if chat.resume:
-                responses.append(None)
-                resumes.append(chat.resume)
-            elif chat.response:
-                responses.append(chat.response)
-                resumes.append(chat.response.resume)
-        context['chat_contacts'] = list(zip(
-            context['chat_list'],
-            jobseekers if jobseekers else employers,
-            resumes,
-            responses,
-            last_messages,
-            last_timestamps
-        ))
+        update_context_from_chats(self.request, context, context['chat_list'])
         return context
 
     def get_queryset(self):
@@ -150,6 +123,63 @@ def receive_message(request, chat_id):
                                      context={'timestamp': context['message'].timestamp},
                                      request=request)
         return JsonResponse({'result': result, 'message': message, 'timestamp': timestamp})
+
+
+def update_context_from_chats(request, context, chats):
+    employers, jobseekers = [], []
+    resumes, responses = [], []
+    last_messages, last_timestamps = [], []
+
+    for chat in chats:
+        if request.user.status == UserStatus.EMPLOYER:
+            contact = chat.participants.all()[1]
+            jobseekers.append(JobSeeker.objects.get(user=contact.user))
+        elif request.user.status == UserStatus.JOBSEEKER:
+            contact = chat.participants.all()[0]
+            employers.append(Employer.objects.get(user=contact.user))
+        last_message = chat.messages.all().last()
+        last_message_text = get_last_message_text(request, last_message.contact.user, last_message.content)
+        last_messages.append(last_message_text)
+        last_timestamps.append(last_message.timestamp)
+        if chat.resume:
+            responses.append(None)
+            resumes.append(chat.resume)
+        elif chat.response:
+            responses.append(chat.response)
+            resumes.append(chat.response.resume)
+    context['chat_contacts'] = list(zip(
+        chats,
+        jobseekers if jobseekers else employers,
+        resumes,
+        responses,
+        last_messages,
+        last_timestamps
+    ))
+
+
+def search_contact(request):
+    if request.is_ajax():
+        name = request.GET.get('contact')
+        if name:
+            if request.user.status == UserStatus.JOBSEEKER:
+                contacts = Employer.objects.filter(name__contains=name)
+            elif request.user.status == UserStatus.EMPLOYER:
+                contacts = JobSeeker.objects.filter(Q(first_name__contains=name) | Q(last_name__contains=name))
+            else:
+                raise Exception('Unsupported user')
+            usernames = []
+            usernames.extend([cont.user.username for cont in contacts])
+        else:
+            usernames = [request.user]
+        chats = Chat.objects.filter(participants__user__username__in=usernames)
+        user_contact = Contact.objects.get(user=request.user)
+        chats = [chat for chat in chats if user_contact in chat.participants.all()]
+        context = {}
+        update_context_from_chats(request, context, chats)
+        result = render_to_string('chat/snippets/contacts.html',
+                                  context=context,
+                                  request=request)
+        return JsonResponse({'result': result})
 
 
 def get_last_10_messages(chatId):

@@ -17,7 +17,7 @@ class Chat {
     }
 
     setHandlers() {
-        this.socket.onmessage = (e) =>{
+        this.socket.onmessage = (e) => {
             const msgData = JSON.parse(e.data);
             $.ajax({
                 url: `receive/${this.chatId}/`,
@@ -85,7 +85,26 @@ function loadChat(link) {
     });
 }
 
-window.onload = () => {
+function searchContact(event) {
+    let $form = $('#search-form');
+    let link = $form.attr('action');
+    event.preventDefault();
+    $.ajax({
+        url: link,
+        data: $('#search-form').serialize(),
+        success: (data) => {
+            if (data.hasOwnProperty('result')) {
+                $('.contacts-ajax').html(data.result);
+                ajaxReloadHandlers();
+            }
+        },
+        error: (e) => {
+            console.error(eval(e))
+        }
+    });
+}
+
+function ajaxReloadHandlers() {
     $('.chat_list')
         .click((event) => {
             event.preventDefault();
@@ -94,6 +113,19 @@ window.onload = () => {
             container.classList.add('active_chat');
             loadChat(container.parentElement.href);
         })
+}
+
+window.onload = () => {
+    ajaxReloadHandlers();
+    $('#search-form').submit((event) => {
+        searchContact(event);
+        $('.search-clear').show();
+    });
+    $('.search-clear').click((event) => {
+        $('.search-bar').val('');
+        searchContact(event);
+        $('.search-clear').hide();
+    });
     let chatIds = $('.chat-link').map(function () {
         const regex = /\/open\/(\d+)\//;
         return regex.exec(this.href)[1]
