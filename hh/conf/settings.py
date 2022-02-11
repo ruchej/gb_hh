@@ -84,6 +84,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',  # For EL-pagination
                 'blog.context_processor.recent_news',
+                'conf.context_processor.new_messages',
             ],
         },
     },

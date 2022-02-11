@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import ChatListView, ChatCreateView, create_chat, open_chat, receive_message, search_contact
+from .views import ChatListView, ChatCreateView, create_chat, open_chat, receive_message, search_contact, \
+    read_notifications
 
 app_name = 'chat'
 
@@ -27,4 +28,5 @@ urlpatterns = [
     path('create/<int:user_id>/', create_chat, name='create'),
     path('open/<int:chat_id>/', open_chat, name='open'),
     path('receive/<int:chat_id>/', receive_message, name='receive'),
+    path('notif/read/<int:chat_id>/', read_notifications, name='read_notif'),
 ]

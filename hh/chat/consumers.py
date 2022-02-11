@@ -5,7 +5,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import async_to_sync, sync_to_async
 
 from .models import Message
-from .views import get_last_10_messages, get_user_contact, get_current_chat
+from .views import get_last_10_messages, get_user_contact, get_current_chat, notify_participants
 
 User = get_user_model()
 
@@ -50,6 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message': self._message_to_json(message)
         }
         async_to_sync(self.send_chat_message)(content)
+        notify_participants(current_chat, user_contact)
 
     async def receive(self, text_data):
         data = json.loads(text_data)

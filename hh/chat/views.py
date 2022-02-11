@@ -6,6 +6,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, TemplateView
 from django.db.models import Q
+from notifications.signals import notify
+from notifications.models import Notification
 
 from .models import Chat, Contact, Message
 from accounts.models import UserStatus, JobSeeker, Employer
@@ -13,6 +15,8 @@ from resumes.models import Resume
 from recruiting.models import Response
 
 User = get_user_model()
+
+NEW_MESSAGE = 'New message'
 
 
 class ChatListView(ListView, LoginRequiredMixin):
@@ -74,9 +78,21 @@ def create_chat(request, user_id):
     return redirect('chat:list')
 
 
+def read_notifications(request, chat_id=None, chat=None):
+    if chat_id and not chat:
+        chat = Chat.objects.get(id=chat_id)
+    for notif in request.user.notifications.unread():
+        if notif.verb == NEW_MESSAGE and notif.target == chat:
+            notif.mark_as_read()
+            notif.save()
+
+
 def open_chat(request, chat_id):
     if request.is_ajax():
         chat = Chat.objects.get(id=chat_id)
+
+        read_notifications(request, chat=chat)
+
         if chat.resume:
             jobseeker = JobSeeker.objects.get(user=chat.resume.user)
         elif chat.response:
@@ -129,6 +145,11 @@ def update_context_from_chats(request, context, chats):
     employers, jobseekers = [], []
     resumes, responses = [], []
     last_messages, last_timestamps = [], []
+    notify_present = []
+
+    notifs = [notif for notif in request.user.notifications.unread()
+              if notif.verb == NEW_MESSAGE]
+    notif_chats = [notif.target for notif in notifs]
 
     for chat in chats:
         if request.user.status == UserStatus.EMPLOYER:
@@ -147,13 +168,19 @@ def update_context_from_chats(request, context, chats):
         elif chat.response:
             responses.append(chat.response)
             resumes.append(chat.response.resume)
+        if chat in notif_chats:
+            num = notif_chats.index(chat)
+            notify_present.append(notifs[num].id)
+        else:
+            notify_present.append(None)
     context['chat_contacts'] = list(zip(
         chats,
         jobseekers if jobseekers else employers,
         resumes,
         responses,
         last_messages,
-        last_timestamps
+        last_timestamps,
+        notify_present
     ))
 
 
@@ -190,6 +217,14 @@ def get_last_10_messages(chatId):
 def get_user_contact(username):
     user = get_object_or_404(User, username=username)
     return get_object_or_404(Contact, user=user)
+
+
+def notify_participants(chat, sender_contact):
+    chat_participants = [cont for cont in chat.participants.all()]
+    chat_participants.remove(sender_contact)
+    for contact in chat_participants:
+        notify.send(sender_contact.user, recipient=contact.user,
+                    verb=NEW_MESSAGE, target=chat)
 
 
 def get_current_chat(chatId):

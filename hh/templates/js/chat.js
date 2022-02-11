@@ -19,6 +19,9 @@ class Chat {
     setHandlers() {
         this.socket.onmessage = (e) => {
             const msgData = JSON.parse(e.data);
+            if ($(`.${this.chatClass}-contact`).hasClass('active_chat')) {
+                this.readNotification();
+            }
             $.ajax({
                 url: `receive/${this.chatId}/`,
                 data: msgData,
@@ -26,9 +29,21 @@ class Chat {
                     if (data.hasOwnProperty('result')) {
                         // let message = `${data.sender}: ${msgData.message.content}`
                         $(`.${this.chatClass}-last`).text(data.message);
+
+                        $('#search-form').submit();
+
+                        // if (!$(`.${this.chatClass}-contact`).hasClass('active_chat')) {
+                        //     $(`.${this.chatClass}-alert`).addClass('alert-danger');
+                        // }
+
                         $(`.chat_date`).replaceWith(data.timestamp);
                         $(`.${this.chatClass}`).append(data.result);
                         $(`.${this.chatClass}`).scrollTop($(`.${this.chatClass}`)[0].scrollHeight);
+
+                        // let container = findClassInParents('chat_list', event.target);
+                        // let alertContainer = findClassInParents('alert', container);
+                        // alertContainer.classList.remove('alert-danger');
+                        // container.classList.add('active_chat');
                     }
                 },
                 error: (e) => {
@@ -52,13 +67,19 @@ class Chat {
         }));
         messageInputDom.value = '';
     }
+
+    readNotification() {
+        $.ajax({
+            url: `notif/read/${this.chatId}/`
+        })
+    }
 }
 
 let chats = {};
 
-function findClassInParents(element) {
-    if (element.classList.contains('chat_list')) return element;
-    return findClassInParents(element.parentElement);
+function findClassInParents(cls, element) {
+    if (element.classList.contains(cls)) return element;
+    return findClassInParents(cls, element.parentElement);
 }
 
 function loadChat(link) {
@@ -109,7 +130,9 @@ function ajaxReloadHandlers() {
         .click((event) => {
             event.preventDefault();
             $('.active_chat').removeClass('active_chat');
-            let container = findClassInParents(event.target);
+            let container = findClassInParents('chat_list', event.target);
+            let alertContainer = findClassInParents('alert', container);
+            alertContainer.classList.remove('alert-danger');
             container.classList.add('active_chat');
             loadChat(container.parentElement.href);
         })

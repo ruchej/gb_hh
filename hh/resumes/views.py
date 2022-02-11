@@ -13,6 +13,7 @@ from django.db.models import Q
 
 from . import models, forms
 from accounts.models import UserStatus, JobSeeker
+from recruiting.views import NEW_RESUME_NOTIF
 
 
 class ResumeListView(LoginRequiredMixin, AjaxListView):
@@ -133,7 +134,8 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
         context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
         context['jobseeker'] = JobSeeker.objects.get(user=context['resume'].user)
         if self.request.user.status == UserStatus.EMPLOYER:
-            notifs = [notif for notif in self.request.user.notifications.unread()]
+            notifs = [notif for notif in self.request.user.notifications.unread()
+                      if notif.verb == NEW_RESUME_NOTIF]
             notifs_resumes = [notif.target for notif in notifs]
             if (resume := context['object']) in notifs_resumes:
                 notifs[notifs_resumes.index(resume)].mark_as_read()
