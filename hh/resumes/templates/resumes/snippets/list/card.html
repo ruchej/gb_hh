@@ -34,6 +34,11 @@
                     <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
                     <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
                 {% elif user.status == 2 %}
+                    <li>
+                        <a href="#">
+                            Откликнуться
+                        </a>
+                    </li>
                     <li class="favorite-icon">
                         <a href="{% url 'accounts:favourite_add' resume.id %}">
                             {% if fav %}
@@ -43,18 +48,15 @@
                             {% endif %}
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            Откликнуться
-                        </a>
-                    </li>
+                    {% if response %}
+                        <li>
+                            <a href="{% url 'recruiting:response_delete' response.id %}">
+                                Отклонить
+                            </a>
+                        </li>
+                    {% endif %}
                 {% endif %}
             </ul>
-            {% if response %}
-                <ul class="btns">
-                    <li><a href="{% url 'recruiting:response_delete' response.id %}">Отклонить</a></li>
-                </ul>
-            {% endif %}
         </div>
         <h5>Опыт: {{ resume.experience.about }}</h5>
         <h5>Навыки: {{ resume.experience.skills }}</h5>
