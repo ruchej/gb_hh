@@ -21,7 +21,9 @@
             </div>
             <p>
                 {% if vacancy.description %}
-                    {{ vacancy.description }}
+                    {% autoescape off %}
+                        {{ vacancy.description }}
+                    {% endautoescape %}
                 {% else %}
                     Нет описания
                 {% endif %}

@@ -32,9 +32,11 @@
                 {% endif %}
                 <ul class="tags">
                     {% if vacancy.hashtags %}
-                        <li>
-                            <a href="#">{{ vacancy.hashtags }}</a>
-                        </li>
+                        {% for hashtag in vacancy.hashtags_as_list %}
+                            <li>
+                                <a href="#">{{ hashtag|truncatechars:17 }}</a>
+                            </li>
+                        {% endfor %}
                     {% endif %}
                 </ul>
             </div>
@@ -66,7 +68,8 @@
                 </div>
                 <p>
                     {% if vacancy.description %}
-                        {{ vacancy.description }}
+                        {{ vacancy.description|striptags|truncatewords:20 }}
+{#                        {{ vacancy.description }}#}
                     {% else %}
                         Нет описания
                     {% endif %}
@@ -80,7 +83,7 @@
                         <span class="lnr lnr-map"></span> {{ employer.city.name }}
                     </p>
                 {% endif %}
-                <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}
+                <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary|default:"Не указана" }}
                 </p>
             </div>
         </div>
