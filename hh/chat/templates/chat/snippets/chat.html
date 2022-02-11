@@ -4,7 +4,15 @@
     {% if chat %}
         <div class="msg_history chat-{{ chat.id }}">
             {% for message in chat.messages.all %}
-                {% include 'chat/snippets/message.html' %}
+                {% if message == chat.messages.all.0 %}
+                    {% if chat.response %}
+                        {% include 'chat/snippets/message.html' with resume=chat.response.resume %}
+                    {% else %}
+                        {% include 'chat/snippets/message.html' with resume=chat.resume %}
+                    {% endif %}
+                {% else %}
+                    {% include 'chat/snippets/message.html' %}
+                {% endif %}
             {% endfor %}
         </div>
         <div class="type_msg">
@@ -17,6 +25,10 @@
             </div>
         </div>
     {% else %}
-        <p>Выберите диалог</p>
+        <div class="justify-content-center d-flex" style="height: 60vh;">
+            <div class="d-flex align-items-center">
+                <h1>Выберите диалог</h1>
+            </div>
+        </div>
     {% endif %}
 </div>

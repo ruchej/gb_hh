@@ -21,10 +21,9 @@ app_name = 'chat'
 
 urlpatterns = [
     path('', ChatListView.as_view(), name='list'),
-    path('create/', ChatCreateView.as_view(), name='start'),
+    path('resume-invite/<int:resume_id>', ChatCreateView.as_view(), name='start_resume'),
+    path('response-invite/<int:response_id>', ChatCreateView.as_view(), name='start_response'),
     path('create/<int:user_id>/', create_chat, name='create'),
     path('open/<int:chat_id>/', open_chat, name='open'),
     path('receive/<int:chat_id>/', receive_message, name='receive'),
-    # path('<str:room_name>/', room, name='room'),
-    # path('', index, name='index'),
 ]

@@ -1,27 +1,38 @@
 {% load static %}
 <div class="inbox_people">
-    <div class="headind_srch">
-        <div class="recent_heading">
-            <h4>Сообщения</h4>
-        </div>
+    <div class="headind_srch justify-content-end d-flex">
         <div class="srch_bar">
             <div class="stylish-input-group">
                 <input type="text" class="search-bar" placeholder="Поиск">
                 <span class="input-group-addon">
                 <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
-                </span></div>
+                </span>
+            </div>
         </div>
     </div>
-    <div class="inbox_chat">
-        {% for chat, contact, last_message, timestamp in chat_contacts %}
+    <div class="inbox_chat" style="margin-left: 8px">
+        {% for chat, contact, resume, response, last_message, timestamp in chat_contacts %}
+            {% if response %}
+                <p class="ml-15" style="margin-bottom: -25px">
+                    <a href="{% url 'vacancies:detail' response.vacancy.id %}">
+                        Вакансия: {{ response.vacancy.title }}
+                    </a>
+                </p>
+            {% else %}
+                <p class="ml-15" style="margin-bottom: -25px">
+                    Отклик на резюме
+                </p>
+            {% endif %}
             <a class="chat-link" href="{% url 'chat:open' chat.id %}">
                 <div class="chat_list">
                     <div class="chat_people">
                         <div class="chat_img">
                             {% if contact.user.avatar %}
-                                <img src="{{ contact.user.avatar.url }}" alt="sunil">
+                                <img src="{{ contact.user.avatar.url }}" alt="sunil"
+                                     style="width: 50px">
                             {% else %}
-                                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"
+                                     style="width: 50px">
                             {% endif %}
                         </div>
                         <div class="chat_ib">
@@ -41,24 +52,3 @@
         {% endfor %}
     </div>
 </div>
-{#{% for chat, contact in chat_contacts %}#}
-{#    <div class="justify-content-start d-flex flex-row">#}
-{#        {% if contact.user.status == 1 %}#}
-{#            <p>#}
-{#                {{ contact.first_name }} {{ contact.last_name }}#}
-{#            </p>#}
-{#        {% elif contact.user.status == 2 %}#}
-{#            <p>#}
-{#                {{ contact.name }}#}
-{#            </p>#}
-{#        {% endif %}#}
-{#        <div id="{{ chat.id }}">#}
-{#            {{ chat.id|json_script:'room-name' }}#}
-{#            {{ user.username|json_script:'sender' }}#}
-{#            {{ contact.user.username|json_script:'receiver' }}#}
-{#            <textarea id="chat-log" cols="100" rows="20"></textarea><br>#}
-{#            <input id="chat-message-input" type="text" size="100"><br>#}
-{#            <input id="chat-message-submit" type="button" value="Send">#}
-{#        </div>#}
-{#    </div>#}
-{#{% endfor %}#}

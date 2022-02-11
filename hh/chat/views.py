@@ -6,8 +6,10 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, TemplateView
 
-from .models import Chat, Contact
+from .models import Chat, Contact, Message
 from accounts.models import UserStatus, JobSeeker, Employer
+from resumes.models import Resume
+from recruiting.models import Response
 
 User = get_user_model()
 
@@ -18,7 +20,10 @@ class ChatListView(ListView, LoginRequiredMixin):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ChatListView, self).get_context_data(object_list=object_list, **kwargs)
-        last_messages, employers, jobseekers, last_timestamps = [], [], [], []
+        employers, jobseekers = [], []
+        resumes, responses = [], []
+        last_messages, last_timestamps = [], []
+
         for chat in context['chat_list']:
             if self.request.user.status == UserStatus.EMPLOYER:
                 contact = chat.participants.all()[1]
@@ -30,27 +35,20 @@ class ChatListView(ListView, LoginRequiredMixin):
             last_message_text = get_last_message_text(self.request, last_message.contact.user, last_message.content)
             last_messages.append(last_message_text)
             last_timestamps.append(last_message.timestamp)
-            # last_contact.append(last_message.contact.user)
+            if chat.resume:
+                responses.append(None)
+                resumes.append(chat.resume)
+            elif chat.response:
+                responses.append(chat.response)
+                resumes.append(chat.response.resume)
         context['chat_contacts'] = list(zip(
             context['chat_list'],
             jobseekers if jobseekers else employers,
+            resumes,
+            responses,
             last_messages,
             last_timestamps
         ))
-        # if self.request.user.status == UserStatus.EMPLOYER:
-        #     jobseekers = []
-        #     for chat in context['chat_list']:
-        #         contact = chat.participants.all()[1]
-        #         jobseekers.append(JobSeeker.objects.get(user=contact.user))
-        #         last_messages.append(chat.messages.all().last())
-        #     context['chat_jobseekers'] = list(zip(context['chat_list'], jobseekers, last_messages))
-        # elif self.request.user.status == UserStatus.JOBSEEKER:
-        #     employers = []
-        #     for chat in context['chat_list']:
-        #         contact = chat.participants.all()[0]
-        #         employers.append(Employer.objects.get(user=contact.user))
-        #         last_messages.append(chat.messages.all().last())
-        #     context['chat_employers'] = list(zip(context['chat_list'], employers, last_messages))
         return context
 
     def get_queryset(self):
@@ -62,17 +60,43 @@ class ChatListView(ListView, LoginRequiredMixin):
 
 
 class ChatCreateView(TemplateView, LoginRequiredMixin):
-    extra_context = {'title': 'Начните Чат'}
+    extra_context = {'title': 'Сообщение кандидату'}
     template_name = 'chat/chat_create.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ChatCreateView, self).get_context_data(**kwargs)
+        response_id = kwargs.get('response_id', None)
+        resume_id = kwargs.get('resume_id', None)
+        if response_id:
+            context['response'] = Response.objects.get(id=response_id)
+            resume = context['response'].resume
+        elif resume_id:
+            resume = Resume.objects.get(id=resume_id)
+            context['resume'] = resume
+        else:
+            raise Exception('Neither resume, nor response ID was provided')
+        context['jobseeker'] = JobSeeker.objects.get(user=resume.user)
+        context['responding'] = True
+        return context
 
 
 def create_chat(request, user_id):
-    chat = Chat()
+    if response_id := request.POST.get('response_id', None):
+        response = Response.objects.get(id=response_id)
+        chat = Chat(response=response)
+    elif resume_id := request.POST.get('resume_id', None):
+        resume = Resume.objects.get(id=resume_id)
+        chat = Chat(resume=resume)
+    else:
+        raise Exception('Neither resume, nor response ID was provided')
     chat.save()
     contact_employer = Contact.objects.get(user=request.user)
     contact_jobseeker = Contact.objects.get(user__id=user_id)
     chat.participants.add(contact_employer)
     chat.participants.add(contact_jobseeker)
+    message = Message(contact=contact_employer, content=request.POST.get('start_message', ''))
+    message.save()
+    chat.messages.add(message)
     chat.save()
     return redirect('chat:list')
 
@@ -80,8 +104,15 @@ def create_chat(request, user_id):
 def open_chat(request, chat_id):
     if request.is_ajax():
         chat = Chat.objects.get(id=chat_id)
+        if chat.resume:
+            jobseeker = JobSeeker.objects.get(user=chat.resume.user)
+        elif chat.response:
+            jobseeker = JobSeeker.objects.get(user=chat.response.resume.user)
+        else:
+            raise Exception('Chat without resume or response??')
         context = {}
         context['chat'] = chat
+        context['jobseeker'] = jobseeker
         result = render_to_string('chat/snippets/chat.html',
                                   context=context,
                                   request=request)
@@ -100,7 +131,8 @@ def get_last_message_text(request, user, text):
         sender = sender.name
     else:
         sender = 'Неизвестный'
-    return f'{sender}: {text[:40] + "..." if len(text) > 40 else text}'
+    string = f'{sender}: {text}'
+    return f'{string[:40] + "..." if len(string) > 40 else string}'
 
 
 def receive_message(request, chat_id):

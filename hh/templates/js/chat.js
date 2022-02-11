@@ -56,52 +56,8 @@ class Chat {
 
 let chats = {};
 
-// const establishConnection = (chatId) => {
-//     chatSocket = new WebSocket(
-//         'ws://'
-//         + window.location.host
-//         + '/ws/chat/'
-//         + chatId
-//         + '/'
-//     );
-//     const chatClass = `chat-${chatId}`
-//
-//     chatSocket.onmessage = function (e) {
-//         $.ajax({
-//             url: `receive/${chatId}/`,
-//             success: (data) => {
-//                 if (data.hasOwnProperty('result')) {
-//                     const msgData = JSON.parse(e.data);
-//                     $(`.${chatClass}-last`).text(msgData.message.content);
-//                     $(`.${chatClass}`).append(data.result);
-//                     $('.${chatClass}').scrollTop($('.${chatClass}')[0].scrollHeight);
-//                 }
-//             },
-//             error: (e) => {
-//                 console.error(eval(e))
-//             }
-//         });
-//     };
-//
-//     chatSocket.onclose = function (e) {
-//         console.error('Chat socket closed unexpectedly');
-//     };
-// }
-//
-// const sendMessage = (chatId) => {
-//     const messageInputDom = document.querySelector('.write_msg');
-//     const message = messageInputDom.value;
-//     chatSocket.send(JSON.stringify({
-//         'command': 'new_message',
-//         chatId,
-//         'from': JSON.parse(document.getElementById('sender').textContent),
-//         'message': message
-//     }));
-//     messageInputDom.value = '';
-// }
-
 function findClassInParents(element) {
-    if (element.className === 'chat_list') return element;
+    if (element.classList.contains('chat_list')) return element;
     return findClassInParents(element.parentElement);
 }
 
@@ -133,7 +89,7 @@ window.onload = () => {
     $('.chat_list')
         .click((event) => {
             event.preventDefault();
-            $('.chat_list .active_chat div').removeClass('active_chat');
+            $('.active_chat').removeClass('active_chat');
             let container = findClassInParents(event.target);
             container.classList.add('active_chat');
             loadChat(container.parentElement.href);

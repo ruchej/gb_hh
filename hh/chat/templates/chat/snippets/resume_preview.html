@@ -1,0 +1,29 @@
+<a href="{% url 'resumes:resume_detail' resume.id %}">
+    <div class="d-flex flex-row pb-2 mb-2 chat-resume">
+        <div class="justify-content-center">
+            {% if resume.photo %}
+                <img src="{{ resume.photo.url }}" style="object-fit: cover; width: 100px; height: 100px">
+            {% endif %}
+        </div>
+        <div class="details ml-2">
+            <div class="title d-flex flex-column">
+                <h6>
+                    {{ jobseeker.first_name }}
+                    {{ jobseeker.last_name }}
+                </h6>
+                <p class="mb-0" style="color: #777">
+                    {{ jobseeker.date_birth }}
+                </p>
+                <p class="mb-0" style="color: #777">
+                    {{ jobseeker.get_sex_display }}
+                </p>
+                <p class="mb-0" style="color: #777">
+                    {{ jobseeker.phone }}
+                </p>
+                <p class="mb-0" style="color: #777">
+                    {{ jobseeker.city.name }}
+                </p>
+            </div>
+        </div>
+    </div>
+</a>
