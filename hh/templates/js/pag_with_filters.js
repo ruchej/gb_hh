@@ -6,6 +6,7 @@ function reloadSelect() {
 
 function onPaginationFinished() {
     reloadSelect();
+    activateFavorites();
 }
 
 function initEndlessPagination() {
@@ -24,6 +25,7 @@ function searchAjax(link) {
                 $('.data-ajax').html(data.result);
                 reloadSelect();
                 initEndlessPagination();
+                activateFavorites();
             }
         },
         error: (e) => {
