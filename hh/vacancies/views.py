@@ -44,7 +44,7 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
     def get_queryset(self):
         queryset = super().get_queryset().order_by('created_at')
         if self.request.user.status == UserStatus.EMPLOYER:
-            queryset = queryset.filter(employer=self.request.user)
+            queryset = queryset.filter(employer=self.request.user).select_related('employer')
         return queryset
 
     def render_to_response(self, context, **response_kwargs):
@@ -79,13 +79,13 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
                                  Q(name__contains=text) |
                                  Q(description__contains=text),
                                  city__id=city_id
-                             )]
+                             ).select_related('user')]
             else:
                 employers = [empl.user for empl in
                              employers.filter(
                                  Q(name__contains=text) |
                                  Q(description__contains=text)
-                             )]
+                             ).select_related('user')]
             employer_vacancies = list(object_list.filter(employer__in=employers).order_by('created_at'))
             vacancies.extend(employer_vacancies)
             vacancies = list(dict.fromkeys(vacancies))
@@ -135,8 +135,8 @@ def filter_by_city(vacancies, city_id):
     empl_acc_all = list(dict.fromkeys([vac.employer for vac in vacancies]))
     # Get relevant employers
     if city_id != 0:
-        employers = Employer.objects.filter(user__in=empl_acc_all, city__id=city_id)
-        vacancies = Vacancy.objects.filter(employer__in=[empl.user for empl in employers]).order_by('created_at')
+        employers = Employer.objects.filter(user__in=empl_acc_all, city__id=city_id).select_related('user')
+        vacancies = Vacancy.objects.filter(employer__in=[empl.user for empl in employers]).order_by('created_at').select_related('employer')
     else:
-        employers = Employer.objects.filter(user__in=empl_acc_all)
+        employers = Employer.objects.filter(user__in=empl_acc_all).select_related('user')
     return vacancies, employers
