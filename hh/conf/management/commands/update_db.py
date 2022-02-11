@@ -1,3 +1,4 @@
+import json
 import random
 
 from django.contrib.auth import get_user_model
@@ -22,6 +23,8 @@ chelyabinsk = City.objects.get(name='Chelyabinsk')
 
 class Command(BaseCommand):
     help = 'Update database with test data.'
+    employers_fixtures = []
+    vacancies_fixtures = []
 
     @staticmethod
     def create_suser():
@@ -34,6 +37,8 @@ class Command(BaseCommand):
             Employer.objects.get(user=employer).delete()
             mixer.blend(Employer, user=employer, name='Google', description=mixer.RANDOM,
                         phone=mixer.RANDOM, country=russia, city=moscow)
+            employer.avatar = 'avatars/google-logo.webp'
+            employer.save()
             mixer.blend(vacancies_models.Vacancy, employer=employer,
                         title='Python Developer', description='Разработчик на питоне (Django)',
                         hashtags='Python, Django', salary='500000')
@@ -47,27 +52,41 @@ class Command(BaseCommand):
             mixer.blend(JobSeeker, user=employee, first_name='Василий', patronymic='Васильевич',
                         last_name='Пупкин', date_birth=mixer.RANDOM, sex=JobSeeker.Sex.MAN,
                         country=russia, city=moscow)
-            resume = mixer.blend(resumes_models.Resume, user=employee)
+            employee.avatar = 'avatars/pupkin.jpg'
+            employee.save()
+            resume = mixer.blend(resumes_models.Resume, user=employee, photo='')
             mixer.cycle(5).blend(resumes_models.Job, experience=resume.experience)
         else:
             employee = User.objects.get(username='employee')
         mixer.blend(recruiting_models.Response, vacancy__employer=employer, resume__user=employee)
 
     @staticmethod
-    def create_users():
+    def create_employers():
         for _ in range(random.randint(10, 20)):
-            user = mixer.blend(User, status=random.choice([UserStatus.JOBSEEKER, UserStatus.EMPLOYER]))
-            if user.status == UserStatus.JOBSEEKER:
-                JobSeeker.objects.get(user=user).delete()
-                mixer.blend(JobSeeker, user=user, date_birth=mixer.RANDOM,
-                            sex=random.choice([JobSeeker.Sex.MAN, JobSeeker.Sex.WOMAN]),
-                            country=russia,
-                            city=random.choice([moscow, st_peter, chelyabinsk]))
-            elif user.status == UserStatus.EMPLOYER:
-                Employer.objects.get(user=user).delete()
-                mixer.blend(Employer, user=user, name=mixer.RANDOM, description=mixer.RANDOM,
-                            phone=mixer.RANDOM, country=russia,
-                            city=random.choice([moscow, st_peter, chelyabinsk]))
+            user = mixer.blend(User, status=UserStatus.EMPLOYER)
+            Employer.objects.get(user=user).delete()
+            mixer.blend(Employer, user=user, name=mixer.RANDOM, description=mixer.RANDOM,
+                        phone=mixer.RANDOM, country=russia,
+                        city=random.choice([moscow, st_peter, chelyabinsk]))
+
+    @staticmethod
+    def create_employers():
+        for _ in range(random.randint(10, 20)):
+            user = mixer.blend(User, status=UserStatus.EMPLOYER)
+            Employer.objects.get(user=user).delete()
+            mixer.blend(Employer, user=user, name=mixer.RANDOM, description=mixer.RANDOM,
+                        phone=mixer.RANDOM, country=russia,
+                        city=random.choice([moscow, st_peter, chelyabinsk]))
+
+    @staticmethod
+    def create_jobseekers():
+        for _ in range(random.randint(10, 20)):
+            user = mixer.blend(User, status=UserStatus.JOBSEEKER)
+            JobSeeker.objects.get(user=user).delete()
+            mixer.blend(JobSeeker, user=user, date_birth=mixer.RANDOM,
+                        sex=random.choice([JobSeeker.Sex.MAN, JobSeeker.Sex.WOMAN]),
+                        country=russia,
+                        city=random.choice([moscow, st_peter, chelyabinsk]))
 
     @staticmethod
     def create_resumes():
@@ -113,7 +132,53 @@ class Command(BaseCommand):
         User.objects.all().delete()
         blog_models.Article.objects.all().delete()
 
+    def import_fixtures(self):
+        with open('conf/fixtures/companies.json', 'r', encoding='utf-8') as f:
+            self.employers_fixtures = json.load(f, strict=False)
+        with open('conf/fixtures/vacancies.json', 'r', encoding='utf-8') as f:
+            self.vacancies_fixtures = json.load(f, strict=False)
+
+    def add_employers_from_fixtures(self):
+        for employer_data in self.employers_fixtures:
+            if 'name' not in employer_data or 'description' not in employer_data:
+                continue
+            user = mixer.blend(User, status=UserStatus.EMPLOYER)
+            Employer.objects.get(user=user).delete()
+            mixer.blend(Employer, user=user, name=employer_data['name'],
+                        description=employer_data['description'],
+                        phone=mixer.RANDOM, country=russia,
+                        city=random.choice([moscow, st_peter, chelyabinsk]))
+            if employer_data['avatar']:
+                user.avatar = employer_data['avatar'][0]['path']
+                user.save()
+
+    def add_vacancies_from_fixtures(self):
+        for vacancy_data in self.vacancies_fixtures:
+            if Employer.objects.filter(name=vacancy_data['company']).exists() and 'position' in vacancy_data:
+                employer = Employer.objects.get(name=vacancy_data['company'])
+                salary = vacancy_data['salary'] if 'salary' in vacancy_data else {}
+                if salary and salary['min']:
+                    salary = f'от {salary["min"]}' \
+                             f'{(" до " + str(salary["max"])) if salary["max"] else ""}' \
+                             f'{(" " + str(salary["currency"])) if salary["currency"] else ""}'
+                else:
+                    salary = ''
+                mixer.blend(vacancies_models.Vacancy,
+                            employer=employer.user,
+                            title=vacancy_data['position'],
+                            description=vacancy_data['description'] if 'description' in vacancy_data else '',
+                            hashtags=vacancy_data['hashtags'] if 'hashtags' in vacancy_data else '',
+                            salary=salary,
+                            address=vacancy_data['address'] if 'address' in vacancy_data else '')
+
     def add_arguments(self, parser):
+        parser.add_argument(
+            '-j',
+            '--json',
+            action='store_true',
+            default=False,
+            help='Fill database using fixtures'
+        )
         parser.add_argument(
             '-f',
             '--fill',
@@ -132,12 +197,33 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options.get('fill'):
             self.create_suser()
-            self.create_users()
+
+            self.create_jobseekers()
             self.create_resumes()
             self.create_jobs()
+
+            self.create_employers()
             self.create_vacancies()
-            self.create_blog()
+
             self.create_responses()
             self.create_offers()
+
+            self.create_blog()
+        elif options.get('json'):
+            self.import_fixtures()
+
+            self.create_suser()
+
+            self.create_jobseekers()
+            self.create_resumes()
+            self.create_jobs()
+
+            self.add_employers_from_fixtures()
+            self.add_vacancies_from_fixtures()
+
+            self.create_responses()
+            self.create_offers()
+
+            self.create_blog()
         elif options.get('clear'):
             self.clear_db()
