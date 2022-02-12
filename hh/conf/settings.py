@@ -85,6 +85,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # For EL-pagination
                 'blog.context_processor.recent_news',
                 'conf.context_processor.new_messages',
+                'conf.context_processor.new_responses',
             ],
         },
     },
