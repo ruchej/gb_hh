@@ -78,6 +78,12 @@ def create_chat(request, user_id):
     return redirect('chat:list')
 
 
+def get_notifications(request):
+    from conf.context_processor import new_messages
+    if request.is_ajax():
+        return JsonResponse(new_messages(request))
+
+
 def read_notifications(request, chat_id=None, chat=None):
     if chat_id and not chat:
         chat = Chat.objects.get(id=chat_id)
@@ -150,7 +156,7 @@ def update_context_from_chats(request, context, chats):
     notifs = [notif for notif in request.user.notifications.unread()
               if notif.verb == NEW_MESSAGE]
     notif_chats = [notif.target for notif in notifs]
-
+#chats.order_by('-messages__timestamp')
     for chat in chats:
         if request.user.status == UserStatus.EMPLOYER:
             contact = chat.participants.all()[1]
@@ -173,7 +179,7 @@ def update_context_from_chats(request, context, chats):
             notify_present.append(notifs[num].id)
         else:
             notify_present.append(None)
-    context['chat_contacts'] = list(zip(
+    pack = list(zip(
         chats,
         jobseekers if jobseekers else employers,
         resumes,
@@ -182,6 +188,7 @@ def update_context_from_chats(request, context, chats):
         last_timestamps,
         notify_present
     ))
+    context['chat_contacts'] = sorted(pack, key=lambda x: x[5], reverse=True)
 
 
 def search_contact(request):

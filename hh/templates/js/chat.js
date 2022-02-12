@@ -16,40 +16,49 @@ class Chat {
         );
     }
 
+    loadChatAjax(msgData, e) {
+        $.ajax({
+            url: `receive/${this.chatId}/`,
+            data: msgData,
+            success: (data) => {
+                if (data.hasOwnProperty('result')) {
+                    // let message = `${data.sender}: ${msgData.message.content}`
+
+                    // $('#search-form').submit();
+
+                    // if (!$(`.${this.chatClass}-contact`).hasClass('active_chat')) {
+                    //     $(`.${this.chatClass}-alert`).addClass('alert-danger');
+                    // }
+
+                    $(`.${this.chatClass}-last`).text(data.message);
+                    $(`.${this.chatClass}-date`).replaceWith(data.timestamp);
+
+                    $(`.${this.chatClass}-alert`).prependTo($('.contacts-ajax'));
+
+                    $(`.${this.chatClass}`).append(data.result);
+                    $(`.${this.chatClass}`).scrollTop($(`.${this.chatClass}`)[0].scrollHeight);
+
+                    // let container = findClassInParents('chat_list', event.target);
+                    // let alertContainer = findClassInParents('alert', container);
+                    // alertContainer.classList.remove('alert-danger');
+                    // container.classList.add('active_chat');
+                }
+            },
+            error: (e) => {
+                console.error(eval(e))
+            }
+        });
+    }
+
     setHandlers() {
         this.socket.onmessage = (e) => {
             const msgData = JSON.parse(e.data);
             if ($(`.${this.chatClass}-contact`).hasClass('active_chat')) {
                 this.readNotification();
+            } else {
+                $(`.${this.chatClass}-alert`).addClass('alert-danger');
             }
-            $.ajax({
-                url: `receive/${this.chatId}/`,
-                data: msgData,
-                success: (data) => {
-                    if (data.hasOwnProperty('result')) {
-                        // let message = `${data.sender}: ${msgData.message.content}`
-                        $(`.${this.chatClass}-last`).text(data.message);
-
-                        $('#search-form').submit();
-
-                        // if (!$(`.${this.chatClass}-contact`).hasClass('active_chat')) {
-                        //     $(`.${this.chatClass}-alert`).addClass('alert-danger');
-                        // }
-
-                        $(`.chat_date`).replaceWith(data.timestamp);
-                        $(`.${this.chatClass}`).append(data.result);
-                        $(`.${this.chatClass}`).scrollTop($(`.${this.chatClass}`)[0].scrollHeight);
-
-                        // let container = findClassInParents('chat_list', event.target);
-                        // let alertContainer = findClassInParents('alert', container);
-                        // alertContainer.classList.remove('alert-danger');
-                        // container.classList.add('active_chat');
-                    }
-                },
-                error: (e) => {
-                    console.error(eval(e))
-                }
-            });
+            this.loadChatAjax(msgData, e);
         };
         this.socket.onclose = function (e) {
             console.error('Chat socket closed unexpectedly');
@@ -76,6 +85,14 @@ class Chat {
 }
 
 let chats = {};
+
+function updateActive() {
+    let activeChat = document.getElementById('chat-id');
+    if (activeChat) {
+        let activeChatId = JSON.parse(activeChat.textContent);
+        $(`.chat-${activeChatId}-contact`).addClass('active_chat');
+    }
+}
 
 function findClassInParents(cls, element) {
     if (element.classList.contains(cls)) return element;
@@ -117,6 +134,7 @@ function searchContact(event) {
             if (data.hasOwnProperty('result')) {
                 $('.contacts-ajax').html(data.result);
                 ajaxReloadHandlers();
+                updateActive();
             }
         },
         error: (e) => {

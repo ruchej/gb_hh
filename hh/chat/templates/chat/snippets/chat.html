@@ -1,4 +1,4 @@
-{{ chat.id|json_script:'room-name' }}
+{{ chat.id|json_script:'chat-id' }}
 {{ user.username|json_script:'sender' }}
 <div class="mesgs">
     {% if chat %}

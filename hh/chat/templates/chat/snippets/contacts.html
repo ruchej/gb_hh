@@ -1,5 +1,5 @@
 {% for chat, contact, resume, response, last_message, timestamp, notify in chat_contacts %}
-    <div class="alert chat-{{ chat.id }}-alert {% if notify %}alert-danger{% endif %}"
+    <div class="alert m-0 chat-{{ chat.id }}-alert {% if notify %}alert-danger{% endif %}"
          style="padding: 0">
         {% if response %}
             <p class="ml-15" style="margin-bottom: -25px">

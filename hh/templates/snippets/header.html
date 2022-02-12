@@ -20,7 +20,7 @@
                         {% if user.status == 2 %}
                             <li {% if request.resolver_match.view_name == 'recruiting:response_list' %}class="active"{% endif %}>
                                 <a class="notification" href="{% url 'recruiting:response_list' %}">
-                                    <span>Отклики</span><span class="badge badge-danger">{% if new_responses %}{{ new_responses }}{% endif %}</span>
+                                    <span>Отклики</span><span class="badge badge-danger resp-nav-notif">{% if new_responses %}{{ new_responses }}{% endif %}</span>
                                 </a>
                             </li>
                         {% endif %}
@@ -31,7 +31,8 @@
                         </li>
                         <li {% if request.resolver_match.view_name == 'chat:list' %}class="active"{% endif %}>
                             <a class="notification" href="{% url 'chat:list' %}">
-                                <span>Чат</span><span class="badge badge-danger">{% if new_messages %}{{ new_messages }}{% endif %}</span>
+                                <span>Чат</span>
+                                <span class="badge badge-danger chat-nav-notif">{% if new_messages %}{{ new_messages }}{% endif %}</span>
                             </a>
                         </li>
                     {% else %}

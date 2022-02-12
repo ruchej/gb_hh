@@ -1,3 +1,5 @@
+let getUrl = window.location;
+
 function activateFavorites() {
     $('.favorite-icon').on('click', (event) => {
         let iconSpan = event.target.localName === 'span' ? event.target : event.target.querySelector('span');
@@ -12,6 +14,34 @@ function activateFavorites() {
         }
         $.ajax({url});
     });
+}
+
+function updateChatNav() {
+    $.ajax({
+        url: `/chat/notif/get/`,
+        success: (data) => {
+            let notifications = data['new_messages'];
+            if (notifications && notifications !== '0') {
+                $('.chat-nav-notif').html(notifications);
+            } else {
+                $('.chat-nav-notif').html('');
+            }
+        }
+    })
+}
+
+function updateRespNav() {
+    $.ajax({
+        url: `/recruiting/responses/notif/get/`,
+        success: (data) => {
+            let notifications = data['new_responses'];
+            if (notifications && notifications !== '0') {
+                $('.resp-nav-notif').html(notifications);
+            } else {
+                $('.resp-nav-notif').html('');
+            }
+        }
+    })
 }
 
 $(document).ready(function () {
@@ -140,4 +170,10 @@ $(document).ready(function () {
         }
     })
     activateFavorites();
+    if ($('.chat-nav-notif')[0]) {
+        setInterval(updateChatNav, 1000);
+    }
+    if ($('.resp-nav-notif')[0]) {
+        setInterval(updateRespNav, 5000);
+    }
 });

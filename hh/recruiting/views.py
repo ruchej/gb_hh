@@ -180,3 +180,9 @@ class OfferDeleteView(LoginRequiredMixin, CreateView):
     """View for deleting offer."""
 
     model = models.Offer
+
+
+def get_notifications(request):
+    from conf.context_processor import new_responses
+    if request.is_ajax():
+        return JsonResponse(new_responses(request))
