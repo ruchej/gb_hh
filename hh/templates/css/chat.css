@@ -15,11 +15,11 @@
 }
 
 .inbox_chat::-webkit-scrollbar-track {
-    background: #f9f9ff;
+    background-color: #fff;
 }
 
 .inbox_chat::-webkit-scrollbar-thumb {
-    background-color: #fff;
+    background: #f9f9ff;
 }
 
 .container {
