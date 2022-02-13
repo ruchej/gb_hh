@@ -66,6 +66,11 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
         return object_list
 
     def employer_filter(self, context, object_list):
+        response_resumes_ids = [res.id for res in object_list
+                                if (self.request.user in res.accepted_by.all() or
+                                    self.request.user in res.rejected_by.all())]
+        # responses = Response.objects.filter(vacancy__employer=self.request.user).select_related('resume')
+        # response_resumes_ids = [resp.resume.id for resp in responses]
         # Check if search by city was invoked
         if 'city_id' in self.request.GET and self.request.GET['city_id']:
             city_id = int(self.request.GET['city_id'])
@@ -80,9 +85,9 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
                 Q(last_name__contains=text)
             )
             if text.isnumeric():
-                resumes = self.model.objects.filter(position__salary=int(text))
+                resumes = object_list.exclude(id__in=response_resumes_ids).filter(position__salary=int(text))
             else:
-                resumes = self.model.objects.filter(
+                resumes = object_list.exclude(id__in=response_resumes_ids).filter(
                     Q(experience__skills=text) |
                     Q(position__title=text) |
                     Q(position__employment=text) |
@@ -93,7 +98,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
             if jobseekers:
                 new_resumes = []
                 for jobseeker in jobseekers:
-                    js_resumes = list(self.model.objects.filter(user=jobseeker.user))
+                    js_resumes = list(object_list.exclude(id__in=response_resumes_ids).filter(user=jobseeker.user))
                     new_resumes.extend(js_resumes)
                 resumes = new_resumes
             elif resumes:
@@ -107,7 +112,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
         else:
             new_resumes = []
             for jobseeker in jobseekers_cities:
-                js_resumes = list(self.model.objects.filter(user=jobseeker.user))
+                js_resumes = list(object_list.exclude(id__in=response_resumes_ids).filter(user=jobseeker.user))
                 new_resumes.extend(js_resumes)
             resumes = new_resumes
 
