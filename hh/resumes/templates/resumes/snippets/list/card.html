@@ -57,7 +57,7 @@
                         </li>
                         {% if response %}
                             <li>
-                                <a href="{% url 'recruiting:response_delete' response.id %}">
+                                <a href="{% url 'chat:start_reject' response_id=response.id %}">
                                     Отклонить
                                 </a>
                             </li>

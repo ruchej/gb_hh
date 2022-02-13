@@ -1,5 +1,6 @@
 <a href="{% url 'resumes:resume_detail' resume.id %}">
-    <div class="d-flex flex-row pb-2 mb-2 chat-resume">
+    <div class="d-flex flex-row pb-2 mb-2 chat-resume"
+         style="background: {% if response.rejected %}#f44a40;{% else %}#49e4fa;{% endif %}">
         <div class="justify-content-center">
             {% if resume.photo %}
                 <img src="{{ resume.photo.url }}" style="object-fit: cover; width: 100px; height: 100px">

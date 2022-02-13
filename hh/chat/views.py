@@ -7,12 +7,12 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, TemplateView
 from django.db.models import Q
 from notifications.signals import notify
-from notifications.models import Notification
 
 from .models import Chat, Contact, Message
 from accounts.models import UserStatus, JobSeeker, Employer
 from resumes.models import Resume
 from recruiting.models import Response
+from recruiting.views import response_accept, response_reject
 
 User = get_user_model()
 
@@ -36,12 +36,12 @@ class ChatListView(ListView, LoginRequiredMixin):
         return queryset
 
 
-class ChatCreateView(TemplateView, LoginRequiredMixin):
+class ChatAcceptView(TemplateView, LoginRequiredMixin):
     extra_context = {'title': 'Сообщение кандидату'}
-    template_name = 'chat/chat_create.html'
+    template_name = 'chat/chat_accept.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ChatCreateView, self).get_context_data(**kwargs)
+        context = super(ChatAcceptView, self).get_context_data(**kwargs)
         response_id = kwargs.get('response_id', None)
         resume_id = kwargs.get('resume_id', None)
         if response_id:
@@ -57,16 +57,24 @@ class ChatCreateView(TemplateView, LoginRequiredMixin):
         return context
 
 
-def create_chat(request, user_id):
-    if response_id := request.POST.get('response_id', None):
-        response = Response.objects.get(id=response_id)
-        chat = Chat(response=response)
-    elif resume_id := request.POST.get('resume_id', None):
-        resume = Resume.objects.get(id=resume_id)
-        chat = Chat(resume=resume)
-    else:
-        raise Exception('Neither resume, nor response ID was provided')
-    chat.save()
+class ChatRejectView(TemplateView, LoginRequiredMixin):
+    extra_context = {'title': 'Сообщение кандидату об отказе'}
+    template_name = 'chat/chat_reject.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ChatRejectView, self).get_context_data(**kwargs)
+        response_id = kwargs.get('response_id', None)
+        if response_id:
+            context['response'] = Response.objects.get(id=response_id)
+            resume = context['response'].resume
+        else:
+            raise Exception('Neither resume, nor response ID was provided')
+        context['jobseeker'] = JobSeeker.objects.get(user=resume.user)
+        context['responding'] = True
+        return context
+
+
+def create_chat_with_msg(request, chat, user_id):
     contact_employer = Contact.objects.get(user=request.user)
     contact_jobseeker = Contact.objects.get(user__id=user_id)
     chat.participants.add(contact_employer)
@@ -75,7 +83,40 @@ def create_chat(request, user_id):
     message.save()
     chat.messages.add(message)
     chat.save()
+    notify.send(contact_employer.user, recipient=contact_jobseeker.user,
+                verb=NEW_MESSAGE, target=chat)
     return redirect('chat:list')
+
+
+def accept_chat(request, user_id):
+    if response_id := request.POST.get('response_id', None):
+        response = Response.objects.get(id=response_id)
+        response_accept(request, response_id)
+        resume = response.resume
+        chat = Chat(response=response)
+    elif resume_id := request.POST.get('resume_id', None):
+        resume = Resume.objects.get(id=resume_id)
+        chat = Chat(resume=resume)
+    else:
+        raise Exception('Neither resume, nor response ID was provided')
+    resume.accepted_by.add(request.user)
+    resume.save()
+    chat.save()
+    return create_chat_with_msg(request, chat, user_id)
+
+
+def create_reject_chat(request, user_id):
+    if response_id := request.POST.get('response_id', None):
+        response = Response.objects.get(id=response_id)
+        response_reject(request, response_id)
+        chat = Chat(response=response)
+        resume = response.resume
+    else:
+        raise Exception('Neither resume, nor response ID was provided')
+    resume.accepted_by.add(request.user)
+    resume.save()
+    chat.save()
+    return create_chat_with_msg(request, chat, user_id)
 
 
 def get_notifications(request):
@@ -156,7 +197,6 @@ def update_context_from_chats(request, context, chats):
     notifs = [notif for notif in request.user.notifications.unread()
               if notif.verb == NEW_MESSAGE]
     notif_chats = [notif.target for notif in notifs]
-#chats.order_by('-messages__timestamp')
     for chat in chats:
         if request.user.status == UserStatus.EMPLOYER:
             contact = chat.participants.all()[1]

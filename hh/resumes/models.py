@@ -104,6 +104,8 @@ class Resume(models.Model):
     experience = models.OneToOneField(Experience, verbose_name=_('опыт работы'), on_delete=models.CASCADE,
                                       db_index=True)
     favourites = models.ManyToManyField(User, related_name='favourites_resumes', blank=True, default=None)
+    accepted_by = models.ManyToManyField(User, related_name='accepted_by', blank=True, default=None)
+    rejected_by = models.ManyToManyField(User, related_name='rejected_by', blank=True, default=None)
 
     def __str__(self):
         return self.title

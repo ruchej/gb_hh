@@ -6,7 +6,7 @@
             {% for message in chat.messages.all %}
                 {% if message == chat.messages.all.0 %}
                     {% if chat.response %}
-                        {% include 'chat/snippets/message.html' with resume=chat.response.resume %}
+                        {% include 'chat/snippets/message.html' with resume=chat.response.resume response=chat.response %}
                     {% else %}
                         {% include 'chat/snippets/message.html' with resume=chat.resume %}
                     {% endif %}

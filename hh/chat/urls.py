@@ -15,18 +15,23 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import ChatListView, ChatCreateView, create_chat, open_chat, receive_message, search_contact, \
-    read_notifications, get_notifications
+from .views import ChatListView, ChatAcceptView, accept_chat, open_chat, receive_message, search_contact, \
+    read_notifications, get_notifications, create_reject_chat, ChatRejectView
 
 app_name = 'chat'
 
 urlpatterns = [
     path('', ChatListView.as_view(), name='list'),
-    path('resume-invite/<int:resume_id>', ChatCreateView.as_view(), name='start_resume'),
-    path('response-invite/<int:response_id>', ChatCreateView.as_view(), name='start_response'),
-    path('search-contact/', search_contact, name='search_contact'),
-    path('create/<int:user_id>/', create_chat, name='create'),
+
+    path('resume-invite/<int:resume_id>', ChatAcceptView.as_view(), name='start_resume'),
+    path('response-accept/<int:response_id>', ChatAcceptView.as_view(), name='start_response'),
+    path('create/<int:user_id>/', accept_chat, name='accept'),
+
+    path('response-reject/<int:response_id>', ChatRejectView.as_view(), name='start_reject'),
+    path('reject/<int:user_id>/', create_reject_chat, name='reject'),
+
     path('open/<int:chat_id>/', open_chat, name='open'),
+    path('search-contact/', search_contact, name='search_contact'),
     path('receive/<int:chat_id>/', receive_message, name='receive'),
     path('notif/read/<int:chat_id>/', read_notifications, name='read_notif'),
     path('notif/get/', get_notifications, name='get_notif'),

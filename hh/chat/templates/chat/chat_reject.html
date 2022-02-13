@@ -19,18 +19,9 @@
                     <div class="row justify-content-end mr-0">
                         {% if response %}
                             <form id="chat-create" method="post"
-                                  action="{% url 'chat:create' user_id=response.resume.user.id %}">
+                                  action="{% url 'chat:reject' user_id=response.resume.user.id %}">
                                 {% csrf_token %}
                                 <input hidden name="response_id" value="{{ response.id }}">
-                                <button class="genric-btn primary" type="submit">
-                                    Отправить!
-                                </button>
-                            </form>
-                        {% else %}
-                            <form id="chat-create" method="post"
-                                  action="{% url 'chat:create' user_id=resume.user.id %}">
-                                {% csrf_token %}
-                                <input hidden name="resume_id" value="{{ resume.id }}">
                                 <button class="genric-btn primary" type="submit">
                                     Отправить!
                                 </button>

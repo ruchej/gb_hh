@@ -28,16 +28,16 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         # Get employers and link them to vacancies
         context['employers_vac_list'] = []
         for vacancy in vacancies:
-            resume_sent = False
+            response = None
             fav = False
             if self.request.user.status == UserStatus.JOBSEEKER and \
                     self.request.user in vacancy.favourites.all():
                 fav = True
             if self.request.user.status == UserStatus.JOBSEEKER and \
                     Response.objects.filter(vacancy=vacancy, resume__user=self.request.user).exists():
-                resume_sent = True
+                response = Response.objects.get(vacancy=vacancy, resume__user=self.request.user)
             context['employers_vac_list'].append(
-                [Employer.objects.get(user=vacancy.employer), vacancy, resume_sent, fav])
+                [Employer.objects.get(user=vacancy.employer), vacancy, response, fav])
 
         return context
 
@@ -45,6 +45,8 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         queryset = super().get_queryset().order_by('created_at')
         if self.request.user.status == UserStatus.EMPLOYER:
             queryset = queryset.filter(employer=self.request.user).select_related('employer')
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            queryset = queryset.filter(status=Vacancy.PUBLISHED)
         return queryset
 
     def render_to_response(self, context, **response_kwargs):
@@ -69,7 +71,6 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
             text = self.request.GET['search']
             vacancies = list(vacancies_city.filter(
                 Q(title__contains=text) |
-                Q(description__contains=text) |
                 Q(salary__contains=text) |
                 Q(hashtags__contains=text)
             ).order_by('created_at'))

@@ -32,7 +32,7 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
         return context
 
     def get_queryset(self):
-        return super().get_queryset().filter(vacancy__employer=self.request.user)
+        return super().get_queryset().filter(vacancy__employer=self.request.user, accepted=False, rejected=False)
 
     def render_to_response(self, context, **response_kwargs):
         if self.request.user.status == UserStatus.JOBSEEKER:
@@ -152,6 +152,20 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
                 models.Response.objects.create(resume=resume, vacancy=context['vacancy'])
             return redirect('vacancies:vacancy_list')
         return super(ResponseCreateView, self).render_to_response(context, **response_kwargs)
+
+
+def response_accept(request, r_pk):
+    response = models.Response.objects.get(id=r_pk)
+    response.accepted = True
+    response.rejected = False
+    response.save()
+
+
+def response_reject(request, r_pk):
+    response = models.Response.objects.get(id=r_pk)
+    response.accepted = False
+    response.rejected = True
+    response.save()
 
 
 class ResponseDeleteView(LoginRequiredMixin, CreateView):
