@@ -21,6 +21,13 @@ st_peter = City.objects.get(name='Saint Petersburg')
 chelyabinsk = City.objects.get(name='Chelyabinsk')
 
 
+def get_random_phone():
+    n = '0000000000'
+    while '9' in n[3:6] or n[3:6] == '000' or n[6] == n[7] == n[8] == n[9]:
+        n = str(random.randint(10 ** 9, 10 ** 10 - 1))
+    return '+' + n[:3] + '-' + n[3:6] + '-' + n[6:]
+
+
 class Command(BaseCommand):
     help = 'Update database with test data.'
     employers_fixtures = []
@@ -36,12 +43,18 @@ class Command(BaseCommand):
                                                      status=UserStatus.EMPLOYER)
             Employer.objects.get(user=employer).delete()
             mixer.blend(Employer, user=employer, name='Google', description=mixer.RANDOM,
-                        phone=mixer.RANDOM, country=russia, city=moscow)
+                        phone=get_random_phone(), country=russia, city=moscow)
             employer.avatar = 'avatars/google-logo.webp'
             employer.save()
             mixer.blend(vacancies_models.Vacancy, employer=employer,
                         title='Python Developer', description='Разработчик на питоне (Django)',
-                        hashtags='Python, Django', salary='500000')
+                        hashtags='Python, Django', salary='500000 руб')
+            mixer.blend(vacancies_models.Vacancy, employer=employer,
+                        title='JavaScript Developer', description='JS разработчик (React)',
+                        hashtags='JavaScript, React', salary='5000 руб')
+            mixer.blend(vacancies_models.Vacancy, employer=employer,
+                        title='Embedded Software Developer', description='Разработчик встраиваемых систем',
+                        hashtags='C, RTOS, AUTOSAR', salary='500 руб')
         else:
             employer = User.objects.get(username='employer')
 
@@ -51,7 +64,7 @@ class Command(BaseCommand):
             JobSeeker.objects.get(user=employee).delete()
             mixer.blend(JobSeeker, user=employee, first_name='Василий', patronymic='Васильевич',
                         last_name='Пупкин', date_birth=mixer.RANDOM, sex=JobSeeker.Sex.MAN,
-                        country=russia, city=moscow)
+                        country=russia, city=moscow, phone=get_random_phone())
             employee.avatar = 'avatars/pupkin.jpg'
             employee.save()
             resume = mixer.blend(resumes_models.Resume, user=employee, photo='')
@@ -66,16 +79,7 @@ class Command(BaseCommand):
             user = mixer.blend(User, status=UserStatus.EMPLOYER)
             Employer.objects.get(user=user).delete()
             mixer.blend(Employer, user=user, name=mixer.RANDOM, description=mixer.RANDOM,
-                        phone=mixer.RANDOM, country=russia,
-                        city=random.choice([moscow, st_peter, chelyabinsk]))
-
-    @staticmethod
-    def create_employers():
-        for _ in range(random.randint(10, 20)):
-            user = mixer.blend(User, status=UserStatus.EMPLOYER)
-            Employer.objects.get(user=user).delete()
-            mixer.blend(Employer, user=user, name=mixer.RANDOM, description=mixer.RANDOM,
-                        phone=mixer.RANDOM, country=russia,
+                        phone=get_random_phone(), country=russia,
                         city=random.choice([moscow, st_peter, chelyabinsk]))
 
     @staticmethod
@@ -85,7 +89,7 @@ class Command(BaseCommand):
             JobSeeker.objects.get(user=user).delete()
             mixer.blend(JobSeeker, user=user, date_birth=mixer.RANDOM,
                         sex=random.choice([JobSeeker.Sex.MAN, JobSeeker.Sex.WOMAN]),
-                        country=russia,
+                        phone=get_random_phone(), country=russia,
                         city=random.choice([moscow, st_peter, chelyabinsk]))
 
     @staticmethod
@@ -104,7 +108,7 @@ class Command(BaseCommand):
         for _ in range(random.randint(10, 100)):
             mixer.blend(vacancies_models.Vacancy, employer=mixer.SELECT,
                         employer__status=UserStatus.EMPLOYER, description=mixer.RANDOM,
-                        hashtags=mixer.RANDOM)
+                        hashtags=mixer.RANDOM, status=vacancies_models.Vacancy.PUBLISHED)
 
     @staticmethod
     def create_blog():
@@ -114,7 +118,11 @@ class Command(BaseCommand):
     @staticmethod
     def create_responses():
         for _ in range(random.randint(10, 100)):
-            mixer.blend(recruiting_models.Response, vacancy=mixer.SELECT, resume=mixer.SELECT)
+            response = mixer.blend(recruiting_models.Response, vacancy=mixer.SELECT, resume=mixer.SELECT,
+                                   vacancy__status=vacancies_models.Vacancy.PUBLISHED)
+            responses = recruiting_models.Response.objects.filter(vacancy=response.vacancy, resume=response.resume)
+            if len([resp for resp in responses]) > 1:
+                response.delete()
 
     @staticmethod
     def create_offers():
@@ -146,7 +154,7 @@ class Command(BaseCommand):
             Employer.objects.get(user=user).delete()
             mixer.blend(Employer, user=user, name=employer_data['name'],
                         description=employer_data['description'],
-                        phone=mixer.RANDOM, country=russia,
+                        phone=get_random_phone(), country=russia,
                         city=random.choice([moscow, st_peter, chelyabinsk]))
             if employer_data['avatar']:
                 user.avatar = employer_data['avatar'][0]['path']
@@ -169,7 +177,8 @@ class Command(BaseCommand):
                             description=vacancy_data['description'] if 'description' in vacancy_data else '',
                             hashtags=vacancy_data['hashtags'] if 'hashtags' in vacancy_data else '',
                             salary=salary,
-                            address=vacancy_data['address'] if 'address' in vacancy_data else '')
+                            address=vacancy_data['address'] if 'address' in vacancy_data else '',
+                            status=vacancies_models.Vacancy.PUBLISHED)
 
     def add_arguments(self, parser):
         parser.add_argument(
