@@ -120,7 +120,8 @@ class Command(BaseCommand):
         for _ in range(random.randint(10, 100)):
             response = mixer.blend(recruiting_models.Response, vacancy=mixer.SELECT, resume=mixer.SELECT,
                                    vacancy__status=vacancies_models.Vacancy.PUBLISHED)
-            responses = recruiting_models.Response.objects.filter(vacancy=response.vacancy, resume=response.resume)
+            responses = recruiting_models.Response.objects.filter(vacancy=response.vacancy,
+                                                                  resume__user=response.resume.user)
             if len([resp for resp in responses]) > 1:
                 response.delete()
 

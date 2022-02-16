@@ -4,24 +4,8 @@
     {% lazy_paginate employers_vac_list %}
     {% for employer, vacancy, response, fav in employers_vac_list %}
         {% if user.status == 2 %}
-            <div class="justify-content-start d-flex flex-row">
-                <div class="default-select" id="default-select">
-                    <select>
-                        {% if vacancy.status != 'WTG' %}
-                            <option>{{ vacancy.get_status_display }}</option>
-                            {% if vacancy.status == 'DF' %}
-                                <option>Опубликовать</option>
-                                <option>Удалить</option>
-                            {% elif vacancy.status == 'PBL' %}
-                                <option>Архивировать</option>
-                            {% endif %}
-                        {% endif %}
-                    </select>
-                </div>
-                <a href="{% url 'vacancies:update' vacancy.id %}"
-                   class="genric-btn default radius" style="filter: brightness(98%)">
-                    Редактировать
-                </a>
+            <div class="justify-content-start d-flex flex-row edit-ajax-{{ vacancy.id }}">
+                {% include 'vacancies/snippets/list/edit-page.html' %}
             </div>
         {% endif %}
         <div class="single-post d-flex flex-row infinite-item">

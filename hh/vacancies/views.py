@@ -141,3 +141,14 @@ def filter_by_city(vacancies, city_id):
     else:
         employers = Employer.objects.filter(user__in=empl_acc_all).select_related('user')
     return vacancies, employers
+
+
+def switch_status(request, pk, status):
+    if request.is_ajax():
+        vacancy = Vacancy.objects.get(id=pk)
+        vacancy.status = status
+        vacancy.save()
+        context = {'vacancy': vacancy}
+        result = render_to_string('vacancies/snippets/list/edit-page.html',
+                                  context=context, request=request)
+        return JsonResponse({'result': result})
