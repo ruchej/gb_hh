@@ -141,35 +141,22 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     @transaction.atomic
     def form_valid(self, form):
-        jobseeker_form = None
-        employer_form = None
-        try:
-            jobseeker_form = JobSeekerForm(
+
+        user = self.request.user
+        if user.status == UserStatus.JOBSEEKER:
+            user_form = JobSeekerFormUpdate(
                 data=self.request.POST,
                 instance=JobSeeker.objects.get(user=self.request.user)
             )
-        except Exception:
-            pass
-        try:
+        elif user.status == UserStatus.EMPLOYER:
             data = self.request.POST.copy()
-            data['country'] = Country.objects.filter(name__contains=data["country"])[0].id
-            data['city'] = City.objects.filter(display_name__contains=data["city"])[0].id
-            employer_form = EmployerForm(
+            data['country'] = Country.objects.filter(name__contains=data["country"]).first()
+            data['city'] = City.objects.filter(display_name__contains=data["city"]).first()
+            user_form = EmployerFormUpdate(
                 data=data,
                 instance=Employer.objects.get(user=self.request.user)
             )
-        except Exception:
-            pass
-        form_valid = False
-        if jobseeker_form and jobseeker_form.is_valid():
-            jobseeker_form.save()
-            form_valid = True
-        if employer_form and employer_form.is_valid():
-            employer_form.save()
-            form_valid = True
-        if form_valid:
-            form.save()
-        return super(ProfileUpdateView, self).form_valid(form)
+        return super(ProfileUpdateView, self).form_valid(user_form)
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -191,3 +178,8 @@ def favourites_add(request, id):
         else:
             vacancy.favourites.add(request.user)
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class EmployerDetailView(DetailView):
+    model = Employer
+    template_name = 'employer/employer_detail.html'
