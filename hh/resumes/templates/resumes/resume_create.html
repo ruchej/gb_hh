@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
-
 {% block content %}
-<form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ resume_form }}
-    {{ contacts_form }}
-    {{ position_form }}
-    {{ experience_form }}
-    {{ job_form }}
-</form>
+    <section class="post-area section-gap">
+        <div class="container">
+            <form action="{% url 'resumes:resume_create' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ resume_form|crispy }}
+                {{ contacts_form|crispy }}
+                {{ position_form|crispy }}
+                {{ experience_form|crispy }}
+                {{ job_form|crispy }}
+                <button type="submit" class="btn btn-primary">Создать</button>
+            </form>
+        </div>
+    </section>
 {% endblock %}
