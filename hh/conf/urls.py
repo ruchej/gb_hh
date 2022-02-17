@@ -13,15 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import notifications.urls
 from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from django.views.generic import TemplateView
-import notifications.urls
+from accounts.views import EmployerDetailView
 
-from . import views
 
 app_name = 'conf'
 
@@ -33,6 +33,7 @@ urlpatterns = [
     path('vacancies/', include('vacancies.urls', namespace='vacancies')),
     path('', include('blog.urls', namespace='blog')),
     path('recruiting/', include('recruiting.urls', namespace='recruiting')),
+    path('employer/<int:pk>/', EmployerDetailView.as_view(), name='employer_detail'),
     path('rules/',
          TemplateView.as_view(template_name='rules.html',
                               extra_context={'title': 'Правила портала'}),
