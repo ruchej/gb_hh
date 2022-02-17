@@ -49,7 +49,7 @@ class UserActivationRegisterForm(forms.Form):
         return self.user
 
 
-class AccountFormUpdate(forms.ModelForm):
+class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = (
@@ -60,7 +60,9 @@ class AccountFormUpdate(forms.ModelForm):
         )
 
 
-class JobSeekerFormUpdate(forms.ModelForm):
+class JobSeekerForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = JobSeeker
         fields = (
@@ -72,7 +74,7 @@ class JobSeekerFormUpdate(forms.ModelForm):
             'phone',
             'country',
             'city',
-            'address'
+            'address',
         )
         widgets = {
             'date_birth': DateInput(attrs={'type': 'date'}),
@@ -85,7 +87,7 @@ class JobSeekerFormUpdate(forms.ModelForm):
         }
 
 
-class EmployerFormUpdate(forms.ModelForm):
+class EmployerForm(forms.ModelForm):
     class Meta:
         model = Employer
         fields = (

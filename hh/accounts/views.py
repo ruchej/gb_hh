@@ -1,24 +1,26 @@
+from cities_light.models import City, Country
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView, LogoutView
-from django.db import transaction
-from django.shortcuts import get_object_or_404
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
-from django.utils.translation import gettext_lazy as _
-from .models import Account, UserStatus, JobSeeker, Employer
-from django.urls import reverse_lazy
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     UserPassesTestMixin,
 )
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetConfirmView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.contrib import messages
-from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView, PasswordContextMixin
-from .forms import UserRegisterForm, UserActivationRegisterForm, JobSeekerFormUpdate, AccountFormUpdate, \
-    EmployerFormUpdate
-from cities_light.models import Country, City
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import CreateView, DetailView, UpdateView
+
 from resumes.models import Resume
 from vacancies.models import Vacancy
+from .forms import (
+    AccountForm, EmployerForm, JobSeekerForm, UserActivationRegisterForm,
+    UserRegisterForm,
+)
+from .models import Account, Employer, JobSeeker, UserStatus
 
 
 class UserNotAuthMixin(UserPassesTestMixin):
@@ -122,9 +124,9 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy("accounts:UserDetail")
     success_message = _('Профиль изменен')
     template_name = 'accounts/profile_update.html'
-    form_class = AccountFormUpdate
-    jobseeker_form_class = JobSeekerFormUpdate
-    employer_form_class = EmployerFormUpdate
+    form_class = AccountForm
+    jobseeker_form_class = JobSeekerForm
+    employer_form_class = EmployerForm
     extra_context = {'title': 'Изменение Профиля'}
 
     def get_context_data(self, **kwargs):
@@ -142,7 +144,7 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         jobseeker_form = None
         employer_form = None
         try:
-            jobseeker_form = JobSeekerFormUpdate(
+            jobseeker_form = JobSeekerForm(
                 data=self.request.POST,
                 instance=JobSeeker.objects.get(user=self.request.user)
             )
@@ -152,7 +154,7 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             data = self.request.POST.copy()
             data['country'] = Country.objects.filter(name__contains=data["country"])[0].id
             data['city'] = City.objects.filter(display_name__contains=data["city"])[0].id
-            employer_form = EmployerFormUpdate(
+            employer_form = EmployerForm(
                 data=data,
                 instance=Employer.objects.get(user=self.request.user)
             )

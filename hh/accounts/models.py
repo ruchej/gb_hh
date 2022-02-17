@@ -80,6 +80,7 @@ class JobSeeker(models.Model):
     class Sex(models.IntegerChoices):
         WOMAN = 0, "Женщина"
         MAN = 1, "Мужчина"
+        __empty__ = _('не выбрано')
 
     user = models.OneToOneField(
         Account, related_name="seeker", on_delete=models.PROTECT, verbose_name=_('Пользователь'))
