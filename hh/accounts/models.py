@@ -97,9 +97,9 @@ class JobSeeker(models.Model):
         choices=Sex.choices, null=True, blank=True, verbose_name=_("Пол"))
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("Телефон"))
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True,
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True,
                                 verbose_name=_("страна проживания"))
-    city = ChainedForeignKey(City, chained_field="country", chained_model_field="country",
+    city = models.ForeignKey(City, on_delete=models.PROTECT,
                              null=True, blank=True, verbose_name=_("город проживания"))
     address = models.TextField(blank=True, verbose_name=_("адрес"))
     objects = JobSeekerManager()
@@ -127,9 +127,9 @@ class Employer(models.Model):
         blank=True, null=True, verbose_name=_("Описание"))
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("телефон"))
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True,
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True,
                                 verbose_name=_("страна"))
-    city = ChainedForeignKey(City, chained_field="country", chained_model_field="country",
+    city = models.ForeignKey(City, on_delete=models.PROTECT,
                              null=True, blank=True, verbose_name=_("город"))
     address = models.TextField(blank=True, verbose_name=_("штаб квартира"))
     objects = EmployerManager()

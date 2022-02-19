@@ -131,10 +131,10 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileUpdateView, self).get_context_data(**kwargs)
-        if self.request.user.status == 1:
+        if self.request.user.status == UserStatus.JOBSEEKER:
             jobseeker = JobSeeker.objects.get(user=self.request.user)
             context['jobseeker_form'] = self.jobseeker_form_class(instance=jobseeker)
-        elif self.request.user.status == 2:
+        elif self.request.user.status == UserStatus.EMPLOYER:
             employer = Employer.objects.get(user=self.request.user)
             context['employer_form'] = self.employer_form_class(instance=employer)
         return context
@@ -143,19 +143,20 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def form_valid(self, form):
 
         user = self.request.user
+        data = self.request.POST.copy()
+        # data['country'] = Country.objects.filter(alternate_names__contains=data["country"]).first()
+        # data['city'] = City.objects.filter(alternate_names__contains=data["city"]).first()
         if user.status == UserStatus.JOBSEEKER:
-            user_form = JobSeekerFormUpdate(
-                data=self.request.POST,
+            user_form = JobSeekerForm(
+                data=data,
                 instance=JobSeeker.objects.get(user=self.request.user)
             )
         elif user.status == UserStatus.EMPLOYER:
-            data = self.request.POST.copy()
-            data['country'] = Country.objects.filter(name__contains=data["country"]).first()
-            data['city'] = City.objects.filter(display_name__contains=data["city"]).first()
-            user_form = EmployerFormUpdate(
+            user_form = EmployerForm(
                 data=data,
                 instance=Employer.objects.get(user=self.request.user)
             )
+        super(ProfileUpdateView, self).form_valid(form)
         return super(ProfileUpdateView, self).form_valid(user_form)
 
     def get_object(self, queryset=None):
