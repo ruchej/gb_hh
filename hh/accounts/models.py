@@ -27,11 +27,11 @@ class EmployerManager(UserManager):
 
 
 class Account(AbstractUser):
-
     status = models.PositiveSmallIntegerField(
         choices=UserStatus.choices,
         default=UserStatus.JOBSEEKER,
         verbose_name=_("Статус пользователя"),
+        db_index=True
     )
     avatar = models.ImageField(
         upload_to="avatars", blank=True, null=True, verbose_name=_("аватар"))
@@ -47,6 +47,7 @@ class Account(AbstractUser):
     is_active
     date_joined
     """
+
     class Meta:
 
         verbose_name = _("пользователя")
@@ -64,6 +65,10 @@ class Account(AbstractUser):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        from chat.models import Contact
+        if not Contact.objects.filter(user=self).exists():
+            contact = Contact(user=self)
+            contact.save()
         if self.status == UserStatus.EMPLOYER:
             if not Employer.objects.filter(user=self).exists():
                 employer = Employer(user=self)
@@ -83,14 +88,17 @@ class JobSeeker(models.Model):
         __empty__ = _('не выбрано')
 
     user = models.OneToOneField(
-        Account, related_name="seeker", on_delete=models.PROTECT, verbose_name=_('Пользователь'))
+        Account, related_name="seeker", on_delete=models.PROTECT, verbose_name=_('Пользователь'),
+        db_index=True)
     first_name = models.CharField(
-        max_length=150, blank=True, verbose_name=_('Имя'))
+        max_length=150, blank=True, verbose_name=_('Имя'),
+        db_index=True)
     patronymic = models.CharField(
         max_length=20, blank=True, default="", verbose_name=_("Отчество")
     )
     last_name = models.CharField(
-        max_length=150, blank=True, verbose_name=_('Фамилия'))
+        max_length=150, blank=True, verbose_name=_('Фамилия'),
+        db_index=True)
     date_birth = models.DateField(
         blank=True, null=True, verbose_name=_("Дата рождения"))
     sex = models.BooleanField(
@@ -99,13 +107,12 @@ class JobSeeker(models.Model):
                              verbose_name=_("Телефон"))
     country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True,
                                 verbose_name=_("страна проживания"))
-    city = models.ForeignKey(City, on_delete=models.PROTECT,
+    city = models.ForeignKey(City, on_delete=models.PROTECT, db_index=True,
                              null=True, blank=True, verbose_name=_("город проживания"))
     address = models.TextField(blank=True, verbose_name=_("адрес"))
     objects = JobSeekerManager()
 
     class Meta:
-
         verbose_name = _("соискателя")
         verbose_name_plural = _("Соискатели")
 
@@ -122,14 +129,16 @@ class Employer(models.Model):
         Account, related_name="employer", on_delete=models.CASCADE, verbose_name=_("Работодатель")
     )
     name = models.CharField(
-        blank=True, null=True, max_length=50, verbose_name=_("название компании"))
+        blank=True, null=True, max_length=50, verbose_name=_("название компании"),
+        db_index=True)
     description = models.TextField(
-        blank=True, null=True, verbose_name=_("Описание"))
+        blank=True, null=True, verbose_name=_("Описание"),
+        db_index=True)
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("телефон"))
     country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True,
                                 verbose_name=_("страна"))
-    city = models.ForeignKey(City, on_delete=models.PROTECT,
+    city = models.ForeignKey(City, on_delete=models.PROTECT, db_index=True,
                              null=True, blank=True, verbose_name=_("город"))
     address = models.TextField(blank=True, verbose_name=_("штаб квартира"))
     objects = EmployerManager()

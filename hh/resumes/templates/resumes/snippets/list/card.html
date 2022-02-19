@@ -1,8 +1,16 @@
-{% if is_new %}
-    <div class="justify-content-end d-flex flex-row" style="pointer-events: none;">
-        <a class="genric-btn info noselect">
-            Новое
-        </a>
+{% if response or is_new %}
+    <div class="justify-content-between d-flex flex-row">
+        {% if response %}
+            <a href="{% url 'vacancies:detail' response.vacancy.id %}"
+               class="genric-btn default">
+                {{ response.vacancy.title }}
+            </a>
+        {% endif %}
+        {% if is_new %}
+            <a class="genric-btn info noselect" style="pointer-events: none;">
+                Новое
+            </a>
+        {% endif %}
     </div>
 {% endif %}
 <div class="single-post d-flex flex-row">
@@ -29,30 +37,40 @@
                     </a>
                 {% endif %}
             </div>
-            <ul class="btns">
-                {% if user.status == 1 %}
-                    <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
-                    <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
-                {% elif user.status == 2 %}
-                    <li class="favorite-icon">
-                        <a href="{% url 'accounts:favourite_add' resume.id %}">
-                            {% if fav %}
-                                <span class="lnr lnr-trash"></span>
-                            {% else %}
-                                <span class="lnr lnr-star"></span>
-                            {% endif %}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            Откликнуться
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-            {% if response %}
+            {% if not responding %}
                 <ul class="btns">
-                    <li><a href="{% url 'recruiting:response_delete' response.id %}">Отклонить</a></li>
+                    {% if user.status == 1 %}
+                        <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
+                        <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
+                    {% elif user.status == 2 %}
+                        <li>
+                            {% if response %}
+                                <a href="{% url 'chat:start_response' response_id=response.id %}">
+                                    Откликнуться
+                                </a>
+                            {% else %}
+                                <a href="{% url 'chat:start_resume' resume_id=resume.id %}">
+                                    Откликнуться
+                                </a>
+                            {% endif %}
+                        </li>
+                        <li class="favorite-icon">
+                            <a href="{% url 'accounts:favourite_add' resume.id %}">
+                                {% if fav %}
+                                    <span class="lnr lnr-trash"></span>
+                                {% else %}
+                                    <span class="lnr lnr-star"></span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        {% if response %}
+                            <li>
+                                <a href="{% url 'chat:start_reject' response_id=response.id %}">
+                                    Отклонить
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
                 </ul>
             {% endif %}
         </div>

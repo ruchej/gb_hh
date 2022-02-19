@@ -38,23 +38,25 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         # Get employers and link them to vacancies
         context['employers_vac_list'] = []
         for vacancy in vacancies:
-            resume_sent = False
+            response = None
             fav = False
             if self.request.user.status == UserStatus.JOBSEEKER and \
                     self.request.user in vacancy.favourites.all():
                 fav = True
             if self.request.user.status == UserStatus.JOBSEEKER and \
                     Response.objects.filter(vacancy=vacancy, resume__user=self.request.user).exists():
-                resume_sent = True
+                response = Response.objects.get(vacancy=vacancy, resume__user=self.request.user)
             context['employers_vac_list'].append(
-                [Employer.objects.get(user=vacancy.employer), vacancy, resume_sent, fav])
+                [Employer.objects.get(user=vacancy.employer), vacancy, response, fav])
 
         return context
 
     def get_queryset(self):
         queryset = super().get_queryset().order_by('created_at')
         if self.request.user.status == UserStatus.EMPLOYER:
-            queryset = queryset.filter(employer=self.request.user)
+            queryset = queryset.filter(employer=self.request.user).select_related('employer')
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            queryset = queryset.filter(status=Vacancy.PUBLISHED)
         return queryset
 
     def render_to_response(self, context, **response_kwargs):
@@ -79,7 +81,6 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
             text = self.request.GET['search']
             vacancies = list(vacancies_city.filter(
                 Q(title__contains=text) |
-                Q(description__contains=text) |
                 Q(salary__contains=text) |
                 Q(hashtags__contains=text)
             ).order_by('created_at'))
@@ -89,13 +90,13 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
                                  Q(name__contains=text) |
                                  Q(description__contains=text),
                                  city__id=city_id
-                             )]
+                             ).select_related('user')]
             else:
                 employers = [empl.user for empl in
                              employers.filter(
                                  Q(name__contains=text) |
                                  Q(description__contains=text)
-                             )]
+                             ).select_related('user')]
             employer_vacancies = list(object_list.filter(employer__in=employers).order_by('created_at'))
             vacancies.extend(employer_vacancies)
             vacancies = list(dict.fromkeys(vacancies))
@@ -145,8 +146,19 @@ def filter_by_city(vacancies, city_id):
     empl_acc_all = list(dict.fromkeys([vac.employer for vac in vacancies]))
     # Get relevant employers
     if city_id != 0:
-        employers = Employer.objects.filter(user__in=empl_acc_all, city__id=city_id)
-        vacancies = Vacancy.objects.filter(employer__in=[empl.user for empl in employers]).order_by('created_at')
+        employers = Employer.objects.filter(user__in=empl_acc_all, city__id=city_id).select_related('user')
+        vacancies = Vacancy.objects.filter(employer__in=[empl.user for empl in employers]).order_by('created_at').select_related('employer')
     else:
-        employers = Employer.objects.filter(user__in=empl_acc_all)
+        employers = Employer.objects.filter(user__in=empl_acc_all).select_related('user')
     return vacancies, employers
+
+
+def switch_status(request, pk, status):
+    if request.is_ajax():
+        vacancy = Vacancy.objects.get(id=pk)
+        vacancy.status = status
+        vacancy.save()
+        context = {'vacancy': vacancy}
+        result = render_to_string('vacancies/snippets/list/edit-page.html',
+                                  context=context, request=request)
+        return JsonResponse({'result': result})

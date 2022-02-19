@@ -32,7 +32,7 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
         return context
 
     def get_queryset(self):
-        return super().get_queryset().filter(vacancy__employer=self.request.user)
+        return super().get_queryset().filter(vacancy__employer=self.request.user, accepted=False, rejected=False)
 
     def render_to_response(self, context, **response_kwargs):
         if self.request.user.status == UserStatus.JOBSEEKER:
@@ -154,6 +154,20 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
         return super(ResponseCreateView, self).render_to_response(context, **response_kwargs)
 
 
+def response_accept(request, r_pk):
+    response = models.Response.objects.get(id=r_pk)
+    response.accepted = True
+    response.rejected = False
+    response.save()
+
+
+def response_reject(request, r_pk):
+    response = models.Response.objects.get(id=r_pk)
+    response.accepted = False
+    response.rejected = True
+    response.save()
+
+
 class ResponseDeleteView(LoginRequiredMixin, CreateView):
     """View for deleting response for job."""
 
@@ -180,3 +194,9 @@ class OfferDeleteView(LoginRequiredMixin, CreateView):
     """View for deleting offer."""
 
     model = models.Offer
+
+
+def get_notifications(request):
+    from conf.context_processor import new_responses
+    if request.is_ajax():
+        return JsonResponse(new_responses(request))

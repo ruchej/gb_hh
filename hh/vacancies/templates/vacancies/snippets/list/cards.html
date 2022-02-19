@@ -2,26 +2,10 @@
 
 {% if employers_vac_list %}
     {% lazy_paginate employers_vac_list %}
-    {% for employer, vacancy, response_sent, fav in employers_vac_list %}
+    {% for employer, vacancy, response, fav in employers_vac_list %}
         {% if user.status == 2 %}
-            <div class="justify-content-start d-flex flex-row">
-                <div class="default-select" id="default-select">
-                    <select>
-                        {% if vacancy.status != 'WTG' %}
-                            <option>{{ vacancy.get_status_display }}</option>
-                            {% if vacancy.status == 'DF' %}
-                                <option>Опубликовать</option>
-                                <option>Удалить</option>
-                            {% elif vacancy.status == 'PBL' %}
-                                <option>Архивировать</option>
-                            {% endif %}
-                        {% endif %}
-                    </select>
-                </div>
-                <a href="{% url 'vacancies:update' vacancy.id %}"
-                   class="genric-btn default radius" style="filter: brightness(98%)">
-                    Редактировать
-                </a>
+            <div class="justify-content-start d-flex flex-row edit-ajax-{{ vacancy.id }}">
+                {% include 'vacancies/snippets/list/edit-page.html' %}
             </div>
         {% endif %}
         <div class="single-post d-flex flex-row infinite-item">
@@ -33,9 +17,11 @@
                 {% endif %}
                 <ul class="tags">
                     {% if vacancy.hashtags %}
-                        <li>
-                            <a href="#">{{ vacancy.hashtags }}</a>
-                        </li>
+                        {% for hashtag in vacancy.hashtags_as_list %}
+                            <li>
+                                <a href="#">{{ hashtag|truncatechars:17 }}</a>
+                            </li>
+                        {% endfor %}
                     {% endif %}
                 </ul>
             </div>
@@ -58,8 +44,14 @@
                                     {% endif %}
                                 </a>
                             </li>
-                            {% if response_sent %}
-                                <li class="btns-success"><a class="noselect">Заявка подана</a></li>
+                            {% if response %}
+                                {% if response.accepted %}
+                                    <li class="btns-success"><a class="noselect">Принято</a></li>
+                                {% elif response.rejected %}
+                                    <li class="btns-danger"><a class="noselect">Отклонено</a></li>
+                                {% else %}
+                                    <li class="btns-warning"><a class="noselect">Заявка подана</a></li>
+                                {% endif %}
                             {% else %}
                                 <li><a href="{% url 'recruiting:response_create' vacancy.id %}">Подать заявку</a></li>
                             {% endif %}
@@ -68,7 +60,8 @@
                 </div>
                 <p>
                     {% if vacancy.description %}
-                        {{ vacancy.description }}
+                        {{ vacancy.description|striptags|truncatewords:20 }}
+                        {#                        {{ vacancy.description }}#}
                     {% else %}
                         Нет описания
                     {% endif %}
@@ -82,7 +75,7 @@
                         <span class="lnr lnr-map"></span> {{ employer.city.name }}
                     </p>
                 {% endif %}
-                <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}
+                <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary|default:"Не указана" }}
                 </p>
             </div>
         </div>

@@ -22,8 +22,12 @@
             <div style="height: 50vh; width: 100vw">
                 <div style="margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 50vw">
                     <p style="text-align: center; font-size: large;">
-                        Вы еще не добавили никаких вакансий!
-                        <a href="{% url 'vacancies:create' %}" class="stretched-link"> Создать?</a>
+                        {% if user.status == 2 %}
+                            Вы еще не добавили никаких вакансий!
+                            <a href="{% url 'vacancies:create' %}" class="stretched-link"> Создать?</a>
+                        {% else %}
+                            Тут пока ничего нет :(
+                        {% endif %}
                     </p>
                 </div>
             </div>
@@ -31,6 +35,8 @@
     </section>
 {% endblock %}
 {% block js %}
+    {% load static %}
     {{ block.super }}
     {% include 'snippets/pagination.html' %}
+    <script src="{% static 'js/vacancies.js' %}"></script>
 {% endblock %}

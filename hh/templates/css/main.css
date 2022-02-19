@@ -2639,6 +2639,30 @@ body.mobile-nav-active #mobile-nav-toggle {
   color: #fff;
 }
 
+.post-list .single-post .btns .btns-warning {
+  background-color: #f4e700;
+}
+
+.post-list .single-post .btns .btns-warning:hover {
+  background-color: #f4e700;
+}
+
+.post-list .single-post .btns .btns-warning a {
+  color: #fff;
+}
+
+.post-list .single-post .btns .btns-danger {
+  background-color: #f44a40;
+}
+
+.post-list .single-post .btns .btns-danger:hover {
+  background-color: #f44a40;
+}
+
+.post-list .single-post .btns .btns-danger a {
+  color: #fff;
+}
+
 .post-list .single-post .btns li i, .post-list .single-post .btns li a, .dropdown-status {
   text-transform: uppercase;
   font-weight: 500;

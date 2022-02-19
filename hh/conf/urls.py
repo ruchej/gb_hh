@@ -39,6 +39,7 @@ urlpatterns = [
                               extra_context={'title': 'Правила портала'}),
          name='rules'),
     url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    path('chat/', include('chat.urls', namespace='chat')),
 ]
 
 if settings.DEBUG:

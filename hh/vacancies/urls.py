@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import VacancyList, VacancyDetail, VacancyCreate, VacancyUpdate, VacancyDelete, favorites_vacancies_list
+from .views import VacancyList, VacancyDetail, VacancyCreate, VacancyUpdate, VacancyDelete, switch_status, favorites_vacancies_list
 
 app_name = 'vacancies'
 
@@ -27,5 +27,6 @@ urlpatterns = [
     path('create/employer/<int:pk>/', VacancyCreate.as_view(), name='create_vacancy'),
     path('<int:pk>/update/', VacancyUpdate.as_view(), name='update'),
     path('<int:pk>/delete/', VacancyDelete.as_view(), name='delete'),
+    path('status/<int:pk>/<str:status>/', switch_status, name='switch_status'),
     path('favorites_vacancies/', favorites_vacancies_list, name='favorites_vacancies'),
 ]

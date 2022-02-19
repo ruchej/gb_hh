@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+    <section class="post-area section-gap">
+        <div class="container">
+            <div class="row justify-content-center d-flex">
+                <div class="col-lg-8 post-list data-ajax">
+                    {% if response %}
+                        {% include 'resumes/snippets/list/card.html' with resume=response.resume %}
+                    {% else %}
+                        {% include 'resumes/snippets/list/card.html' %}
+                    {% endif %}
+                    <p style="text-align: center; font-size: large;">
+                        Напишите сопроводительное сообщение кандидату:
+                    </p>
+                    <textarea class="single-textarea" placeholder="Введите сообщение"
+                              onfocus="this.placeholder = ''"
+                              onblur="this.placeholder = 'Введите сообщение'"
+                              required="" name="start_message" form="chat-create"></textarea>
+                    <div class="row justify-content-end mr-0">
+                        {% if response %}
+                            <form id="chat-create" method="post"
+                                  action="{% url 'chat:accept' user_id=response.resume.user.id %}">
+                                {% csrf_token %}
+                                <input hidden name="response_id" value="{{ response.id }}">
+                                <button class="genric-btn primary" type="submit">
+                                    Отправить!
+                                </button>
+                            </form>
+                        {% else %}
+                            <form id="chat-create" method="post"
+                                  action="{% url 'chat:accept' user_id=resume.user.id %}">
+                                {% csrf_token %}
+                                <input hidden name="resume_id" value="{{ resume.id }}">
+                                <button class="genric-btn primary" type="submit">
+                                    Отправить!
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    {% include 'snippets/pagination.html' %}
+{% endblock %}
