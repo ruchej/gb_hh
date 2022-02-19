@@ -58,19 +58,19 @@
 {#                        </ul>#}
 {#                    </li>#}
                     {% if user.username %}
-                        <li {% if request.resolver_match.view_name == 'accounts:UserDetail' %}class="active"{% endif %}>
-                            <a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
+                        <li {% if request.resolver_match.view_name == 'accounts:user-detail' %}class="active"{% endif %}>
+                            <a href="{% url 'accounts:user-detail' %}" style="font-weight: 600; font-size: 18px">
                                 {{ user.username }}
                             </a>
                         </li>
                         <li>
-                            <a class="ticker-btn" href="{% url 'accounts:Logout' %}?next={{ request.path|urlencode }}">
+                            <a class="ticker-btn" href="{% url 'accounts:logout' %}?next={{ request.path|urlencode }}">
                                 Выйти
                             </a>
                         </li>
                     {% else %}
                         <li>
-                            <a class="ticker-btn" href="{% url 'accounts:Login' %}" data-toggle="modal"
+                            <a class="ticker-btn" href="{% url 'accounts:login' %}" data-toggle="modal"
                                data-target="#modal"
                                data-tooltip>
                                 Войти
