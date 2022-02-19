@@ -6,11 +6,11 @@ from .views import Login, Logout, UserCreate, UserConfirm, UserDetail, ProfileUp
 app_name = "accounts"
 
 urlpatterns = [
-    path("login/", Login.as_view(), name="Login"),
-    path("logout/", Logout.as_view(), name="Logout"),
-    path("singup/", UserCreate.as_view(), name="UserCreate"),
-    path("confirm/<uidb64>/<token>/", UserConfirm.as_view(), name="UserConfirm"),
-    path("editeprof/", ProfileUpdateView.as_view(), name="ProfileUpdate"),
-    path("", UserDetail.as_view(), name="UserDetail"),
+    path("login/", Login.as_view(), name="login"),
+    path("logout/", Logout.as_view(), name="logout"),
+    path("singup/", UserCreate.as_view(), name="user-create"),
+    path("confirm/<uidb64>/<token>/", UserConfirm.as_view(), name="user-confirm"),
+    path("editeprof/", ProfileUpdateView.as_view(), name="profile-update"),
+    path("", UserDetail.as_view(), name="user-detail"),
     path("fav/<int:id>/", favourites_add, name="favourite_add"),
 ]

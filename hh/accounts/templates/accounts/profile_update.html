@@ -4,7 +4,7 @@
 {% block content %}
     <section class="post-area section-gap">
         <div class="container col-3">
-            <form action="{% url 'accounts:ProfileUpdate' %}" method="post"  enctype="multipart/form-data">
+            <form action="{% url 'accounts:profile-update' %}" method="post"  enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form|crispy }}
                 {% if jobseeker_form %}

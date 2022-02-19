@@ -1,5 +1,6 @@
 from cities_light.models import City, Country
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
@@ -68,8 +69,7 @@ class UserCreate(
     model = Account
     extra_context = {"title": _("Регистрация")}
     form_class = UserRegisterForm
-    success_url = reverse_lazy("blog:news")
-    # url_redirect = reverse_lazy("accounts:UserDetail")
+    success_url = reverse_lazy("accounts:user-detail")
     template_name = 'accounts/account_signup_form.html'
     success_message = _("Для активации аккаунта выслано письмо")
 
@@ -78,6 +78,16 @@ class UserCreate(
         form_kwargs['new_status_choices'] = UserStatus.choices
         form_kwargs['new_status_choices'].pop(UserStatus.MODERATOR)
         return form_kwargs
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        username = self.request.POST['username']
+        password = self.request.POST['password2']
+        user_auth = authenticate(self.request, username=username, password=password)
+        if user_auth is not None:
+            if user_auth.is_active:
+                login(self.request, user_auth)
+        return super().form_valid(form)
 
 
 class UserConfirm(PasswordResetConfirmView):
@@ -90,7 +100,7 @@ class UserConfirm(PasswordResetConfirmView):
         "header_class": "hero",
     }
 
-    success_url = reverse_lazy("accounts:Login")
+    success_url = reverse_lazy("login")
     template_name = "accounts/signup_confirm.html"
     form_class = UserActivationRegisterForm
     post_reset_login = True
@@ -121,7 +131,7 @@ class UserDetail(LoginRequiredMixin, DetailView):
 
 class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Account
-    success_url = reverse_lazy("accounts:UserDetail")
+    success_url = reverse_lazy("user-detail")
     success_message = _('Профиль изменен')
     template_name = 'accounts/profile_update.html'
     form_class = AccountForm

@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body mr-4 ml-4">
                 <form id="loginForm" method="post"
-                      action="{% url 'accounts:Login' %}?next={{ request.path|urlencode }}">
+                      action="{% url 'accounts:login' %}?next={{ request.path|urlencode }}">
                     {% csrf_token %}
                     <div class="form-outline mb-3">
                         <input type="text" id="id_username" name="username" maxlength="30"
@@ -23,7 +23,7 @@
                         Войти
                     </a>
                     <div class="text-lg-start">
-                        <a class="hidden-link" href="{% url 'accounts:UserCreate' %}">или создайте учётную
+                        <a class="hidden-link" href="{% url 'accounts:user-create' %}">или создайте учётную
                             запись</a>
                     </div>
                 </form>
