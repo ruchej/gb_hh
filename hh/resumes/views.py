@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView
 from el_pagination.views import AjaxListView
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
@@ -14,6 +14,15 @@ from django.db.models import Q
 from . import models, forms
 from accounts.models import UserStatus, JobSeeker
 from recruiting.views import NEW_RESUME_NOTIF
+
+
+def resume_favorite_list(request):
+    user = request.user
+    favorites_resumes = user.favourites_resumes.all()
+    context = {
+        'favorites_resumes': favorites_resumes,
+    }
+    return render(request, 'resumes/favorites_resume_list.html', context)
 
 
 class ResumeListView(LoginRequiredMixin, AjaxListView):

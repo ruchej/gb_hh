@@ -11,8 +11,9 @@
         <div class="single-post d-flex flex-row infinite-item">
             <div class="thumb justify-content-center">
                 {% if vacancy.employer.avatar %}
+                <a href="{% url 'employer_detail' employer.id %}">
                     <img src="{{ vacancy.employer.avatar.url }}" alt=""
-                         class="vacancy-image">
+                         class="vacancy-image"></a>
                 {% endif %}
                 <ul class="tags">
                     {% if vacancy.hashtags %}
@@ -29,7 +30,8 @@
                     <div class="titles">
                         <a href="{% url 'vacancies:detail' vacancy.id %}">
                             <h4>{{ vacancy.title }}</h4></a>
-                        <h6>{{ employer.name }}</h6>
+                        <a href="{% url 'employer_detail' employer.id %}">
+                        <h6>{{ employer.name }}</h6></a>
                     </div>
                     <ul class="btns">
                         {% if user.status == 1 %}

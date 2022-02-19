@@ -2,6 +2,7 @@ from collections import Counter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
@@ -14,6 +15,15 @@ from .forms import VacancyForm
 from .models import Vacancy
 from accounts.models import UserStatus, Employer
 from recruiting.models import Response
+
+
+def favorites_vacancies_list(request):
+    user = request.user
+    favorites_vacancies = user.favourites_vacancies.all()
+    context = {
+        'favorites_vacancies': favorites_vacancies,
+    }
+    return render(request, 'vacancies/favorites_vacanies_list.html', context)
 
 
 class VacancyList(LoginRequiredMixin, AjaxListView):

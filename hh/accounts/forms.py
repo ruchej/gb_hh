@@ -49,18 +49,20 @@ class UserActivationRegisterForm(forms.Form):
         return self.user
 
 
-class AccountFormUpdate(forms.ModelForm):
+class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = (
             'username',
             'email',
-            'password',
+            # 'password',
             'avatar'
         )
 
 
-class JobSeekerFormUpdate(forms.ModelForm):
+class JobSeekerForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = JobSeeker
         fields = (
@@ -72,20 +74,20 @@ class JobSeekerFormUpdate(forms.ModelForm):
             'phone',
             'country',
             'city',
-            'address'
+            'address',
         )
         widgets = {
             'date_birth': DateInput(attrs={'type': 'date'}),
-            'country': floppyforms.widgets.Input(
-                datalist=Country.objects.all
-            ),
-            'city': floppyforms.widgets.Input(
-                datalist=City.objects.all
-            )
+            # 'country': floppyforms.widgets.Input(
+            #     datalist=Country.objects.all
+            # ),
+            # 'city': floppyforms.widgets.Input(
+            #     datalist=City.objects.all
+            # )
         }
 
 
-class EmployerFormUpdate(forms.ModelForm):
+class EmployerForm(forms.ModelForm):
     class Meta:
         model = Employer
         fields = (
@@ -96,11 +98,11 @@ class EmployerFormUpdate(forms.ModelForm):
             'city',
             'address'
         )
-        widgets = {
-            'country': floppyforms.widgets.Input(
-                datalist=Country.objects.all
-            ),
-            'city': floppyforms.widgets.Input(
-                datalist=City.objects.all
-            )
-        }
+        # widgets = {
+        #     'country': floppyforms.widgets.Input(
+        #         datalist=Country.objects.all
+        #     ),
+        #     'city': floppyforms.widgets.Input(
+        #         datalist=City.objects.all
+        #     )
+        # }
