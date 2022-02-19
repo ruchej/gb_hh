@@ -55,7 +55,7 @@ class AccountForm(forms.ModelForm):
         fields = (
             'username',
             'email',
-            'password',
+            # 'password',
             'avatar'
         )
 
@@ -78,12 +78,12 @@ class JobSeekerForm(forms.ModelForm):
         )
         widgets = {
             'date_birth': DateInput(attrs={'type': 'date'}),
-            'country': floppyforms.widgets.Input(
-                datalist=Country.objects.all
-            ),
-            'city': floppyforms.widgets.Input(
-                datalist=City.objects.all
-            )
+            # 'country': floppyforms.widgets.Input(
+            #     datalist=Country.objects.all
+            # ),
+            # 'city': floppyforms.widgets.Input(
+            #     datalist=City.objects.all
+            # )
         }
 
 
@@ -98,11 +98,11 @@ class EmployerForm(forms.ModelForm):
             'city',
             'address'
         )
-        widgets = {
-            'country': floppyforms.widgets.Input(
-                datalist=Country.objects.all
-            ),
-            'city': floppyforms.widgets.Input(
-                datalist=City.objects.all
-            )
-        }
+        # widgets = {
+        #     'country': floppyforms.widgets.Input(
+        #         datalist=Country.objects.all
+        #     ),
+        #     'city': floppyforms.widgets.Input(
+        #         datalist=City.objects.all
+        #     )
+        # }
