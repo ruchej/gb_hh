@@ -198,11 +198,12 @@ def update_context_from_chats(request, context, chats):
               if notif.verb == NEW_MESSAGE]
     notif_chats = [notif.target for notif in notifs]
     for chat in chats:
+        participants = [p for p in chat.participants.all()]
+        participants.remove(Contact.objects.get(user=request.user))
+        contact = participants[0]
         if request.user.status == UserStatus.EMPLOYER:
-            contact = chat.participants.all()[1]
             jobseekers.append(JobSeeker.objects.get(user=contact.user))
         elif request.user.status == UserStatus.JOBSEEKER:
-            contact = chat.participants.all()[0]
             employers.append(Employer.objects.get(user=contact.user))
         last_message = chat.messages.all().last()
         last_message_text = get_last_message_text(request, last_message.contact.user, last_message.content)
