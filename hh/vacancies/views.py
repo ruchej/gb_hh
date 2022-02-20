@@ -126,6 +126,7 @@ class VacancyCreate(LoginRequiredMixin, CreateView):
 class VacancyUpdate(LoginRequiredMixin, UpdateView):
     model = Vacancy
     form_class = VacancyForm
+    template_name = 'vacancies/vacancy_update.html'
     extra_context = {'title': 'Изменение Вакансии'}
     success_url = reverse_lazy('vacancies:vacancy_list')
 

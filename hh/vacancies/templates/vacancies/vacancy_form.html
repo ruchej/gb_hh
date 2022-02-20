@@ -6,7 +6,12 @@
     <div class="container">
         <form method="post" action="{% url 'vacancies:create_vacancy' user.id %}">
             {% csrf_token %}
-            {{ form|crispy }}
+            {{ form.title|as_crispy_field }}
+            {{ form.description|as_crispy_field }}
+            {{ form.hashtags|as_crispy_field }}
+            {{ form.employment_type|as_crispy_field }}
+            {{ form.experience|as_crispy_field }}
+            {{ form.salary|as_crispy_field }}
             <button type="submit" class="btn btn-primary">Создать</button>
         </form>
     </div>
