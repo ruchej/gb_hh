@@ -27,11 +27,7 @@
                     </div>
                     <div class="chat_ib">
                         <h5>
-                            {% if contact.user.status == 1 %}
-                                {{ contact.first_name }} {{ contact.last_name }}
-                            {% elif contact.user.status == 2 %}
-                                {{ contact.name }}
-                            {% endif %}
+                            {{ contact }}
                             {% include 'chat/snippets/msg_time.html' %}
                         </h5>
                         <p class="chat-{{ chat.id }}-last">{{ last_message }}</p>

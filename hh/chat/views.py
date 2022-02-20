@@ -161,10 +161,10 @@ def get_last_message_text(request, user, text):
         sender = 'Вы'
     elif user.status == UserStatus.JOBSEEKER:
         sender = JobSeeker.objects.get(user=user)
-        sender = f'{sender.first_name} {sender.last_name}'
+        sender = str(sender)
     elif user.status == UserStatus.EMPLOYER:
         sender = Employer.objects.get(user=user)
-        sender = sender.name
+        sender = str(sender)
     else:
         sender = 'Неизвестный'
     string = f'{sender}: {text}'

@@ -117,7 +117,7 @@ class JobSeeker(models.Model):
         verbose_name_plural = _("Соискатели")
 
     def __str__(self):
-        full_name = f"{self.first_name} {self.patronymic} {self.last_name}".strip()
+        full_name = f"{self.first_name} {self.last_name}".strip()
         name = full_name if full_name else str(self.user)
         return name
 
