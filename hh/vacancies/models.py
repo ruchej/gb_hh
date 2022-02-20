@@ -89,7 +89,7 @@ class Vacancy(models.Model):
         default=DRAFT,
         verbose_name=_('Статус')
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now_add=True)
     published_at = models.DateTimeField(auto_now_add=True)
     favourites = models.ManyToManyField(User, related_name='favourites_vacancies', blank=True, default=None)
 

@@ -53,11 +53,11 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('-published_at')
+        queryset = super().get_queryset()
         if self.request.user.status == UserStatus.EMPLOYER:
-            queryset = queryset.filter(employer=self.request.user).select_related('employer')
+            queryset = queryset.filter(employer=self.request.user).order_by('-published_at').select_related('employer')
         if self.request.user.status == UserStatus.JOBSEEKER:
-            queryset = queryset.filter(status=Vacancy.PUBLISHED)
+            queryset = queryset.filter(status=Vacancy.PUBLISHED).order_by('-modified_at').select_related('employer')
         return queryset
 
     def render_to_response(self, context, **response_kwargs):
@@ -164,6 +164,7 @@ def switch_status(request, pk, status):
     if request.is_ajax():
         vacancy = Vacancy.objects.get(id=pk)
         vacancy.status = status
+        vacancy.modified_at = datetime.now()
         if status == Vacancy.PUBLISHED:
             vacancy.published_at = datetime.now()
         vacancy.save()
