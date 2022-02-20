@@ -19,7 +19,7 @@ User = get_user_model()
 NEW_MESSAGE = 'New message'
 
 
-class ChatListView(ListView, LoginRequiredMixin):
+class ChatListView(LoginRequiredMixin, ListView):
     model = Chat
     extra_context = {'title': 'Чат'}
 
@@ -36,7 +36,7 @@ class ChatListView(ListView, LoginRequiredMixin):
         return queryset
 
 
-class ChatAcceptView(TemplateView, LoginRequiredMixin):
+class ChatAcceptView(LoginRequiredMixin, TemplateView):
     extra_context = {'title': 'Сообщение кандидату'}
     template_name = 'chat/chat_accept.html'
 
@@ -57,7 +57,7 @@ class ChatAcceptView(TemplateView, LoginRequiredMixin):
         return context
 
 
-class ChatRejectView(TemplateView, LoginRequiredMixin):
+class ChatRejectView(LoginRequiredMixin, TemplateView):
     extra_context = {'title': 'Сообщение кандидату об отказе'}
     template_name = 'chat/chat_reject.html'
 
