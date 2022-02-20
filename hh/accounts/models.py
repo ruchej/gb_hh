@@ -139,3 +139,7 @@ class Employer(models.Model):
 
     def __str__(self):
         return self.name if self.name else str(self.user)
+
+    def vacancy_amount(self):
+        from vacancies.models import Vacancy
+        return Vacancy.objects.filter(employer=self.user, status=Vacancy.PUBLISHED).count()

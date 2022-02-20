@@ -1,0 +1,28 @@
+<div class="single-slidebar">
+    <div class="ml-50">
+        <div class="col mx-auto mb-2">
+            <h4>{{ object }}</h4>
+        </div>
+        <div class="col mx-auto mb-3">
+            <img src="{% if object.user.avatar %}{{ object.user.avatar.url }}{% endif %}"
+                 id="imgProfile"
+                 style="max-width: 150px; max-height: 150px"/>
+        </div>
+        <div class="col mx-auto mb-3">
+            <p class="mb-1">
+                <span class="lnr lnr-map"></span> {{ object.city.name|default:"" }}
+            </p>
+            {% if object.address %}
+                <p class="mb-1">
+                    <span class="lnr lnr-home"></span> {{ object.address|default:"" }}
+                </p>
+            {% endif %}
+            <p class="mb-1">
+                <span class="lnr lnr-phone"></span> {{ object.phone|default:"" }}
+            </p>
+            <a class="mb-1" href="{% url 'vacancies:vacancy_list' %}?search={{ object.name }}">
+                <span class="lnr lnr-briefcase"></span> Вакансий: {{ object.vacancy_amount }}
+            </a>
+        </div>
+    </div>
+</div>

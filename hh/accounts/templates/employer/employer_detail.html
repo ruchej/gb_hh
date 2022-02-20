@@ -1,35 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<section class="post-area section-gap">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title mb-4">
-                            <div class="row d-flex justify-content-start">
-                                <div class="image-container d-flex flex-row">
-                                    <img src="{% if object.user.avatar %}{{ object.user.avatar.url }}{% endif %}"
-                                         id="imgProfile"
-                                         style="max-width: 150px; max-height: 150px"/>
-                                    <p>{{ object.country|default:"" }}</p>
-                                    <p>{{ object.city|default:"" }}</p>
-                                    <p>{{ object.phone|default:"" }}</p>
-                                </div>
-                                <div class="userData ml-2 flex-row">
-                                    <h2 class="d-block mb-3" style="font-size: 2rem; font-weight: bold">
-                                        {{ object.name }}
-                                    </h2>
-                                    <p>{{ object.description|default:"" }}</p>
-                                    <p>{{ object.address|default:"" }}</p>
-                                </div>
-                            </div>
-                        </div>
+    <section class="post-area section-gap">
+        <div class="container">
+            <div class="title d-flex flex-row justify-content-between">
+                <div class="col-lg-4 sidebar">
+                    {% include 'employer/card.html' %}
+                </div>
+                <div class="col-lg-8 post-list">
+                    <div class="single-post job-details" style="color: black">
+                        {% if object.description %}
+                            {% autoescape off %}
+                                {{ object.description }}
+                            {% endautoescape %}
+                        {% else %}
+                            Нет описания
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock %}
