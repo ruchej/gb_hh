@@ -24,8 +24,12 @@ from .models import Resume
 def resume_favorite_list(request):
     user = request.user
     favorites_resumes = user.favourites_resumes.all()
+    jobseekers, favs = [], []
+    for resume in favorites_resumes:
+        jobseekers.append(JobSeeker.objects.get(user=resume.user))
+        favs.append(True)
     context = {
-        'favorites_resumes': favorites_resumes,
+        'favorites_resumes': zip(favorites_resumes, jobseekers, favs),
     }
     return render(request, 'resumes/favorites_resume_list.html', context)
 
@@ -191,11 +195,6 @@ class ResumeCreateView(CreateView):
         if contacts_form.is_valid():
             super().form_valid(contacts_form)
         return super().form_valid(form)
-
-
-
-
-
 
 
 @login_required
