@@ -11,7 +11,7 @@ class Contacts(models.Model):
     """Model for keeping contacts of employee."""
 
     # TODO: Add phones database to field 'phone'.
-    phone = models.CharField(verbose_name=_('мобильный телефон'), blank=True, max_length=20)
+    phone = models.CharField(verbose_name=_('мобильный телефон'), blank=True, null=True, max_length=20)
     email = models.EmailField(verbose_name=_('электронная почта'), max_length=254)
     telegram = models.CharField(verbose_name=_('аккаунт в "Telegram"'), blank=True, max_length=64)
 
@@ -40,7 +40,7 @@ class Position(models.Model):
         choices=RelocationChoices.choices, default=RelocationChoices.IMPOSSIBLE
     )
     business_trip = models.SmallIntegerField(
-        verbose_name=_('командировки'), blank=True,
+        verbose_name=_('командировки'), blank=True, null=True,
         choices=TripChoices.choices, default=TripChoices.NEVER
     )
 
@@ -56,9 +56,9 @@ class Position(models.Model):
 class Experience(models.Model):
     """Model for keeping info about employee's experience."""
 
-    skills = models.TextField(verbose_name=_('ключевые навыки'), blank=True, db_index=True)
+    skills = models.TextField(verbose_name=_('ключевые навыки'), blank=True, null=True, db_index=True)
     about = models.TextField(verbose_name=_('о себе'), db_index=True)
-    portfolio = models.URLField(verbose_name=_('ссылка на портфолио'), blank=True)
+    portfolio = models.URLField(verbose_name=_('ссылка на портфолио'), blank=True, null=True)
 
     def __str__(self):
         return self.about

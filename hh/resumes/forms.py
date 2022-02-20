@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import DateInput
+from django.forms.models import inlineformset_factory
 
 from . import models
 
@@ -41,3 +43,7 @@ class JobForm(forms.ModelForm):
     class Meta:
         model = models.Job
         fields = ('organization', 'start', 'end', 'location', 'site', 'scope', 'position', 'functions')
+        widgets = {
+            'start': DateInput(attrs={'type': 'date'}),
+            'end': DateInput(attrs={'type': 'date'}),
+        }

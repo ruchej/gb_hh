@@ -2,6 +2,7 @@ from collections import Counter
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -11,10 +12,13 @@ from el_pagination.views import AjaxListView
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 
+from accounts.views import UserNotAuthMixin
 from . import models, forms
 from accounts.models import JobSeeker
 from conf.choices import UserStatusChoices
 from recruiting.views import NEW_RESUME_NOTIF
+from .forms import ResumeForm
+from .models import Resume
 
 
 def resume_favorite_list(request):
@@ -157,6 +161,43 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
+class ResumeCreateView(CreateView):
+    model = Resume
+    form_class = ResumeForm
+    success_url = reverse_lazy("resumes:resume_detail")
+    template_name = "resumes/resume_create.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resume_form'] = forms.ResumeForm(self.request.POST)
+        context['contacts_form'] = forms.ContactsForm(self.request.POST)
+        context['position_form'] = forms.PositionForm(self.request.POST)
+        context['experience_form'] = forms.ExperienceForm(self.request.POST)
+        context['job_form'] = forms.JobForm(self.request.POST)
+        return context
+
+    @transaction.atomic
+    def form_valid(self, form):
+        contacts_form = forms.ContactsForm(self.request.POST)
+        position_form = forms.PositionForm(self.request.POST)
+        experience_form = forms.ExperienceForm(self.request.POST)
+        job_form = forms.JobForm(self.request.POST)
+        if job_form.is_valid():
+            super().form_valid(job_form)
+        if experience_form.is_valid():
+            super().form_valid(experience_form)
+        if position_form.is_valid():
+            super().form_valid(position_form)
+        if contacts_form.is_valid():
+            super().form_valid(contacts_form)
+        return super().form_valid(form)
+
+
+
+
+
+
+
 @login_required
 def resume_create(request):
     if request.method == 'POST':
@@ -167,7 +208,7 @@ def resume_create(request):
         job_form = forms.JobForm(request.POST)
         view_forms = (resume_form, contacts_form, position_form, experience_form, job_form)
         if all([item.is_valid() for item in view_forms]):
-            resume_form.form.save(commit=False)
+            resume_form.save(commit=False)
             resume_form.user = request.user
             for item in view_forms[1:]:
                 item.save()
