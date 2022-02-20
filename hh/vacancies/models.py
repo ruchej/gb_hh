@@ -48,18 +48,17 @@ class Vacancy(models.Model):
         on_delete=models.CASCADE
     )
     title = models.CharField(
-        max_length=50,
+        max_length=500,
         verbose_name=_('Название'),
         db_index=True
     )
     description = models.TextField(
         blank=True,
         null=True,
-        verbose_name=_('Описание'),
-        db_index=True
+        verbose_name=_('Описание')
     )
     hashtags = models.CharField(
-        max_length=50,
+        max_length=500,
         blank=True,
         null=True,
         verbose_name=_('Ключевые навыки'),
