@@ -22,13 +22,13 @@
     <div class="details">
         <div class="title d-flex flex-row justify-content-between">
             <div class="titles">
-                {% if user.status == 1 %}
+                {% if user.status == user_status_choices.JOBSEEKER %}
                     <a href="{% url 'resumes:resume_detail' resume.id %}">
                         <h4>
                             {{ resume.title }}
                         </h4>
                     </a>
-                {% elif user.status == 2 %}
+                {% elif user.status == user_status_choices.EMPLOYER %}
                     <a href="{% url 'resumes:resume_detail' resume.id %}">
                         <h4>
                             {{ jobseeker.first_name }}
@@ -39,10 +39,10 @@
             </div>
             {% if not responding %}
                 <ul class="btns">
-                    {% if user.status == 1 %}
+                    {% if user.status == user_status_choices.JOBSEEKER %}
                         <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
                         <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
-                    {% elif user.status == 2 %}
+                    {% elif user.status == user_status_choices.EMPLOYER %}
                         <li>
                             {% if response %}
                                 <a href="{% url 'chat:start_response' response_id=response.id %}">

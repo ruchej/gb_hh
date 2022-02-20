@@ -17,3 +17,9 @@ def new_responses(request):
         new_responses = [True for notif in request.user.notifications.unread() if notif.verb == NEW_RESUME_NOTIF]
         return {'new_responses': len(new_responses)}
     return {'new_responses': 0}
+
+
+def user_status_choices(request):
+    return {
+        'user_status_choices': UserStatusChoices
+    }

@@ -17,8 +17,8 @@
     </div>
 </div>
 
-{% if user.status == 1 %}
-{% elif user.status == 2 %}
+{% if user.status == user_status_choices.JOBSEEKER %}
+{% elif user.status == user_status_choices.EMPLOYER %}
     <div class="single-slidebar">
         <h4>Резюме по расположению</h4>
         {% if resumes_cities %}

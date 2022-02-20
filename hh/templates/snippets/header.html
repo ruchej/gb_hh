@@ -17,7 +17,7 @@
                                 Резюме
                             </a>
                         </li>
-                        {% if user.status == 2 %}
+                        {% if user.status == user_status_choices.EMPLOYER %}
                             <li {% if request.resolver_match.view_name == 'recruiting:response_list' %}class="active"{% endif %}>
                                 <a class="notification" href="{% url 'recruiting:response_list' %}">
                                     <span>Отклики</span><span class="badge badge-danger resp-nav-notif">{% if new_responses %}{{ new_responses }}{% endif %}</span>

@@ -47,11 +47,11 @@
                     <p style="text-align: center; font-size: large;">
                         Тут пока ничего нет :(
                     </p>
-                    {% if user.status == 1 %}
+                    {% if user.status == user_status_choices.JOBSEEKER %}
                         <p style="text-align: center; font-size: large;">
                             Как только на ваше резюме откликнутся - чат будет доступен
                         </p>
-                    {% elif user.status == 2 %}
+                    {% elif user.status == user_status_choices.EMPLOYER %}
                         <p style="text-align: center; font-size: large;">
                             Отправьте ответ на резюме и чат будет доступен
                         </p>

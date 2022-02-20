@@ -25,9 +25,9 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if user.status == 1 %}
+                            {% if user.status == user_status_choices.JOBSEEKER %}
                                 {% include 'accounts/snippets/detail/jobseeker_card.html' %}
-                            {% elif user.status == 2 %}
+                            {% elif user.status == user_status_choices.EMPLOYER %}
                                 {% include 'accounts/snippets/detail/employer_card.html' %}
                             {% endif %}
                         </div>

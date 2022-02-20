@@ -1,12 +1,12 @@
 {% if user.status == 1 and object_list or user.status == 2 and jobseekers_resume_list %}
     {% load el_pagination_tags %}
 
-    {% if user.status == 1 %}
+    {% if user.status == user_status_choices.JOBSEEKER %}
         {% lazy_paginate object_list %}
         {% for resume in object_list %}
             {% include 'resumes/snippets/list/card.html' %}
         {% endfor %}
-    {% elif user.status == 2 %}
+    {% elif user.status == user_status_choices.EMPLOYER %}
         {% lazy_paginate jobseekers_resume_list %}
         {% for jobseeker, resume, fav in jobseekers_resume_list %}
             {% include 'resumes/snippets/list/card.html' %}

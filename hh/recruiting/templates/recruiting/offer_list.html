@@ -11,7 +11,7 @@
                     </div>
 
                     <div class="col-lg-4 sidebar">
-                        {% if user.status == 1 %}
+                        {% if user.status == user_status_choices.JOBSEEKER %}
                             <a class="d-flex flex-row ticker-btn" href="{% url 'resumes:resume_create' %}">
                                 Создать резюме
                             </a>

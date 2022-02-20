@@ -89,6 +89,7 @@ TEMPLATES = [
                 'blog.context_processor.recent_news',
                 'conf.context_processor.new_messages',
                 'conf.context_processor.new_responses',
+                'conf.context_processor.user_status_choices',
             ],
         },
     },

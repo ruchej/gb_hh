@@ -12,7 +12,7 @@
             {{ form.employment_type|as_crispy_field }}
             {{ form.experience|as_crispy_field }}
             {{ form.salary|as_crispy_field }}
-            {% if user.status == 0 %}
+            {% if user.status == user_status_choices.MODERATOR %} %}
                 {{ form.status|as_crispy_field }}
             {% endif %}
             <button type="submit" class="btn btn-primary">Изменить</button>

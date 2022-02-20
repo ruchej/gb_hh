@@ -2,11 +2,11 @@
 
 {% if employers_vac_list %}
     {% lazy_paginate employers_vac_list %}
-    {% if user.status == 1 %}
+    {% if user.status == user_status_choices.JOBSEEKER %}
         {% for employer, vacancy, response, fav in employers_vac_list %}
             {% include 'vacancies/snippets/list/card.html' %}
         {% endfor %}
-    {% elif user.status == 2 %}
+    {% elif user.status == user_status_choices.EMPLOYER %}
         <div class="accordion " id="accordionEx" role="tablist" aria-multiselectable="true">
             <div class="card panel-card">
                 <div class="card-header panel-heading" role="tab"
