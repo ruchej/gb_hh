@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from cities_light.models import Country, City
 
-from conf.choices import SexChoices, UserStatusChoices
+from conf.choices import SexChoices, UserStatusChoices, PublicStatusChoices
 
 
 class AccountManager(UserManager):
@@ -141,4 +141,4 @@ class Employer(models.Model):
 
     def vacancy_amount(self):
         from vacancies.models import Vacancy
-        return Vacancy.objects.filter(employer=self.user, status=Vacancy.PUBLISHED).count()
+        return Vacancy.objects.filter(employer=self.user, status=PublicStatusChoices.PUBLISHED).count()
