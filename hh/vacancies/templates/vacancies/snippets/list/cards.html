@@ -9,16 +9,16 @@
     {% elif user.status == 2 %}
         <div class="accordion " id="accordionEx" role="tablist" aria-multiselectable="true">
             <div class="card panel-card">
-                <div class="card-header panel-heading" role="tab" id="publishedHeading">
+                <div class="card-header panel-heading" role="tab" id="PBLHeading">
                     <h3 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordionEx" href="#published"
-                           aria-expanded="true" aria-controls="published" class="btn-nav-accordion">
+                        <a data-toggle="collapse" data-parent="#accordionEx" href="#PBL"
+                           aria-expanded="false" aria-controls="PBL" class="btn-nav-accordion">
                             Опубликованные вакансии <i class="fa fa-angle-down rotate-icon"></i>
                         </a>
                     </h3>
                 </div>
-                <div id="published" class="panel-collapse collapse in show" role="tabpanel"
-                     aria-labelledby="publishedHeading">
+                <div id="PBL" class="panel-collapse collapse in" role="tabpanel"
+                     aria-labelledby="PBLHeading">
                     <div class="card-body pl-0 pr-0">
                         {% for employer, vacancy, response, fav in employers_vac_list %}
                             {% if vacancy.status == 'PBL' %}
@@ -29,16 +29,16 @@
                 </div>
             </div>
             <div class="card panel-card">
-                <div class="card-header panel-heading" role="tab" id="draftsHeading">
+                <div class="card-header panel-heading" role="tab" id="DFHeading">
                     <h3 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#accordionEx" href="#drafts"
-                           aria-expanded="false" aria-controls="drafts" class="btn-nav-accordion">
+                        <a role="button" data-toggle="collapse" data-parent="#accordionEx" href="#DF"
+                           aria-expanded="false" aria-controls="DF" class="btn-nav-accordion">
                             Черновики <i class="fa fa-angle-down rotate-icon"></i>
                         </a>
                     </h3>
                 </div>
-                <div id="drafts" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="draftsHeading">
+                <div id="DF" class="panel-collapse collapse in" role="tabpanel"
+                     aria-labelledby="DFHeading">
                     <div class="card-body">
                         {% for employer, vacancy, response, fav in employers_vac_list %}
                             {% if vacancy.status == 'DF' %}
@@ -49,16 +49,16 @@
                 </div>
             </div>
             <div class="card panel-card">
-                <div class="card-header panel-heading" role="tab" id="archivedHeading">
+                <div class="card-header panel-heading" role="tab" id="ARCHeading">
                     <h3 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#accordionEx" href="#archived"
-                           aria-expanded="false" aria-controls="archived" class="btn-nav-accordion">
+                        <a role="button" data-toggle="collapse" data-parent="#accordionEx" href="#ARC"
+                           aria-expanded="false" aria-controls="ARC" class="btn-nav-accordion">
                             Архив <i class="fa fa-angle-down rotate-icon"></i>
                         </a>
                     </h3>
                 </div>
-                <div id="archived" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="archivedHeading">
+                <div id="ARC" class="panel-collapse collapse in" role="tabpanel"
+                     aria-labelledby="ARCHeading">
                     <div class="card-body">
                         {% for employer, vacancy, response, fav in employers_vac_list %}
                             {% if vacancy.status == 'ARC' %}
