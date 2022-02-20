@@ -53,6 +53,12 @@ function cityAjax(event) {
     searchSubmit(event);
 }
 
+function showMoreCities(event) {
+    event.preventDefault();
+    $('.search-cities-ajax li:gt(3)').show();
+    $('.show-more-cities').hide();
+}
+
 function vacanciesAjax(event) {
     let link = event.target.href ?? event.target.parentNode.href;
     let vacId = link.split('vac_id=')[1];
@@ -60,6 +66,12 @@ function vacanciesAjax(event) {
     $(this).closest('li').addClass('search-selected');
     $('#vac-id-input-ajax').val(vacId);
     searchSubmit(event);
+}
+
+function showMoreVacancies(event) {
+    event.preventDefault();
+    $('.search-vacancies-ajax li:gt(3)').show();
+    $('.show-more-vacancies').hide();
 }
 
 function searchClear(event) {
@@ -73,6 +85,8 @@ window.onload = () => {
     $('.search-cities-ajax').on('click', 'a', cityAjax);
     $('.search-vacancies-ajax').on('click', 'a', vacanciesAjax);
     $('.ajax-search').submit(searchSubmit);
+    $('.show-more-cities').click(showMoreCities);
+    $('.show-more-vacancies').click(showMoreVacancies);
     // Too laggy
     // $('.search-input-ajax').on('input', searchSubmit);
     $('.clear-link').on('click', searchClear);

@@ -176,4 +176,5 @@ $(document).ready(function () {
     if ($('.resp-nav-notif')[0]) {
         setInterval(updateRespNav, 5000);
     }
+    $('.single-slidebar ul li:gt(3)').hide();
 });
