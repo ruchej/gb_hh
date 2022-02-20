@@ -1,3 +1,4 @@
+from datetime import datetime
 from collections import Counter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -52,7 +53,7 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('created_at')
+        queryset = super().get_queryset().order_by('-published_at')
         if self.request.user.status == UserStatus.EMPLOYER:
             queryset = queryset.filter(employer=self.request.user).select_related('employer')
         if self.request.user.status == UserStatus.JOBSEEKER:
@@ -83,7 +84,7 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
                 Q(title__contains=text) |
                 Q(salary__contains=text) |
                 Q(hashtags__contains=text)
-            ).order_by('created_at'))
+            ))
             if city_id:
                 employers = [empl.user for empl in
                              employers.filter(
@@ -97,7 +98,7 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
                                  Q(name__contains=text) |
                                  Q(description__contains=text)
                              ).select_related('user')]
-            employer_vacancies = list(object_list.filter(employer__in=employers).order_by('created_at'))
+            employer_vacancies = list(object_list.filter(employer__in=employers))
             vacancies.extend(employer_vacancies)
             vacancies = list(dict.fromkeys(vacancies))
         else:
@@ -147,7 +148,7 @@ def filter_by_city(vacancies, city_id):
     # Get relevant employers
     if city_id != 0:
         employers = Employer.objects.filter(user__in=empl_acc_all, city__id=city_id).select_related('user')
-        vacancies = Vacancy.objects.filter(employer__in=[empl.user for empl in employers]).order_by('created_at').select_related('employer')
+        vacancies = Vacancy.objects.filter(employer__in=[empl.user for empl in employers]).select_related('employer')
     else:
         employers = Employer.objects.filter(user__in=empl_acc_all).select_related('user')
     return vacancies, employers
@@ -157,6 +158,8 @@ def switch_status(request, pk, status):
     if request.is_ajax():
         vacancy = Vacancy.objects.get(id=pk)
         vacancy.status = status
+        if status == Vacancy.PUBLISHED:
+            vacancy.published_at = datetime.now()
         vacancy.save()
         context = {'vacancy': vacancy}
         result = render_to_string('vacancies/snippets/list/edit-page.html',
