@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from cities_light.models import Country, City
-from smart_selects.db_fields import ChainedForeignKey
 
 
 class UserStatus(models.IntegerChoices):
@@ -149,3 +148,7 @@ class Employer(models.Model):
 
     def __str__(self):
         return self.name if self.name else str(self.user)
+
+    def vacancy_amount(self):
+        from vacancies.models import Vacancy
+        return Vacancy.objects.filter(employer=self.user, status=Vacancy.PUBLISHED).count()
