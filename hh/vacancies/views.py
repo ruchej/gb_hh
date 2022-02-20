@@ -111,6 +111,11 @@ class VacancyDetail(LoginRequiredMixin, DetailView):
     model = Vacancy
     extra_context = {'title': 'Детали Вакансии'}
 
+    def get_context_data(self, **kwargs):
+        context = super(VacancyDetail, self).get_context_data(**kwargs)
+        context['employer'] = Employer.objects.get(user=context['vacancy'].employer)
+        return context
+
 
 class VacancyCreate(LoginRequiredMixin, CreateView):
     model = Vacancy

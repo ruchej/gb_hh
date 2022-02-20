@@ -5,35 +5,22 @@
     <section class="post-area section-gap">
         <div class="container">
             <div class="title d-flex flex-row justify-content-between">
-                <div class="titles">
-                    <a href="#"><h1>{{ vacancy.title }}</h1></a>
-                    <h4>{{ employer.name }}</h4>
+                <div class="col-lg-8 post-list data-ajax">
+                    {% include 'vacancies/snippets/list/card.html' %}
+                    <div class="single-post job-details">
+                        {% if vacancy.description %}
+                            {% autoescape off %}
+                                {{ vacancy.description }}
+                            {% endautoescape %}
+                        {% else %}
+                            Нет описания
+                        {% endif %}
+                    </div>
                 </div>
-                <ul class="btns">
-                    {% if user.status == 2 %}
-                        <li><a href="{% url 'vacancies:update' vacancy.id %}">Редактировать</a></li>
-                        <li><a href="{% url 'vacancies:delete' vacancy.id %}">Удалить</a></li>
-                    {% else %}
-                        <li><a href="#"><span class="lnr lnr-heart"></span></a></li>
-                        <li><a href="#">Подать заявку</a></li>
-                    {% endif %}
-                </ul>
+                <div class="col-lg-4 sidebar">
+                    {% include 'snippets/recent_news.html' %}
+                </div>
             </div>
-            <p>
-                {% if vacancy.description %}
-                    {% autoescape off %}
-                        {{ vacancy.description }}
-                    {% endautoescape %}
-                {% else %}
-                    Нет описания
-                {% endif %}
-            </p>
-            <h5>Опыт работы: {{ vacancy.get_experience_display }}</h5>
-            {% if vacancy.employment_type %}
-                <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
-            {% endif %}
-            <p class="address"><span class="lnr lnr-map"></span> {{ employer.city.name }}</p>
-            <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}</p>
         </div>
     </section>
 {% endblock %}

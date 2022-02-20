@@ -4223,3 +4223,34 @@ body.mobile-nav-active #mobile-nav-toggle {
 .fa-angle-down {
     transition: all 0.3s ease;
  }
+
+.job-details li:before {
+  content:url('../img/list.jpg');
+  position:relative;
+  top: 3px;
+  right: 10px;
+}
+
+.job-details ul {
+  padding-left: 10px;
+}
+
+.job-details ul li, .job-details ul li p {
+  color: black;
+  margin-bottom: 30px;
+}
+
+.job-details p {
+  font-size: 16px;
+}
+
+.job-details p strong {
+  font-weight: bold;
+  font-size: 18px;
+  color: black;
+  margin-bottom: 20px;
+}
+.job-details strong {
+  font-weight: bold;
+  color: black;
+}
