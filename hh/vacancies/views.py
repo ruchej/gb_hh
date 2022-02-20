@@ -22,8 +22,12 @@ from recruiting.models import Response
 def favorites_vacancies_list(request):
     user = request.user
     favorites_vacancies = user.favourites_vacancies.all()
+    employers, favs = [], []
+    for vacancy in favorites_vacancies:
+        employers.append(Employer.objects.get(user=vacancy.user))
+        favs.append(True)
     context = {
-        'favorites_vacancies': favorites_vacancies,
+        'favorites_vacancies': zip(favorites_vacancies, employers, favs),
     }
     return render(request, 'vacancies/favorites_vacanies_list.html', context)
 
@@ -58,7 +62,8 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         if self.request.user.status == UserStatusChoices.EMPLOYER:
             queryset = queryset.filter(employer=self.request.user).order_by('-published_at').select_related('employer')
         if self.request.user.status == UserStatusChoices.JOBSEEKER:
-            queryset = queryset.filter(status=PublicStatusChoices.PUBLISHED).order_by('-modified_at').select_related('employer')
+            queryset = queryset.filter(status=PublicStatusChoices.PUBLISHED).order_by('-modified_at').select_related(
+                'employer')
         return queryset
 
     def render_to_response(self, context, **response_kwargs):
