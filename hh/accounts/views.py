@@ -100,7 +100,7 @@ class UserConfirm(PasswordResetConfirmView):
         "header_class": "hero",
     }
 
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("accounts:login")
     template_name = "accounts/signup_confirm.html"
     form_class = UserActivationRegisterForm
     post_reset_login = True
@@ -131,7 +131,7 @@ class UserDetail(LoginRequiredMixin, DetailView):
 
 class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Account
-    success_url = reverse_lazy("user-detail")
+    success_url = reverse_lazy("accounts:user-detail")
     success_message = _('Профиль изменен')
     template_name = 'accounts/profile_update.html'
     form_class = AccountForm
