@@ -22,7 +22,7 @@ COPY ./requirements.txt .
 RUN pip3 install -r requirements.txt
 
 # install server dependencies
-RUN pip3 install gunicorn
+RUN pip3 install gunicorn uWSGI
 
 # copy entrypoint.sh
 COPY ./entrypoint.sh .
@@ -31,6 +31,7 @@ RUN chmod +x ./entrypoint.sh
 
 # copy project
 COPY ./ ./
+ADD . /code/
 
 # run entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
