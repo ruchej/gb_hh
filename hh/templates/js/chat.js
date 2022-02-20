@@ -4,6 +4,7 @@ class Chat {
         this.chatClass = `chat-${chatId}`
         this.socket = this.establishConnection(chatId);
         this.setHandlers();
+        $(`.${this.chatClass}-alert`).show();
     }
 
     establishConnection(chatId) {
