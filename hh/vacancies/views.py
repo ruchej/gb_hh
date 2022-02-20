@@ -40,6 +40,7 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyList, self).get_context_data(object_list=object_list, **kwargs)
         context.update({'title': 'Вакансии'})
+        context['publicstatuschoices'] = PublicStatusChoices
         vacancies = self.filter(context, object_list)
         # Get employers and link them to vacancies
         context['employers_vac_list'] = []
@@ -60,9 +61,9 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.request.user.status == UserStatusChoices.EMPLOYER:
-            queryset = queryset.filter(employer=self.request.user).order_by('-published_at').select_related('employer')
-        if self.request.user.status == UserStatusChoices.JOBSEEKER:
-            queryset = queryset.filter(status=PublicStatusChoices.PUBLISHED).order_by('-modified_at').select_related(
+            queryset = queryset.filter(employer=self.request.user).order_by('-modified_at').select_related('employer')
+        elif self.request.user.status == UserStatusChoices.JOBSEEKER:
+            queryset = queryset.filter(status=PublicStatusChoices.PUBLISHED).order_by('-published_at').select_related(
                 'employer')
         return queryset
 
@@ -171,10 +172,13 @@ def switch_status(request, pk, status):
         vacancy = Vacancy.objects.get(id=pk)
         vacancy.status = status
         vacancy.modified_at = datetime.now()
-        if status == Vacancy.PUBLISHED:
+        if status == PublicStatusChoices.PUBLISHED:
             vacancy.published_at = datetime.now()
         vacancy.save()
-        context = {'vacancy': vacancy}
+        context = {
+            'vacancy': vacancy,
+            'publicstatuschoices': PublicStatusChoices
+        }
         result = render_to_string('vacancies/snippets/list/edit-page.html',
                                   context=context, request=request)
         return JsonResponse({'result': result})

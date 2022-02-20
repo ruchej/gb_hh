@@ -9,19 +9,22 @@
     {% elif user.status == 2 %}
         <div class="accordion " id="accordionEx" role="tablist" aria-multiselectable="true">
             <div class="card panel-card">
-                <div class="card-header panel-heading" role="tab" id="PBLHeading">
+                <div class="card-header panel-heading" role="tab"
+                     id="{{ publicstatuschoices.PUBLISHED }}Heading">
                     <h3 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordionEx" href="#PBL"
-                           aria-expanded="false" aria-controls="PBL" class="btn-nav-accordion">
+                        <a data-toggle="collapse" data-parent="#accordionEx"
+                           href="#{{ publicstatuschoices.PUBLISHED }}"
+                           aria-expanded="false" aria-controls="{{ publicstatuschoices.PUBLISHED }}"
+                           class="btn-nav-accordion">
                             Опубликованные вакансии <i class="fa fa-angle-down rotate-icon"></i>
                         </a>
                     </h3>
                 </div>
-                <div id="PBL" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="PBLHeading">
+                <div id="{{ publicstatuschoices.PUBLISHED }}" class="panel-collapse collapse in"
+                     role="tabpanel" aria-labelledby="{{ publicstatuschoices.PUBLISHED }}Heading">
                     <div class="card-body pl-0 pr-0">
                         {% for employer, vacancy, response, fav in employers_vac_list %}
-                            {% if vacancy.status == 'PBL' %}
+                            {% if vacancy.status == publicstatuschoices.PUBLISHED %}
                                 {% include 'vacancies/snippets/list/card.html' %}
                             {% endif %}
                         {% endfor %}
@@ -29,19 +32,22 @@
                 </div>
             </div>
             <div class="card panel-card">
-                <div class="card-header panel-heading" role="tab" id="DFHeading">
+                <div class="card-header panel-heading" role="tab"
+                     id="{{ publicstatuschoices.DRAFT }}Heading">
                     <h3 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#accordionEx" href="#DF"
-                           aria-expanded="false" aria-controls="DF" class="btn-nav-accordion">
+                        <a role="button" data-toggle="collapse" data-parent="#accordionEx"
+                           href="#{{ publicstatuschoices.DRAFT }}"
+                           aria-expanded="false" aria-controls="{{ publicstatuschoices.DRAFT }}"
+                           class="btn-nav-accordion">
                             Черновики <i class="fa fa-angle-down rotate-icon"></i>
                         </a>
                     </h3>
                 </div>
-                <div id="DF" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="DFHeading">
+                <div id="{{ publicstatuschoices.DRAFT }}" class="panel-collapse collapse in"
+                     role="tabpanel" aria-labelledby="{{ publicstatuschoices.DRAFT }}Heading">
                     <div class="card-body">
                         {% for employer, vacancy, response, fav in employers_vac_list %}
-                            {% if vacancy.status == 'DF' %}
+                            {% if vacancy.status == publicstatuschoices.DRAFT %}
                                 {% include 'vacancies/snippets/list/card.html' %}
                             {% endif %}
                         {% endfor %}
@@ -49,19 +55,22 @@
                 </div>
             </div>
             <div class="card panel-card">
-                <div class="card-header panel-heading" role="tab" id="ARCHeading">
+                <div class="card-header panel-heading" role="tab"
+                     id="{{ publicstatuschoices.ARCHIVED }}Heading">
                     <h3 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#accordionEx" href="#ARC"
-                           aria-expanded="false" aria-controls="ARC" class="btn-nav-accordion">
+                        <a role="button" data-toggle="collapse" data-parent="#accordionEx"
+                           href="#{{ publicstatuschoices.ARCHIVED }}"
+                           aria-expanded="false" aria-controls="{{ publicstatuschoices.ARCHIVED }}"
+                           class="btn-nav-accordion">
                             Архив <i class="fa fa-angle-down rotate-icon"></i>
                         </a>
                     </h3>
                 </div>
-                <div id="ARC" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="ARCHeading">
+                <div id="{{ publicstatuschoices.ARCHIVED }}" class="panel-collapse collapse in"
+                     role="tabpanel" aria-labelledby="{{ publicstatuschoices.ARCHIVED }}Heading">
                     <div class="card-body">
                         {% for employer, vacancy, response, fav in employers_vac_list %}
-                            {% if vacancy.status == 'ARC' %}
+                            {% if vacancy.status == publicstatuschoices.ARCHIVED %}
                                 {% include 'vacancies/snippets/list/card.html' %}
                             {% endif %}
                         {% endfor %}
