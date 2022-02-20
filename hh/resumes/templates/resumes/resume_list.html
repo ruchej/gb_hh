@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
     <section class="post-area section-gap">
-        {% if object_list %}
-            <div class="container">
-                <div class="row justify-content-sm-center d-flex ">
-                    <div class="col-lg-8 post-list">
-                        {% for resume in object_list %}
-                            {% include 'resumes/snippets/list/card.html' %}
-                        {% endfor %}
+        <div class="container">
+            <div class="row justify-content-sm-center d-flex">
+                {% if object_list %}
+                    <div class="col-lg-8 post-list data-ajax">
+                        {% include page_template %}
                     </div>
 
                     <div class="col-lg-4 sidebar">
@@ -16,19 +14,37 @@
                                 Создать резюме
                             </a>
                         {% endif %}
+                        {% include 'resumes/snippets/list/search.html' %}
                         {% include 'snippets/recent_news.html' %}
                     </div>
-                </div>
+                {% else %}
+                    <div style="height: 50vh; width: 100vw">
+                        <div style="margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 50vw">
+                            <p style="text-align: center; font-size: large;">
+                                {% if user.status == 1 %}
+                                    Вы еще не добавили никаких резюме!
+                                    <a href="{% url 'resumes:resume_create' %}" class="stretched-link"> Создать?</a>
+                                {% else %}
+                                    Отсутствуют резюме...
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+
+
+
+
+                {#                {% if user.status == 1 %}#}
+                {#                    {% include 'resumes/snippets/list/employee_list.html' %}#}
+                {#                {% else %}#}
+                {#                    {% include 'resumes/snippets/list/employer_list.html' %}#}
+                {#                {% endif %}#}
             </div>
-        {% else %}
-            <div style="height: 50vh; width: 100vw">
-                <div style="margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 50vw">
-                    <p style="text-align: center; font-size: large;">
-                        Вы еще не добавили никаких резюме!
-                        <a href="{% url 'resumes:resume_create' %}" class="stretched-link"> Создать?</a>
-                    </p>
-                </div>
-            </div>
-        {% endif %}
+        </div>
     </section>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    {% include 'snippets/pagination.html' %}
 {% endblock %}

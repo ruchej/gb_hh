@@ -7,7 +7,7 @@
             <div class="title d-flex flex-row justify-content-between">
                 <div class="titles">
                     <a href="#"><h1>{{ vacancy.title }}</h1></a>
-                    <h4>{{ vacancy.employer.first_name }}</h4>
+                    <h4>{{ employer.name }}</h4>
                 </div>
                 <ul class="btns">
                     {% if user.status == 2 %}
@@ -21,7 +21,9 @@
             </div>
             <p>
                 {% if vacancy.description %}
-                    {{ vacancy.description }}
+                    {% autoescape off %}
+                        {{ vacancy.description }}
+                    {% endautoescape %}
                 {% else %}
                     Нет описания
                 {% endif %}
@@ -30,7 +32,7 @@
             {% if vacancy.employment_type %}
                 <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
             {% endif %}
-            <p class="address"><span class="lnr lnr-map"></span> {{ vacancy.employer.adress }}</p>
+            <p class="address"><span class="lnr lnr-map"></span> {{ employer.city.name }}</p>
             <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary }}</p>
         </div>
     </section>

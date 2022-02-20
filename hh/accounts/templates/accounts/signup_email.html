@@ -6,7 +6,7 @@
             Вы получили это письмо для подтверждения регистрации на сайте .
             Пожалуйста, перейдите по ссылке для подтверждения регистрации:
             {% block reset_link %}
-                {{ protocol }}://{{ domain }}{% url 'accounts:UserConfirm' uidb64=uid token=token %}
+                {{ protocol }}://{{ domain }}{% url 'accounts:user-confirm' uidb64=uid token=token %}
             {% endblock %}
             Ваше имя пользователя, в том случае если вы забыли: {{ user.username }}
             Спасибо за использование нашего сайта!

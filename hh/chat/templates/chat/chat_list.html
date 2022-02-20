@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <section class="post-area section-gap">
+        {% if chat_contacts %}
+            <div class="container">
+                <div class="messaging">
+                    <div class="inbox_msg">
+                        <div class="inbox_people">
+                            <div class="headind_srch justify-content-end d-flex">
+                                <div class="srch_bar">
+                                    <div class="stylish-input-group justify-content-end d-flex">
+                                        <a href="#" style="display: none" class="search-clear">
+                                            Очистить
+                                        </a>
+                                        <form id="search-form" action="{% url 'chat:search_contact' %}"
+                                              class="m-0 p-0">
+                                            <input type="text" name="contact" class="search-bar" placeholder="Поиск">
+                                            <span class="input-group-addon">
+                                                <button type="submit">
+                                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                                </button>
+                                            </span>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inbox_chat" style="margin-left: 8px">
+                                <div class="contacts-ajax">
+                                    {% include 'chat/snippets/contacts.html' %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-ajax">
+                            {% include 'chat/snippets/chat.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div style="height: 50vh; width: 100vw">
+                <div style="margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 50vw">
+                    <p style="text-align: center; font-size: large;">
+                        Тут пока ничего нет :(
+                    </p>
+                    {% if user.status == 1 %}
+                        <p style="text-align: center; font-size: large;">
+                            Как только на ваше резюме откликнутся - чат будет доступен
+                        </p>
+                    {% elif user.status == 2 %}
+                        <p style="text-align: center; font-size: large;">
+                            Отправьте ответ на резюме и чат будет доступен
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    {% include 'snippets/pagination.html' %}
+    <script src="{% static 'js/chat.js' %}"></script>
+{% endblock %}

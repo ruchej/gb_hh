@@ -1,0 +1,17 @@
+{% for city, cnt in vacancy_cities %}
+    {% if vacancy_cities.0.0 == city %}
+        <li class="ajax-selection-all search-selected">
+            <a class="justify-content-between d-flex"
+               href="{% url 'vacancies:vacancy_list_search'%}?city_id=0">
+                <p>{{ city }}</p><span>{{ cnt }}</span>
+            </a>
+        </li>
+    {% else %}
+        <li>
+            <a class="justify-content-between d-flex vacancy-city"
+               href="{% url 'vacancies:vacancy_list_search'%}?city_id={{ city.id }}">
+                <p>{{ city.name }}</p><span>{{ cnt }}</span>
+            </a>
+        </li>
+    {% endif %}
+{% endfor %}

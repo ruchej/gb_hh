@@ -49,33 +49,39 @@ class Vacancy(models.Model):
     )
     title = models.CharField(
         max_length=50,
-        verbose_name=_('Название')
+        verbose_name=_('Название'),
+        db_index=True
     )
     description = models.TextField(
         blank=True,
         null=True,
-        verbose_name=_('Описание')
+        verbose_name=_('Описание'),
+        db_index=True
     )
     hashtags = models.CharField(
         max_length=50,
         blank=True,
         null=True,
-        verbose_name=_('Ключевые навыки')
+        verbose_name=_('Ключевые навыки'),
+        db_index=True
     )
     employment_type = models.CharField(
         choices=EMPLOYMENT_TYPE_CHOICES,
         max_length=3,
-        verbose_name=_('Тип занятости')
+        verbose_name=_('Тип занятости'),
+        db_index=True
     )
     experience = models.CharField(
         choices=EXPERIENCE_CHOICES,
         max_length=2,
-        verbose_name=_('Опыт работы')
+        verbose_name=_('Опыт работы'),
+        db_index=True
     )
     salary = models.CharField(
         max_length=30,
         default=_('Не указана'),
-        verbose_name=_('Зарплата')
+        verbose_name=_('Зарплата'),
+        db_index=True
     )
     status = models.CharField(
         choices=VACANCY_STATUS_CHOICES,
@@ -85,6 +91,7 @@ class Vacancy(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     published_at = models.DateTimeField(auto_now_add=True)
+    favourites = models.ManyToManyField(User, related_name='favourites_vacancies', blank=True, default=None)
 
     class Meta:
         verbose_name = _('Вакансия')
@@ -98,3 +105,6 @@ class Vacancy(models.Model):
     def __str__(self):
         # TODO: return employer and title
         return self.title
+
+    def hashtags_as_list(self):
+        return self.hashtags.split(', ')[:5]

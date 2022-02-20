@@ -1,0 +1,15 @@
+{% if jobseekers_resp_list %}
+    {% load el_pagination_tags %}
+    {% lazy_paginate jobseekers_resp_list %}
+
+    {% for jobseeker, response, is_new in jobseekers_resp_list %}
+        {% with resume=response.resume %}
+            {% include 'resumes/snippets/list/card.html' %}
+        {% endwith %}
+    {% endfor %}
+    {% show_more %}
+{% else %}
+    <p style="text-align: center; font-size: large;">
+        Не удалось найти резюме :(
+    </p>
+{% endif %}

@@ -4,10 +4,12 @@
         {% if object_list %}
             <div class="container">
                 <div class="row justify-content-sm-center d-flex ">
-                    <div class="col-lg-8 post-list">
-                        {% for response in object_list %}
-                            {% include 'recruiting/snippets/response/list/card.html' %}
-                        {% endfor %}
+                    <div class="col-lg-8 post-list data-ajax">
+                        {% include page_template %}
+                    </div>
+                    <div class="col-lg-4 sidebar">
+                        {% include 'recruiting/snippets/response/list/search.html' %}
+                        {% include 'snippets/recent_news.html' %}
                     </div>
                 </div>
             </div>
@@ -21,4 +23,8 @@
             </div>
         {% endif %}
     </section>
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    {% include 'snippets/pagination.html' %}
 {% endblock %}

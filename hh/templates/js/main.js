@@ -1,3 +1,49 @@
+let getUrl = window.location;
+
+function activateFavorites() {
+    $('.favorite-icon').on('click', (event) => {
+        let iconSpan = event.target.localName === 'span' ? event.target : event.target.querySelector('span');
+        let url = iconSpan.closest('a').href;
+        event.preventDefault();
+        if (iconSpan.className.includes('lnr-star')) {
+            iconSpan.classList.remove('lnr-star');
+            iconSpan.classList.add('lnr-trash');
+        } else {
+            iconSpan.classList.remove('lnr-trash');
+            iconSpan.classList.add('lnr-star');
+        }
+        $.ajax({url});
+    });
+}
+
+function updateChatNav() {
+    $.ajax({
+        url: `/chat/notif/get/`,
+        success: (data) => {
+            let notifications = data['new_messages'];
+            if (notifications && notifications !== '0') {
+                $('.chat-nav-notif').html(notifications);
+            } else {
+                $('.chat-nav-notif').html('');
+            }
+        }
+    })
+}
+
+function updateRespNav() {
+    $.ajax({
+        url: `/recruiting/responses/notif/get/`,
+        success: (data) => {
+            let notifications = data['new_responses'];
+            if (notifications && notifications !== '0') {
+                $('.resp-nav-notif').html(notifications);
+            } else {
+                $('.resp-nav-notif').html('');
+            }
+        }
+    })
+}
+
 $(document).ready(function () {
     "use strict";
 
@@ -21,6 +67,15 @@ $(document).ready(function () {
     if (document.getElementById("default-selects2")) {
         $('select').niceSelect();
     }
+
+
+    // Initiate superfish on nav menu
+    $('.nav-menu').superfish({
+        animation: {
+            opacity: 'show'
+        },
+        speed: 400
+    });
 
     if ($('#nav-menu-container').length) {
         let $mobile_nav = $('#nav-menu-container').clone().prop({
@@ -92,7 +147,7 @@ $(document).ready(function () {
             }
         }
     });
-    
+
     $(document).ready(function () {
         $('html, body').hide();
         if (window.location.hash) {
@@ -106,7 +161,7 @@ $(document).ready(function () {
             $('html, body').show();
         }
     });
-    
+
     $(window).scroll(function () {
         if ($(this).scrollTop() > 100) {
             $('#header').addClass('header-scrolled');
@@ -114,4 +169,11 @@ $(document).ready(function () {
             $('#header').removeClass('header-scrolled');
         }
     })
+    activateFavorites();
+    if ($('.chat-nav-notif')[0]) {
+        setInterval(updateChatNav, 1000);
+    }
+    if ($('.resp-nav-notif')[0]) {
+        setInterval(updateRespNav, 5000);
+    }
 });

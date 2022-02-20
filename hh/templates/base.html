@@ -11,11 +11,12 @@
 {% include 'snippets/banner.html' %}
 
 {% block content %}
-
 {% endblock %}
 
 {% include 'snippets/footer.html' %}
-{% include 'snippets/scripts.html' %}
+{% block js %}
+    {% include 'snippets/scripts.html' %}
+{% endblock %}
 
 </body>
 </html>

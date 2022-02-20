@@ -1,0 +1,20 @@
+{% if user.status == 1 and object_list or user.status == 2 and jobseekers_resume_list %}
+    {% load el_pagination_tags %}
+
+    {% if user.status == 1 %}
+        {% lazy_paginate object_list %}
+        {% for resume in object_list %}
+            {% include 'resumes/snippets/list/card.html' %}
+        {% endfor %}
+    {% elif user.status == 2 %}
+        {% lazy_paginate jobseekers_resume_list %}
+        {% for jobseeker, resume, fav in jobseekers_resume_list %}
+            {% include 'resumes/snippets/list/card.html' %}
+        {% endfor %}
+    {% endif %}
+    {% show_more %}
+{% else %}
+    <p style="text-align: center; font-size: large;">
+        Не удалось найти резюме :(
+    </p>
+{% endif %}

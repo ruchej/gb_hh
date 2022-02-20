@@ -6,37 +6,76 @@
             </div>
             <nav id="nav-menu-container">
                 <ul class="nav-menu">
-                    <li><a href="{% url 'blog:news' %}">Новости</a></li>
-                    {% if user.username %}
-                        {% if user.status == 1 %}
-                            <li><a href="{% url 'resumes:resume_list' %}">Резюме</a></li>
-                        {% else %}
-                            <li><a href="{% url 'recruiting:response_list' %}">Отклики</a></li>
-                        {% endif %}
-                        <li><a href="{% url 'vacancies:vacancy_list' %}">Вакансии</a></li>
-                    {% else %}
-                        <li><a href="{% url 'vacancies:vacancy_list' %}" data-toggle="modal" data-target="#modal"
-                               data-toolti>
-                            Вакансии
-                        </a></li>
-                    {% endif %}
-                    <li><a href="#">О нас</a></li>
-                    <li>
-                        <a href="{% url 'rules' %}">Правила</a>
+                    <li {% if request.resolver_match.view_name == 'blog:news' %} class="active" {% endif %}>
+                        <a href="{% url 'blog:news' %}">
+                            Новости
+                        </a>
                     </li>
                     {% if user.username %}
-                        <li><a href="{% url 'accounts:UserDetail' %}" style="font-weight: 600; font-size: 18px">
-                            {{ user.username }}
-                        </a></li>
-                        <li><a class="ticker-btn" href="{% url 'accounts:Logout' %}?next={{ request.path|urlencode }}">
-                            Выйти
-                        </a></li>
+                        <li {% if request.resolver_match.view_name == 'resumes:resume_list' %}class="active"{% endif %}>
+                            <a href="{% url 'resumes:resume_list' %}">
+                                Резюме
+                            </a>
+                        </li>
+                        {% if user.status == 2 %}
+                            <li {% if request.resolver_match.view_name == 'recruiting:response_list' %}class="active"{% endif %}>
+                                <a class="notification" href="{% url 'recruiting:response_list' %}">
+                                    <span>Отклики</span><span class="badge badge-danger resp-nav-notif">{% if new_responses %}{{ new_responses }}{% endif %}</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li {% if request.resolver_match.view_name == 'vacancies:vacancy_list' %}class="active"{% endif %}>
+                            <a href="{% url 'vacancies:vacancy_list' %}">
+                                Вакансии
+                            </a>
+                        </li>
+                        <li {% if request.resolver_match.view_name == 'chat:list' %}class="active"{% endif %}>
+                            <a class="notification" href="{% url 'chat:list' %}">
+                                <span>Чат</span>
+                                <span class="badge badge-danger chat-nav-notif">{% if new_messages %}{{ new_messages }}{% endif %}</span>
+                            </a>
+                        </li>
                     {% else %}
-                        <li><a class="ticker-btn" href="{% url 'accounts:Login' %}" data-toggle="modal"
+                        <li {% if request.resolver_match.view_name == 'vacancies:vacancy_list' %}class="active"{% endif %}>
+                            <a
+                                    href="{% url 'vacancies:vacancy_list' %}" data-toggle="modal" data-target="#modal"
+                                    data-toolti>
+                                Вакансии
+                            </a></li>
+                    {% endif %}
+                    <li {% if request.resolver_match.view_name == 'about_us' %}class="active"{% endif %}><a href="#">О
+                        нас</a>
+                    </li>
+                    <li {% if request.resolver_match.view_name == 'rules' %}class="active"{% endif %}>
+                        <a href="{% url 'rules' %}">Правила</a>
+                    </li>
+{#                    Пример выпадающего окна#}
+{#                    <li class="menu-has-children"><a href="">Pages</a>#}
+{#                        <ul>#}
+{#                            <li><a href="elements.html">elements</a></li>#}
+{#                            <li><a href="search.html">search</a></li>#}
+{#                            <li><a href="single.html">single</a></li>#}
+{#                        </ul>#}
+{#                    </li>#}
+                    {% if user.username %}
+                        <li {% if request.resolver_match.view_name == 'accounts:user-detail' %}class="active"{% endif %}>
+                            <a href="{% url 'accounts:user-detail' %}" style="font-weight: 600; font-size: 18px">
+                                {{ user.username }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="ticker-btn" href="{% url 'accounts:logout' %}?next={{ request.path|urlencode }}">
+                                Выйти
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a class="ticker-btn" href="{% url 'accounts:login' %}" data-toggle="modal"
                                data-target="#modal"
                                data-tooltip>
-                            Войти
-                        </a></li>
+                                Войти
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </nav>

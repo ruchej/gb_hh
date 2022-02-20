@@ -33,10 +33,30 @@
 
     <div class="row">
         <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">Штаб квартира</label>
+            <label style="font-weight:bold;">Страна</label>
         </div>
         <div class="col-md-8 col-6">
-            {{ jobseeker.address }}
+            {{ employer.country.name }}
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Город</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ employer.city.name }}
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2 col-5">
+            <label style="font-weight:bold;">Улица</label>
+        </div>
+        <div class="col-md-8 col-6">
+            {{ employer.address }}
         </div>
     </div>
     <hr/>
@@ -46,7 +66,7 @@
             <label style="font-weight:bold;">Телефон</label>
         </div>
         <div class="col-md-8 col-6">
-            {{ jobseeker.phone }}
+            {{ employer.phone }}
         </div>
     </div>
     <hr/>

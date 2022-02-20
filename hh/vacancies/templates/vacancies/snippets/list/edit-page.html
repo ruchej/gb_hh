@@ -1,0 +1,32 @@
+<div class="default-select" id="default-select">
+    <select class="vacancy-status">
+        {% if vacancy.status != 'WTG' %}
+            <option value="#">{{ vacancy.get_status_display }}</option>
+            {% if vacancy.status == 'DF' %}
+                <option value="{% url 'vacancies:switch_status' vacancy.id "PBL" %}">
+                    Опубликовать
+                </option>
+                <option value="{% url 'vacancies:switch_status' vacancy.id "ARC" %}">
+                    Архивировать
+                </option>
+            {% elif vacancy.status == 'PBL' %}
+                <option value="{% url 'vacancies:switch_status' vacancy.id "DF" %}">
+                    В черновик
+                </option>
+                <option value="{% url 'vacancies:switch_status' vacancy.id "ARC" %}">
+                    Архивировать
+                </option>
+            {% elif vacancy.status == 'ARC' %}
+                <option value="{% url 'vacancies:switch_status' vacancy.id "DF" %}">
+                    Восстановить
+                </option>
+            {% endif %}
+        {% endif %}
+    </select>
+</div>
+{% if vacancy.status == 'DF' %}
+    <a href="{% url 'vacancies:update' vacancy.id %}"
+       class="genric-btn default radius" style="filter: brightness(98%)">
+        Редактировать
+    </a>
+{% endif %}

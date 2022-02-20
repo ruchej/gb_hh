@@ -3,11 +3,12 @@ from django import forms
 from . import models
 
 
-class PersonalInfoForm(forms.ModelForm):
-    """Form for processing information about personal information in resume."""
+class ResumeForm(forms.ModelForm):
+    """Form for processing information about resume."""
+
     class Meta:
-        model = models.PersonalInfo
-        fields = ('name', 'patronymic', 'surname', 'birthday', 'gender', 'location', 'relocation', 'business_trip')
+        model = models.Resume
+        fields = ('title', 'photo')
 
 
 class ContactsForm(forms.ModelForm):
@@ -23,7 +24,7 @@ class PositionForm(forms.ModelForm):
 
     class Meta:
         model = models.Position
-        fields = ('title', 'salary', 'employment', 'schedule')
+        fields = ('title', 'salary', 'employment', 'schedule', 'relocation', 'business_trip')
 
 
 class ExperienceForm(forms.ModelForm):

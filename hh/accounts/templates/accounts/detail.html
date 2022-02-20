@@ -11,20 +11,20 @@
                             <div class="card-title mb-4">
                                 <div class="row d-flex justify-content-start">
                                     <div class="image-container d-flex flex-row">
-                                        <img src="{{ object.avatar.url }}" id="imgProfile"
-                                             style="width: 150px; height: 150px" class="img-thumbnail"/>
+                                        <img src="{% if user.avatar %}{{ user.avatar.url }}{% endif %}"
+                                             id="imgProfile"
+                                             style="max-width: 150px; max-height: 150px"/>
                                     </div>
                                     <div class="userData ml-2 flex-row">
                                         <h2 class="d-block mb-3" style="font-size: 2rem; font-weight: bold">
                                             {{ object }}
                                         </h2>
-                                        <a class="ticker-btn" href="{%  url 'accounts:ProfileUpdate' %}">
+                                        <a class="ticker-btn" href="{%  url 'accounts:profile-update' %}">
                                             Редактировать
                                         </a>
                                     </div>
                                 </div>
                             </div>
-
                             {% if user.status == 1 %}
                                 {% include 'accounts/snippets/detail/jobseeker_card.html' %}
                             {% elif user.status == 2 %}

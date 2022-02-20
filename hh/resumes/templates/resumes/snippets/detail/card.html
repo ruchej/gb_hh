@@ -1,14 +1,75 @@
-<div class="card-title mb-4">
-    <div class="row d-flex justify-content-start">
-        <div class="image-container d-flex flex-row">
-            <img src="{{ resume.photo.url }}" id="imgProfile"
-                 class="img-thumbnail resume-image"/>
-        </div>
-        <div class="userData ml-2 flex-row">
-            <h2 class="d-block mb-3" style="font-size: 2rem; font-weight: bold">
-                {{ resume.personal_info.name }}
-                {{ resume.personal_info.surname }}
-            </h2>
+<section>
+    <div class="card-title mb-4">
+        <div class="row d-flex justify-content-start">
+            <div class="image-container d-flex flex-row">
+                <img src="{{ resume.photo.url }}" id="imgProfile"
+                     class="img-thumbnail resume-image"/>
+            </div>
+            <div class="userData ml-4 flex-row">
+                <div class="row">
+                    <h2 class="d-block mb-4" style="font-size: 2rem; font-weight: bold">
+                        {{ jobseeker.first_name }}
+                        {{ jobseeker.patronymic }}
+                        {{ jobseeker.last_name }}
+                    </h2>
+                </div>
+                <div class="row">
+                    <div>
+                        <label style="font-weight:bold;">Пол</label>
+                    </div>
+                    <div class="col-md-8 col-6">
+                        {% if jobseeker.get_sex_display %}
+                            {{ jobseeker.get_sex_display }}
+                        {% else %}
+                            Не указан
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <label style="font-weight:bold;">Дата рождения</label>
+                    </div>
+                    <div class="col-md-8 col-6">
+                        {{ jobseeker.date_birth }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <label style="font-weight:bold;">Email</label>
+                    </div>
+                    <div class="col-md-8 col-6">
+                        {{ resume.contacts.email }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <label style="font-weight:bold;">Адрес</label>
+                    </div>
+                    <div class="col-md-8 col-6">
+                        {{ jobseeker.address }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <label style="font-weight:bold;">Телефон</label>
+                    </div>
+                    <div class="col-md-8 col-6">
+                        {{ resume.contacts.phone }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <label style="font-weight:bold;">Telegram</label>
+                    </div>
+                    <div class="col-md-8 col-6">
+                        @{{ resume.contacts.telegram }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>

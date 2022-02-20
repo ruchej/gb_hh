@@ -1,32 +1,42 @@
-<div class="single-slidebar search-widget">
-    <form class="example" action="#" style="margin:auto;max-width:300px">
-        <input type="text" placeholder="Найти вакансию" name="search2">
-        <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
+<div class="sticky-search">
+    <div class="single-slidebar search-widget">
+        <form id="search-form" class="example ajax-search"
+              action="{% url 'vacancies:vacancy_list_search' %}"
+              style="margin:auto;max-width:300px">
+            <input type="text" placeholder="Найти вакансию" name="search" class="search-input-ajax">
+            <input id="city-id-input-ajax" type="text" name="city_id" value="0" style="display: none"/>
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        <a href="{% url 'vacancies:vacancy_list_search' %}"
+           class="clear-link">
+            <p class="ml-2 mt-0 mb-0 pt-0 pb-0">
+                Очистить
+            </p>
+        </a>
+    </div>
 </div>
 
 <div class="single-slidebar">
     <h4>Вакансии по расположению</h4>
-    <ul class="cat-list">
-        <li><a class="justify-content-between d-flex" href="#"><p>Москва</p><span>37</span></a>
-        </li>
-        <li><a class="justify-content-between d-flex" href="#"><p>Санкт-Петербург</p>
-            <span>57</span></a>
-        </li>
-        <li><a class="justify-content-between d-flex" href="#"><p>И так далее</p><span>33</span></a>
-        </li>
-    </ul>
+    {% if vacancy_cities %}
+        <ul class="cat-list search-cities-ajax">
+            {% include 'vacancies/snippets/list/cities_page.html' %}
+        </ul>
+        <a href="#" class="mt-0 mb-0 pt-0 pb-0">
+            Показать больше (Пока не работает)
+        </a>
+    {% endif %}
 </div>
 
-<div class="single-slidebar">
-    <h4>Вакансии по категориям</h4>
-    <ul class="cat-list">
-        <li><a class="justify-content-between d-flex" href="#"><p>Разработчик ПО</p>
-            <span>37</span></a>
-        </li>
-        <li><a class="justify-content-between d-flex" href="#"><p>Инженер</p><span>57</span></a>
-        </li>
-        <li><a class="justify-content-between d-flex" href="#"><p>Кто-то еще</p><span>33</span></a>
-        </li>
-    </ul>
-</div>
+{#<div class="single-slidebar">#}
+{#    <h4>Вакансии по категориям</h4>#}
+{#    <ul class="cat-list">#}
+{#        <li><a class="justify-content-between d-flex" href="#"><p>Разработчик ПО</p>#}
+{#            <span>37</span></a>#}
+{#        </li>#}
+{#        <li><a class="justify-content-between d-flex" href="#"><p>Инженер</p><span>57</span></a>#}
+{#        </li>#}
+{#        <li><a class="justify-content-between d-flex" href="#"><p>Кто-то еще</p><span>33</span></a>#}
+{#        </li>#}
+{#    </ul>#}
+{#</div>#}

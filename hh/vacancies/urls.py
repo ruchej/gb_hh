@@ -15,15 +15,18 @@ Including another URLconf
 """
 from django.urls import path
 
-from .views import VacancyList, VacancyDetail, VacancyCreate, VacancyUpdate, VacancyDelete
+from .views import VacancyList, VacancyDetail, VacancyCreate, VacancyUpdate, VacancyDelete, switch_status, favorites_vacancies_list
 
 app_name = 'vacancies'
 
 urlpatterns = [
     path('', VacancyList.as_view(), name='vacancy_list'),
+    path('search/', VacancyList.as_view(), name='vacancy_list_search'),
     path('<int:pk>/detail/', VacancyDetail.as_view(), name='detail'),
     path('create/', VacancyCreate.as_view(), name='create'),
     path('create/employer/<int:pk>/', VacancyCreate.as_view(), name='create_vacancy'),
     path('<int:pk>/update/', VacancyUpdate.as_view(), name='update'),
     path('<int:pk>/delete/', VacancyDelete.as_view(), name='delete'),
+    path('status/<int:pk>/<str:status>/', switch_status, name='switch_status'),
+    path('favorites_vacancies/', favorites_vacancies_list, name='favorites_vacancies'),
 ]

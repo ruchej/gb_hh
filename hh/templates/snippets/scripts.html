@@ -1,20 +1,6 @@
 {% load static %}
-{% if page_obj.has_next %}
-    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
-{% endif %}
 <script src="{% static 'js/vendor/jquery-3.6.0.min.js' %}"></script>
-<script src="{% static 'js/vendor/jquery.waypoints.min.js' %}"></script>
-<script src="{% static 'js/vendor/infinite.min.js' %}"></script>
 <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.nice-select.min.js' %}"></script>
+<script src="{% static 'js/vendor/superfish.min.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
-<script>
-    let infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
-        onBeforePageLoad: function () {
-            $('.spinner-border').show();
-        },
-        onAfterPageLoad: function ($items) {
-            $('.spinner-border').hide();
-        }
-    });
-</script>

@@ -31,11 +31,11 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('blog:post', kwargs={'post_slug': self.slug})
 
-    # def delete(self, using=None, keep_parents=False):
-    #     #     self.is_active = False
-    #     #     self.save()
+    def delete(self, using=None, keep_parents=False):
+        self.is_active = False
+        self.save()
 
     class Meta:
-        verbose_name = 'Статья'
+        verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
         ordering = ['created_at']

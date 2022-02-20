@@ -1,17 +1,27 @@
-from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
-from django.utils.translation import gettext_lazy as _
-from .models import Account, UserStatus, JobSeeker, Employer
-from django.urls import reverse_lazy
+from cities_light.models import City, Country
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     UserPassesTestMixin,
 )
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetConfirmView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import transaction
 from django.http import HttpResponseRedirect
-from django.contrib import messages
-from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView, PasswordContextMixin
-from .forms import UserRegisterForm, UserActivationRegisterForm, JobSeekerFormUpdate
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import CreateView, DetailView, UpdateView
+
+from resumes.models import Resume
+from vacancies.models import Vacancy
+from .forms import (
+    AccountForm, EmployerForm, JobSeekerForm, UserActivationRegisterForm,
+    UserRegisterForm,
+)
+from .models import Account, Employer, JobSeeker, UserStatus
 
 
 class UserNotAuthMixin(UserPassesTestMixin):
@@ -59,8 +69,7 @@ class UserCreate(
     model = Account
     extra_context = {"title": _("Регистрация")}
     form_class = UserRegisterForm
-    success_url = reverse_lazy("blog:news")
-    #url_redirect = reverse_lazy("accounts:UserDetail")
+    success_url = reverse_lazy("accounts:user-detail")
     template_name = 'accounts/account_signup_form.html'
     success_message = _("Для активации аккаунта выслано письмо")
 
@@ -69,6 +78,16 @@ class UserCreate(
         form_kwargs['new_status_choices'] = UserStatus.choices
         form_kwargs['new_status_choices'].pop(UserStatus.MODERATOR)
         return form_kwargs
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        username = self.request.POST['username']
+        password = self.request.POST['password2']
+        user_auth = authenticate(self.request, username=username, password=password)
+        if user_auth is not None:
+            if user_auth.is_active:
+                login(self.request, user_auth)
+        return super().form_valid(form)
 
 
 class UserConfirm(PasswordResetConfirmView):
@@ -81,7 +100,7 @@ class UserConfirm(PasswordResetConfirmView):
         "header_class": "hero",
     }
 
-    success_url = reverse_lazy("accounts:Login")
+    success_url = reverse_lazy("login")
     template_name = "accounts/signup_confirm.html"
     form_class = UserActivationRegisterForm
     post_reset_login = True
@@ -111,12 +130,67 @@ class UserDetail(LoginRequiredMixin, DetailView):
 
 
 class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = JobSeeker
-    succes_url = reverse_lazy("accounts:UserDetail")
+    model = Account
+    success_url = reverse_lazy("user-detail")
     success_message = _('Профиль изменен')
     template_name = 'accounts/profile_update.html'
-    form_class = JobSeekerFormUpdate
+    form_class = AccountForm
+    jobseeker_form_class = JobSeekerForm
+    employer_form_class = EmployerForm
+    extra_context = {'title': 'Изменение Профиля'}
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileUpdateView, self).get_context_data(**kwargs)
+        if self.request.user.status == UserStatus.JOBSEEKER:
+            jobseeker = JobSeeker.objects.get(user=self.request.user)
+            context['jobseeker_form'] = self.jobseeker_form_class(instance=jobseeker)
+        elif self.request.user.status == UserStatus.EMPLOYER:
+            employer = Employer.objects.get(user=self.request.user)
+            context['employer_form'] = self.employer_form_class(instance=employer)
+        return context
+
+    @transaction.atomic
+    def form_valid(self, form):
+
+        user = self.request.user
+        data = self.request.POST.copy()
+        # data['country'] = Country.objects.filter(alternate_names__contains=data["country"]).first()
+        # data['city'] = City.objects.filter(alternate_names__contains=data["city"]).first()
+        if user.status == UserStatus.JOBSEEKER:
+            user_form = JobSeekerForm(
+                data=data,
+                instance=JobSeeker.objects.get(user=self.request.user)
+            )
+        elif user.status == UserStatus.EMPLOYER:
+            user_form = EmployerForm(
+                data=data,
+                instance=Employer.objects.get(user=self.request.user)
+            )
+        super(ProfileUpdateView, self).form_valid(form)
+        return super(ProfileUpdateView, self).form_valid(user_form)
 
     def get_object(self, queryset=None):
-        account = JobSeeker.objects.get(user=self.request.user)
-        return account
+        return self.request.user
+
+
+@login_required
+def favourites_add(request, id):
+    user = request.user
+    if user.status == UserStatus.EMPLOYER:
+        resume = get_object_or_404(Resume, id=id)
+        if resume.favourites.filter(id=request.user.id).exists():
+            resume.favourites.remove(request.user)
+        else:
+            resume.favourites.add(request.user)
+    elif user.status == UserStatus.JOBSEEKER:
+        vacancy = get_object_or_404(Vacancy, id=id)
+        if vacancy.favourites.filter(id=request.user.id).exists():
+            vacancy.favourites.remove(request.user)
+        else:
+            vacancy.favourites.add(request.user)
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class EmployerDetailView(DetailView):
+    model = Employer
+    template_name = 'employer/employer_detail.html'
