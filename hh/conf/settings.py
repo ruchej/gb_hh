@@ -24,8 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = local_settings.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = local_settings.DEBUG
-DEBUG = True
+DEBUG = local_settings.DEBUG
 
 ALLOWED_HOSTS = local_settings.ALLOWED_HOSTS
 
@@ -100,7 +99,7 @@ WSGI_APPLICATION = 'conf.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if local_settings.DEBUG:
+if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -122,7 +121,7 @@ else:
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
-if local_settings.DEBUG:
+if DEBUG:
     AUTH_PASSWORD_VALIDATORS = []
 else:
     AUTH_PASSWORD_VALIDATORS = [
@@ -272,7 +271,7 @@ CITIES_LIGHT_FIXTURES_BASE_URL = f'file://{os.path.join(BASE_DIR, "conf/fixtures
 # Channels
 ASGI_APPLICATION = "conf.asgi.application"
 
-if local_settings.DEBUG:
+if DEBUG:
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels.layers.InMemoryChannelLayer"
