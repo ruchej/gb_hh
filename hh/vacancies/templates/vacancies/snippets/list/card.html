@@ -1,0 +1,76 @@
+{% if user.status == 2 %}
+    <div class="justify-content-start d-flex flex-row edit-ajax-{{ vacancy.id }}">
+        {% include 'vacancies/snippets/list/edit-page.html' %}
+    </div>
+{% endif %}
+<div class="single-post d-flex flex-row infinite-item">
+    <div class="thumb justify-content-center">
+        {% if vacancy.employer.avatar %}
+            <a href="{% url 'employer_detail' employer.id %}">
+                <img src="{{ vacancy.employer.avatar.url }}" alt=""
+                     class="vacancy-image"></a>
+        {% endif %}
+        <ul class="tags">
+            {% if vacancy.hashtags %}
+                {% for hashtag in vacancy.hashtags_as_list %}
+                    <li>
+                        <a href="#">{{ hashtag|truncatechars:17 }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+    <div class="details">
+        <div class="title d-flex flex-row justify-content-between">
+            <div class="titles">
+                <a href="{% url 'vacancies:detail' vacancy.id %}">
+                    <h4>{{ vacancy.title }}</h4></a>
+                <a href="{% url 'employer_detail' employer.id %}">
+                    <h6>{{ employer }}</h6></a>
+            </div>
+            <ul class="btns">
+                {% if user.status == 1 %}
+                    <li class="favorite-icon">
+                        <a href="{% url 'accounts:favourite_add' vacancy.id %}">
+                            {% if fav %}
+                                <span class="lnr lnr-trash"></span>
+                            {% else %}
+                                <span class="lnr lnr-star"></span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% if response %}
+                        {% if response.accepted %}
+                            <li class="btns-success"><a class="noselect">Принято</a></li>
+                        {% elif response.rejected %}
+                            <li class="btns-danger"><a class="noselect">Отклонено</a></li>
+                        {% else %}
+                            <li class="btns-warning"><a class="noselect">Заявка подана</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li><a href="{% url 'recruiting:response_create' vacancy.id %}">Подать заявку</a></li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+        <p>
+            {% if vacancy.description %}
+                {{ vacancy.description|striptags|truncatewords:20 }}
+                {#                        {{ vacancy.description }}#}
+            {% else %}
+                Нет описания
+            {% endif %}
+        </p>
+        <h5>Опыт работы: {{ vacancy.get_experience_display }}</h5>
+        {% if vacancy.employment_type %}
+            <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
+        {% endif %}
+        {% if employer.city %}
+            <p class="address">
+                <span class="lnr lnr-map"></span> {{ employer.city.name }}
+            </p>
+        {% endif %}
+        <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary|default:"Не указана" }}
+        </p>
+    </div>
+</div>

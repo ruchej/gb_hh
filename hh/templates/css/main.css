@@ -4194,3 +4194,32 @@ body.mobile-nav-active #mobile-nav-toggle {
   background: red;
   color: white;
 }
+
+.panel-card {
+  border: 0;
+}
+
+.panel-heading {
+  padding: 0;
+  border: 0;
+}
+
+.panel-title > a, .panel-title > a:active {
+  display: block;
+  padding: 15px;
+  color: #000000;
+  background-color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  word-spacing: 3px;
+  text-decoration: none;
+}
+
+.btn-nav-accordion[aria-expanded="true"] .fa-angle-down {
+  transform: rotate(-180deg);
+}
+
+.fa-angle-down {
+    transition: all 0.3s ease;
+ }
