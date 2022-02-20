@@ -1,5 +1,14 @@
 let getUrl = window.location;
 
+function reloadSelect() {
+    if (document.getElementById('default-select')) {
+        $('select').niceSelect();
+    }
+    if (typeof setStatusHandler !== 'undefined') {
+        setStatusHandler();
+    }
+}
+
 function activateFavorites() {
     $('.favorite-icon').on('click', (event) => {
         let iconSpan = event.target.localName === 'span' ? event.target : event.target.querySelector('span');

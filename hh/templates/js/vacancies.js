@@ -10,7 +10,10 @@ function selectStatus(vacancyId) {
             success: (data) => {
                 if (data.hasOwnProperty('result')) {
                     $(`.edit-ajax-${vacancyId}`).html(data.result);
-                    $(`.vacancy-${vacancyId}-card`).prependTo($(`#${newStatus} .card-body`));
+                    let container = $(`#${newStatus} .card-body`);
+                    if (container.length) {
+                        $(`.vacancy-${vacancyId}-card`).prependTo(container);
+                    }
                     reloadSelect();
                     selectStatus(vacancyId);
                 }
@@ -33,7 +36,10 @@ function setStatusHandler() {
             success: (data) => {
                 if (data.hasOwnProperty('result')) {
                     $(`.edit-ajax-${vacancyId}`).html(data.result);
-                    $(`.vacancy-${vacancyId}-card`).prependTo($(`#${newStatus} .card-body`));
+                    let container = $(`#${newStatus} .card-body`);
+                    if (container.length) {
+                        $(`.vacancy-${vacancyId}-card`).prependTo(container);
+                    }
                     reloadSelect();
                     selectStatus(vacancyId);
                 }

@@ -1,12 +1,3 @@
-function reloadSelect() {
-    if (document.getElementById('default-select')) {
-        $('select').niceSelect();
-    }
-    if (typeof setStatusHandler !== 'undefined') {
-        setStatusHandler();
-    }
-}
-
 function onPaginationFinished() {
     reloadSelect();
     activateFavorites();
