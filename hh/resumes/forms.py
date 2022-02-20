@@ -24,7 +24,7 @@ class PositionForm(forms.ModelForm):
 
     class Meta:
         model = models.Position
-        fields = ('title', 'salary', 'employment', 'schedule', 'relocation', 'business_trip')
+        fields = ('title', 'salary', 'employment_type', 'relocation', 'business_trip')
 
 
 class ExperienceForm(forms.ModelForm):

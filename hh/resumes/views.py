@@ -12,7 +12,8 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 
 from . import models, forms
-from accounts.models import UserStatus, JobSeeker
+from accounts.models import JobSeeker
+from conf.choices import UserStatusChoices
 from recruiting.views import NEW_RESUME_NOTIF
 
 
@@ -35,7 +36,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResumeListView, self).get_context_data(object_list=object_list, **kwargs)
         context.update({'title': 'Мои Резюме'})
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             context['object_list'] = self.employee_filter(context, object_list)
             context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
         else:
@@ -47,7 +48,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             queryset = queryset.filter(user=self.request.user)
         return queryset
 
@@ -147,7 +148,7 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
         context = super(ResumeDetailView, self).get_context_data()
         context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
         context['jobseeker'] = JobSeeker.objects.get(user=context['resume'].user)
-        if self.request.user.status == UserStatus.EMPLOYER:
+        if self.request.user.status == UserStatusChoices.EMPLOYER:
             notifs = [notif for notif in self.request.user.notifications.unread()
                       if notif.verb == NEW_RESUME_NOTIF]
             notifs_resumes = [notif.target for notif in notifs]

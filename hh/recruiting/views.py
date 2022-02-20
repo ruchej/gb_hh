@@ -10,7 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 
 from . import models
-from accounts.models import JobSeeker, Employer, UserStatus
+from accounts.models import JobSeeker, Employer
+from conf.choices import UserStatusChoices
 from resumes.models import Resume
 from vacancies.models import Vacancy
 from el_pagination.views import AjaxListView
@@ -35,7 +36,7 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
         return super().get_queryset().filter(vacancy__employer=self.request.user, accepted=False, rejected=False)
 
     def render_to_response(self, context, **response_kwargs):
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             return redirect('blog:news')
         if self.request.is_ajax() and 'page' not in self.request.GET:
             result = render_to_string(self.page_template, context=context, request=self.request)
