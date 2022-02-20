@@ -119,11 +119,10 @@ class Employer(models.Model):
         Account, related_name="employer", on_delete=models.CASCADE, verbose_name=_("Работодатель")
     )
     name = models.CharField(
-        blank=True, null=True, max_length=50, verbose_name=_("название компании"),
+        blank=True, null=True, max_length=500, verbose_name=_("название компании"),
         db_index=True)
     description = models.TextField(
-        blank=True, null=True, verbose_name=_("Описание"),
-        db_index=True)
+        blank=True, null=True, verbose_name=_("Описание"))
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("телефон"))
     country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True,
