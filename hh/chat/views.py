@@ -244,7 +244,7 @@ def search_contact(request):
             usernames = []
             usernames.extend([cont.user.username for cont in contacts])
         else:
-            usernames = [request.user]
+            usernames = [request.user.username]
         chats = Chat.objects.filter(participants__user__username__in=usernames)
         user_contact = Contact.objects.get(user=request.user)
         chats = [chat for chat in chats if user_contact in chat.participants.all()]
