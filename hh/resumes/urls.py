@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.ResumeListView.as_view(), name='resume_list'),
     path('search/', views.ResumeListView.as_view(), name='resume_list_search'),
     path('<int:pk>/', views.ResumeDetailView.as_view(), name='resume_detail'),
+    # path('create/', views.ResumeCreateView.as_view(), name='resume_create'),
     path('create/', views.resume_create, name='resume_create'),
     path('update/<int:pk>/', views.ResumeUpdateView.as_view(), name='resume_update'),
     path('delete/<int:pk>/', views.ResumeDeleteView.as_view(), name='resume_delete'),

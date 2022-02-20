@@ -21,7 +21,8 @@ from .forms import (
     AccountForm, EmployerForm, JobSeekerForm, UserActivationRegisterForm,
     UserRegisterForm,
 )
-from .models import Account, Employer, JobSeeker, UserStatus
+from .models import Account, Employer, JobSeeker
+from conf.choices import UserStatusChoices
 
 
 class UserNotAuthMixin(UserPassesTestMixin):
@@ -75,8 +76,8 @@ class UserCreate(
 
     def get_form_kwargs(self):
         form_kwargs = super(UserCreate, self).get_form_kwargs()
-        form_kwargs['new_status_choices'] = UserStatus.choices
-        form_kwargs['new_status_choices'].pop(UserStatus.MODERATOR)
+        form_kwargs['new_status_choices'] = UserStatusChoices.choices
+        form_kwargs['new_status_choices'].pop(UserStatusChoices.MODERATOR)
         return form_kwargs
 
     def form_valid(self, form):
@@ -118,11 +119,11 @@ class UserDetail(LoginRequiredMixin, DetailView):
     template_name = 'accounts/detail.html'
 
     def get_object(self, *args, **kwargs):
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             account = JobSeeker.objects.get(user=self.request.user)
-        elif self.request.user.status == UserStatus.EMPLOYER:
+        elif self.request.user.status == UserStatusChoices.EMPLOYER:
             account = Employer.objects.get(user=self.request.user)
-        elif self.request.user.status == UserStatus.MODERATOR:
+        elif self.request.user.status == UserStatusChoices.MODERATOR:
             account = Account.objects.get(user=self.request.user)
         else:
             raise Exception('Undefined user status')
@@ -141,10 +142,10 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileUpdateView, self).get_context_data(**kwargs)
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             jobseeker = JobSeeker.objects.get(user=self.request.user)
             context['jobseeker_form'] = self.jobseeker_form_class(instance=jobseeker)
-        elif self.request.user.status == UserStatus.EMPLOYER:
+        elif self.request.user.status == UserStatusChoices.EMPLOYER:
             employer = Employer.objects.get(user=self.request.user)
             context['employer_form'] = self.employer_form_class(instance=employer)
         return context
@@ -156,12 +157,12 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         data = self.request.POST.copy()
         # data['country'] = Country.objects.filter(alternate_names__contains=data["country"]).first()
         # data['city'] = City.objects.filter(alternate_names__contains=data["city"]).first()
-        if user.status == UserStatus.JOBSEEKER:
+        if user.status == UserStatusChoices.JOBSEEKER:
             user_form = JobSeekerForm(
                 data=data,
                 instance=JobSeeker.objects.get(user=self.request.user)
             )
-        elif user.status == UserStatus.EMPLOYER:
+        elif user.status == UserStatusChoices.EMPLOYER:
             user_form = EmployerForm(
                 data=data,
                 instance=Employer.objects.get(user=self.request.user)
@@ -176,13 +177,13 @@ class ProfileUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 @login_required
 def favourites_add(request, id):
     user = request.user
-    if user.status == UserStatus.EMPLOYER:
+    if user.status == UserStatusChoices.EMPLOYER:
         resume = get_object_or_404(Resume, id=id)
         if resume.favourites.filter(id=request.user.id).exists():
             resume.favourites.remove(request.user)
         else:
             resume.favourites.add(request.user)
-    elif user.status == UserStatus.JOBSEEKER:
+    elif user.status == UserStatusChoices.JOBSEEKER:
         vacancy = get_object_or_404(Vacancy, id=id)
         if vacancy.favourites.filter(id=request.user.id).exists():
             vacancy.favourites.remove(request.user)

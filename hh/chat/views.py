@@ -9,7 +9,8 @@ from django.db.models import Q
 from notifications.signals import notify
 
 from .models import Chat, Contact, Message
-from accounts.models import UserStatus, JobSeeker, Employer
+from accounts.models import JobSeeker, Employer
+from conf.choices import UserStatusChoices
 from resumes.models import Resume
 from recruiting.models import Response
 from recruiting.views import response_accept, response_reject
@@ -159,10 +160,10 @@ def open_chat(request, chat_id):
 def get_last_message_text(request, user, text):
     if request.user == user:
         sender = 'Вы'
-    elif user.status == UserStatus.JOBSEEKER:
+    elif user.status == UserStatusChoices.JOBSEEKER:
         sender = JobSeeker.objects.get(user=user)
         sender = str(sender)
-    elif user.status == UserStatus.EMPLOYER:
+    elif user.status == UserStatusChoices.EMPLOYER:
         sender = Employer.objects.get(user=user)
         sender = str(sender)
     else:
@@ -201,9 +202,9 @@ def update_context_from_chats(request, context, chats):
         participants = [p for p in chat.participants.all()]
         participants.remove(Contact.objects.get(user=request.user))
         contact = participants[0]
-        if request.user.status == UserStatus.EMPLOYER:
+        if request.user.status == UserStatusChoices.EMPLOYER:
             jobseekers.append(JobSeeker.objects.get(user=contact.user))
-        elif request.user.status == UserStatus.JOBSEEKER:
+        elif request.user.status == UserStatusChoices.JOBSEEKER:
             employers.append(Employer.objects.get(user=contact.user))
         last_message = chat.messages.all().last()
         last_message_text = get_last_message_text(request, last_message.contact.user, last_message.content)
@@ -236,9 +237,9 @@ def search_contact(request):
     if request.is_ajax():
         name = request.GET.get('contact')
         if name:
-            if request.user.status == UserStatus.JOBSEEKER:
+            if request.user.status == UserStatusChoices.JOBSEEKER:
                 contacts = Employer.objects.filter(name__contains=name)
-            elif request.user.status == UserStatus.EMPLOYER:
+            elif request.user.status == UserStatusChoices.EMPLOYER:
                 contacts = JobSeeker.objects.filter(Q(first_name__contains=name) | Q(last_name__contains=name))
             else:
                 raise Exception('Unsupported user')

@@ -14,7 +14,8 @@ from el_pagination.views import AjaxListView
 
 from .forms import VacancyForm
 from .models import Vacancy
-from accounts.models import UserStatus, Employer
+from accounts.models import Employer
+from conf.choices import PublicStatusChoices, UserStatusChoices
 from recruiting.models import Response
 
 
@@ -41,10 +42,10 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
         for vacancy in vacancies:
             response = None
             fav = False
-            if self.request.user.status == UserStatus.JOBSEEKER and \
+            if self.request.user.status == UserStatusChoices.JOBSEEKER and \
                     self.request.user in vacancy.favourites.all():
                 fav = True
-            if self.request.user.status == UserStatus.JOBSEEKER and \
+            if self.request.user.status == UserStatusChoices.JOBSEEKER and \
                     Response.objects.filter(vacancy=vacancy, resume__user=self.request.user).exists():
                 response = Response.objects.get(vacancy=vacancy, resume__user=self.request.user)
             context['employers_vac_list'].append(
@@ -54,10 +55,10 @@ class VacancyList(LoginRequiredMixin, AjaxListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.status == UserStatus.EMPLOYER:
+        if self.request.user.status == UserStatusChoices.EMPLOYER:
             queryset = queryset.filter(employer=self.request.user).order_by('-published_at').select_related('employer')
-        if self.request.user.status == UserStatus.JOBSEEKER:
-            queryset = queryset.filter(status=Vacancy.PUBLISHED).order_by('-modified_at').select_related('employer')
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
+            queryset = queryset.filter(status=PublicStatusChoices.PUBLISHED).order_by('-modified_at').select_related('employer')
         return queryset
 
     def render_to_response(self, context, **response_kwargs):

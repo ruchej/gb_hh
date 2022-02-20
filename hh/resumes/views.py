@@ -2,6 +2,7 @@ from collections import Counter
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -11,9 +12,13 @@ from el_pagination.views import AjaxListView
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 
+from accounts.views import UserNotAuthMixin
 from . import models, forms
-from accounts.models import UserStatus, JobSeeker
+from accounts.models import JobSeeker
+from conf.choices import UserStatusChoices
 from recruiting.views import NEW_RESUME_NOTIF
+from .forms import ResumeForm
+from .models import Resume
 
 
 def resume_favorite_list(request):
@@ -35,7 +40,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResumeListView, self).get_context_data(object_list=object_list, **kwargs)
         context.update({'title': 'Мои Резюме'})
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             context['object_list'] = self.employee_filter(context, object_list)
             context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
         else:
@@ -47,7 +52,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             queryset = queryset.filter(user=self.request.user)
         return queryset
 
@@ -147,13 +152,50 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
         context = super(ResumeDetailView, self).get_context_data()
         context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
         context['jobseeker'] = JobSeeker.objects.get(user=context['resume'].user)
-        if self.request.user.status == UserStatus.EMPLOYER:
+        if self.request.user.status == UserStatusChoices.EMPLOYER:
             notifs = [notif for notif in self.request.user.notifications.unread()
                       if notif.verb == NEW_RESUME_NOTIF]
             notifs_resumes = [notif.target for notif in notifs]
             if (resume := context['object']) in notifs_resumes:
                 notifs[notifs_resumes.index(resume)].mark_as_read()
         return context
+
+
+class ResumeCreateView(CreateView):
+    model = Resume
+    form_class = ResumeForm
+    success_url = reverse_lazy("resumes:resume_detail")
+    template_name = "resumes/resume_create.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resume_form'] = forms.ResumeForm(self.request.POST)
+        context['contacts_form'] = forms.ContactsForm(self.request.POST)
+        context['position_form'] = forms.PositionForm(self.request.POST)
+        context['experience_form'] = forms.ExperienceForm(self.request.POST)
+        context['job_form'] = forms.JobForm(self.request.POST)
+        return context
+
+    @transaction.atomic
+    def form_valid(self, form):
+        contacts_form = forms.ContactsForm(self.request.POST)
+        position_form = forms.PositionForm(self.request.POST)
+        experience_form = forms.ExperienceForm(self.request.POST)
+        job_form = forms.JobForm(self.request.POST)
+        if job_form.is_valid():
+            super().form_valid(job_form)
+        if experience_form.is_valid():
+            super().form_valid(experience_form)
+        if position_form.is_valid():
+            super().form_valid(position_form)
+        if contacts_form.is_valid():
+            super().form_valid(contacts_form)
+        return super().form_valid(form)
+
+
+
+
+
 
 
 @login_required
@@ -166,7 +208,7 @@ def resume_create(request):
         job_form = forms.JobForm(request.POST)
         view_forms = (resume_form, contacts_form, position_form, experience_form, job_form)
         if all([item.is_valid() for item in view_forms]):
-            resume_form.form.save(commit=False)
+            resume_form.save(commit=False)
             resume_form.user = request.user
             for item in view_forms[1:]:
                 item.save()
