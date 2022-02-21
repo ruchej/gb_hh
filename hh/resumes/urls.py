@@ -35,5 +35,6 @@ urlpatterns = [
     path('job/<int:pk>/', views.JobDetailView.as_view(), name='job_detail'),
     path('job/create/', views.JobCreateView.as_view(), name='job_create'),
     path('job/update/<int:pk>/', views.JobUpdateView.as_view(), name='job_update'),
+    path('job/delete/<int:pk>/', views.JobDeleteView.as_view(), name='job_delete'),
     path('favorites_resumes/', views.resume_favorite_list, name='favorites_resumes'),
 ]

@@ -15,8 +15,12 @@
                     {% include 'snippets/form_elements/text.html' with field=form.position required=True icon='fa-id-badge' %}
                     {% include 'snippets/form_elements/message.html' with field=form.functions icon='fa-question' %}
                     {% include 'snippets/form_elements/select.html' with field=form.city %}
-                    <div class="mt-20">
-                        <button type="submit" class="genric-btn primary">Изменить</button>
+                    <div class="mt-20 d-flex justify-content-start">
+                        <button type="submit" class="genric-btn primary mr-10">Изменить</button>
+                        <button class="genric-btn primary danger"
+                           href="{% url 'resumes:job_delete' job.id %}">
+                            Удалить
+                        </button>
                     </div>
                 </form>
             </div>

@@ -312,3 +312,10 @@ class JobUpdateView(LoginRequiredMixin, UpdateView):
         context = super(JobUpdateView, self).get_context_data(**kwargs)
         context['title'] = str(context['object'])
         return context
+
+
+class JobDeleteView(LoginRequiredMixin, DeleteView):
+    """View for deleting job."""
+
+    model = models.Job
+    success_url = reverse_lazy('resumes:resume_list')
