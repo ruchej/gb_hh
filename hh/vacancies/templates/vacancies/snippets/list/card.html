@@ -25,9 +25,15 @@
             <div class="title d-flex flex-row justify-content-between">
                 <div class="titles">
                     <a href="{% url 'vacancies:detail' vacancy.id %}">
-                        <h4>{{ vacancy.title }}</h4></a>
+                        <h4>
+                            {{ vacancy.title }}
+                        </h4>
+                    </a>
                     <a href="{% url 'employer_detail' employer.id %}">
-                        <h6>{{ employer }}</h6></a>
+                        <h6>
+                            {{ employer }}
+                        </h6>
+                    </a>
                 </div>
                 <ul class="btns">
                     {% if user.status == user_status_choices.JOBSEEKER %}
@@ -54,25 +60,28 @@
                     {% endif %}
                 </ul>
             </div>
-            <p>
+        <div class="col mx-auto mb-3 pl-0">
+            <p class="mb-1">
+                <span class="fa fa-map"></span> {{ employer.city.name|default:'Город не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-handshake-o"></span> Опыт работы: {{ vacancy.get_experience_display|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-clock-o"></span> Тип занятости: {{ vacancy.get_employment_type_display|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-money"></span> {{ vacancy.salary|default:'Зарплата не указана' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-question"></span>
                 {% if vacancy.description %}
                     {{ vacancy.description|striptags|truncatewords:20 }}
-                    {#                        {{ vacancy.description }}#}
                 {% else %}
                     Нет описания
                 {% endif %}
             </p>
-            <h5>Опыт работы: {{ vacancy.get_experience_display }}</h5>
-            {% if vacancy.employment_type %}
-                <h5>Тип занятости: {{ vacancy.get_employment_type_display }}</h5>
-            {% endif %}
-            {% if employer.city %}
-                <p class="address">
-                    <span class="lnr lnr-map"></span> {{ employer.city.name }}
-                </p>
-            {% endif %}
-            <p class="address"><span class="lnr lnr-database"></span> {{ vacancy.salary|default:"Не указана" }}
-            </p>
+        </div>
         </div>
     </div>
 </div>
