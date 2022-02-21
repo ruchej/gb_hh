@@ -28,7 +28,7 @@ class Contacts(models.Model):
 class Position(models.Model):
     """Model for keeping info about wishing position."""
 
-    title = models.CharField(verbose_name=_('название должности'), max_length=64, db_index=True)
+    position = models.CharField(verbose_name=_('название должности'), max_length=64, db_index=True)
     salary = models.PositiveIntegerField(verbose_name=_('зарплата'), default=0, db_index=True)
     employment_type = models.SmallIntegerField(
         choices=EmploymentTypeChoices.choices,
@@ -46,10 +46,10 @@ class Position(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.position
 
     class Meta:
-        ordering = ('title',)
+        ordering = ('position',)
         verbose_name = _('требования к должности')
         verbose_name_plural = _('требования к должностям')
 

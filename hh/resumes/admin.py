@@ -12,7 +12,7 @@ class ContactsAdmin(admin.ModelAdmin):
 
 @admin.register(models.Position)
 class PositionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'salary', 'employment_type', 'relocation', 'business_trip',)
+    list_display = ('position', 'salary', 'employment_type', 'relocation', 'business_trip',)
     list_filter = ('salary',)
     list_per_page = 15
     search_fields = ('title', )
