@@ -24,10 +24,12 @@ def favorites_vacancies_list(request):
     favorites_vacancies = user.favourites_vacancies.all()
     employers, favs = [], []
     for vacancy in favorites_vacancies:
-        employers.append(Employer.objects.get(user=vacancy.user))
+        employers.append(Employer.objects.get(user=vacancy.employer))
         favs.append(True)
     context = {
         'favorites_vacancies': zip(favorites_vacancies, employers, favs),
+        'title': 'Избранные вакансии',
+
     }
     return render(request, 'vacancies/favorites_vacanies_list.html', context)
 
