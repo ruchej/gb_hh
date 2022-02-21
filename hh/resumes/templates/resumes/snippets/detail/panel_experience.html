@@ -19,6 +19,9 @@
         Моё портфолио:
     </h4>
     <p class="mt-2">
-        {{ resume.experience.portfolio|default:'Не указано' }}
+        <a {% if job.site %}href="{{ resume.experience.portfolio }}"{% endif %}
+           style="color: #777777">
+            {{ resume.experience.portfolio|default:'Не указано' }}
+        </a>
     </p>
 </div>

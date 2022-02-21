@@ -16,22 +16,37 @@
 <div class="single-post d-flex flex-row">
     <div class="thumb justify-content-center">
         {% if resume.photo %}
-            <a href="{% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
+            <a href="
+
+                    {% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
                 <img src="{{ resume.photo.url }}" style="object-fit: cover; width: 120px; height: 120px">
             </a>
         {% endif %}
+        <ul class="tags">
+            {% if resume.experience.skills %}
+                {% for hashtag in resume.experience.skills_as_list %}
+                    <li>
+                        <a href="#">{{ hashtag|truncatechars:17 }}</a>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
     </div>
     <div class="details">
         <div class="title d-flex flex-row justify-content-between">
             <div class="titles">
                 {% if user.status == user_status_choices.JOBSEEKER %}
-                    <a href="{% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
+                    <a href="
+
+                            {% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
                         <h4>
                             {{ resume.title }}
                         </h4>
                     </a>
                 {% elif user.status == user_status_choices.EMPLOYER %}
-                    <a href="{% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
+                    <a href="
+
+                            {% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
                         <h4>
                             {{ jobseeker.first_name }}
                             {{ jobseeker.last_name }}
@@ -76,12 +91,36 @@
                 </ul>
             {% endif %}
         </div>
-        <h5>Опыт: {{ resume.experience.about }}</h5>
-        <h5>Навыки: {{ resume.experience.skills }}</h5>
-        <h5>Зарплата: {{ resume.position.salary }}</h5>
-        <h5>Занятость: {{ resume.position.employment }}</h5>
-        <h5>График: {{ resume.position.schedule }}</h5>
-        <h5>Переезд: {{ resume.position.get_relocation_display }}</h5>
-        <h5>Командировки: {{ resume.position.get_business_trip_display }}</h5>
+        <div class="col mb-3 pl-0">
+            <p class="mb-1">
+                <span class="fa fa-id-badge"></span> {{ resume.position.position|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-money"></span> от {{ resume.position.salary|default:'Не указана' }} руб.
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-clock-o"></span> {{ resume.position.get_employment_type_display|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-car"></span>
+                Переезд: {{ resume.position.get_relocation_display|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-plane"></span>
+                Командировки: {{ resume.position.get_business_trip_display|default:'Не указан' }}
+            </p>
+            {% if resume.experience.portfolio %}
+                <p class="mb-1">
+                    <a href="{{ resume.experience.portfolio }}"
+                       style="color: #777777">
+                        <span class="fa fa-external-link"></span> {{ resume.position.portfolio|default:'Не указан' }}
+                    </a>
+                </p>
+            {% endif %}
+            <p class="mb-1">
+                <span class="fa fa-question"></span>
+                О себе: {{ resume.experience.about|truncatewords:20|default:'Не указано' }}
+            </p>
+        </div>
     </div>
 </div>

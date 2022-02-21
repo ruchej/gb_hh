@@ -69,6 +69,9 @@ class Experience(models.Model):
         verbose_name = _('опыт работы')
         verbose_name_plural = _('опыт работ')
 
+    def skills_as_list(self):
+        return self.skills.split(', ')[:5]
+
 
 class Job(models.Model):
     """Model for keeping info about jobs."""
