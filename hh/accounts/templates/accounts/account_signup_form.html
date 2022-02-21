@@ -4,7 +4,7 @@
 {% block content %}
     <section class="post-area section-gap">
         <div class="container d-flex justify-content-center">
-            <div class="col-lg-8 col-md-8">
+            <div class="col-lg-4 col-md-4">
                 <form action="{% url 'accounts:user-create' %}" method="post">
                     {% csrf_token %}
                     {% include 'snippets/form_elements/text.html' with field=form.username required=True icon='fa-user' %}
