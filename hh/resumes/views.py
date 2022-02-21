@@ -11,6 +11,7 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView,
 from el_pagination.views import AjaxListView
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
+from django.forms.models import model_to_dict
 
 from accounts.views import UserNotAuthMixin
 from . import models, forms
@@ -188,27 +189,41 @@ class ResumeCreateView(CreateView):
     @transaction.atomic
     def get_form(self, form_class=None):
         form = super(ResumeCreateView, self).get_form(form_class=form_class)
-        contacts_form = forms.ContactsForm(self.request.POST)
-        position_form = forms.PositionForm(self.request.POST)
-        experience_form = forms.ExperienceForm(self.request.POST)
-        if experience_form.is_valid():
-            form.instance.experience_id = experience_form.save().id
-            form.errors.pop('experience')
-        if position_form.is_valid():
-            form.instance.position_id = position_form.save().id
-            form.errors.pop('position')
-        if contacts_form.is_valid():
-            form.instance.contacts_id = contacts_form.save().id
-            form.errors.pop('contacts')
-        form.instance.user_id = self.request.user.id
+        if self.request.method == 'POST':
+            contacts_form = forms.ContactsForm(self.request.POST)
+            position_form = forms.PositionForm(self.request.POST)
+            experience_form = forms.ExperienceForm(self.request.POST)
+            if experience_form.is_valid():
+                form.instance.experience_id = experience_form.save().id
+                form.errors.pop('experience')
+            if position_form.is_valid():
+                form.instance.position_id = position_form.save().id
+                form.errors.pop('position')
+            if contacts_form.is_valid():
+                form.instance.contacts_id = contacts_form.save().id
+                form.errors.pop('contacts')
+            form.instance.user_id = self.request.user.id
         return form
 
 
-class ResumeUpdateView(LoginRequiredMixin, UpdateView):
+class ResumeUpdateView(LoginRequiredMixin, ResumeCreateView, UpdateView):
     """View for updating resume."""
+    template_name = "resumes/resume_update.html"
 
-    model = models.Resume
-    form_class = forms.ResumeForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        resume = context['object']
+        context['resume_form'] = context['form']
+        context['contacts_form'] = forms.ContactsForm(initial=model_to_dict(resume.contacts))
+        context['position_form'] = forms.PositionForm(initial=model_to_dict(resume.position))
+        context['experience_form'] = forms.ExperienceForm(initial=model_to_dict(resume.experience))
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return super(UpdateView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return super(UpdateView, self).post(request, *args, **kwargs)
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):

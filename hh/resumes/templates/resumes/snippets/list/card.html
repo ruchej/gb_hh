@@ -40,7 +40,7 @@
             {% if not responding %}
                 <ul class="btns">
                     {% if user.status == user_status_choices.JOBSEEKER %}
-                        <li><a href="{% url 'resumes:resume_detail' resume.id %}">Изменить</a></li>
+                        <li><a href="{% url 'resumes:resume_update' resume.id %}">Изменить</a></li>
                         <li><a href="{% url 'resumes:resume_delete' resume.id %}">Удалить</a></li>
                     {% elif user.status == user_status_choices.EMPLOYER %}
                         <li>
