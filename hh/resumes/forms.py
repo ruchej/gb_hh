@@ -17,7 +17,6 @@ class ResumeForm(forms.ModelForm):
         super(ResumeForm, self).__init__(*args, **kwargs)
         self.fields['jobs'].widget = forms.widgets.CheckboxSelectMultiple()
         self.fields['jobs'].queryset = models.Job.objects.filter(user=user)
-        # self.fields['jobs'].widget.attrs['checked'] = ''
         self.fields['jobs'].widget.attrs['form'] = 'resume_form'
 
 

@@ -3,34 +3,22 @@
 {% load static %}
 {% block content %}
     <section class="post-area section-gap">
-        <div class="container">
-            <form action="{% url 'resumes:resume_create' %}" id="resume_form"
-                  method="POST" enctype="multipart/form-data">
-                <h2 class="mb-2">Резюме</h2>
-                {% csrf_token %}
-                {{ resume_form.title|as_crispy_field }}
-                {{ resume_form.photo|as_crispy_field }}
-                <h2 class="pt-4 mb-2">Контакты</h2>
-                {{ contacts_form|crispy }}
-                <h2 class="pt-4 mb-2">Пожелания</h2>
-                {{ position_form|crispy }}
-                <h2 class="pt-4 mb-2">Опыт</h2>
-                {{ experience_form|crispy }}
-                <div class="mb-3">
-                    {% for job in resume_form.jobs %}
-                        <div class="switch-wrap d-flex justify-content-start">
-                            <div class="primary-checkbox">
-                                {{ job.tag }}
-                                <label for="{{ job.id_for_label }}"></label>
-                            </div>
-                            <p class="ml-3" style="font-size: 16px">
-                                {{ job.choice_label }}
-                            </p>
-                        </div>
-                    {% endfor %}
-                </div>
-                <button type="submit" class="genric-btn primary">Создать</button>
-            </form>
+        <div class="container d-flex justify-content-center">
+            <div class="col-lg-8 col-md-8">
+                <form action="{% url 'resumes:resume_create' %}" id="resume_form"
+                      method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% include 'snippets/form_elements/text.html' with field=resume_form.title required=True icon='fa-file-text-o' %}
+                    {% include 'resumes/snippets/forms/contacts.html' %}
+                    {% include 'resumes/snippets/forms/position.html' %}
+                    {% include 'resumes/snippets/forms/experience.html' %}
+                    {% include 'snippets/form_elements/checkbox.html' with field=resume_form.jobs %}
+                    <div class="mt-20">
+                        {{ resume_form.photo|as_crispy_field }}
+                    </div>
+                    <button type="submit" class="genric-btn primary">Создать</button>
+                </form>
+            </div>
         </div>
     </section>
 {% endblock %}

@@ -1,0 +1,7 @@
+{% include 'snippets/form_elements/text.html' with field=position_form.title required=True icon='fa-id-badge' %}
+{% include 'snippets/form_elements/number.html' with field=position_form.salary required=True icon='fa-money' %}
+<div class="d-flex justify-content-between">
+    {% include 'snippets/form_elements/select.html' with field=position_form.employment_type required=True %}
+    {% include 'snippets/form_elements/select.html' with field=position_form.relocation required=True %}
+    {% include 'snippets/form_elements/select.html' with field=position_form.business_trip required=True %}
+</div>

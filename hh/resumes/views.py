@@ -172,6 +172,7 @@ class ResumeCreateView(CreateView):
     form_class = ResumeForm
     success_url = reverse_lazy("resumes:resume_list")
     template_name = "resumes/resume_create.html"
+    extra_context = {'title': 'Создание Резюме'}
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
