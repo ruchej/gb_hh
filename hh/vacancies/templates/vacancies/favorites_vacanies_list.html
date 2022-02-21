@@ -1,18 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center d-flex">
-            <div class="col-lg-8 post-list data-ajax">
-                {% for vacancy, employer, fav in favorites_vacancies %}
-                    {% include 'vacancies/snippets/list/card.html' %}
-                {% endfor %}
+    <section class="post-area section-gap">
+        {% if favorites_vacancies %}
+            <div class="container">
+                <div class="row justify-content-center d-flex">
+                    <div class="col-lg-8 post-list data-ajax">
+                        {% for vacancy, employer, fav in favorites_vacancies %}
+                            {% include 'vacancies/snippets/list/card.html' %}
+                        {% endfor %}
+                    </div>
+                    <div class="col-lg-4 sidebar">
+                        {% include 'snippets/recent_news.html' %}
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        {% else %}
+            <div style="height: 50vh; width: 100vw">
+                <div style="margin-left: auto; margin-right: auto; position: relative; top: 50%; width: 50vw">
+                    <p style="text-align: center; font-size: large;">
+                        Вы еще не добавили ничего в избранное!
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </section>
 {% endblock %}
 {% block js %}
     {% load static %}
     {{ block.super }}
     {% include 'snippets/pagination.html' %}
-    <script src="{% static 'js/vacancies.js' %}"></script>
+    <script src="{% static 'js/favorites.js' %}"></script>
 {% endblock %}

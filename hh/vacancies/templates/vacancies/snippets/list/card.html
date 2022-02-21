@@ -1,4 +1,4 @@
-<div class="vacancy-{{ vacancy.id }}-card">
+<div class="vacancy-{{ vacancy.id }}-card obj-{{ vacancy.id }}-card">
     {% if user.status == user_status_choices.EMPLOYER %}
         <div class="justify-content-start d-flex flex-row edit-ajax-{{ vacancy.id }}">
             {% include 'vacancies/snippets/list/edit-page.html' %}

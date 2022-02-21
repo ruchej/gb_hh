@@ -9,6 +9,9 @@ function reloadSelect() {
     }
 }
 
+function favoritesHandler($icon, url) {
+}
+
 function activateFavorites() {
     $('.favorite-icon').on('click', (event) => {
         let iconSpan = event.target.localName === 'span' ? event.target : event.target.querySelector('span');
@@ -22,6 +25,7 @@ function activateFavorites() {
             iconSpan.classList.add('lnr-star');
         }
         $.ajax({url});
+        favoritesHandler(iconSpan, url);
     });
 }
 
