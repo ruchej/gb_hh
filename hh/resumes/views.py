@@ -47,6 +47,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
         if self.request.user.status == UserStatusChoices.JOBSEEKER:
             context['object_list'] = self.employee_filter(context, object_list)
             context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
+            context['jobs'] = models.Job.objects.filter(user=self.request.user).order_by('-start')
         else:
             context['title'] = 'Резюме Соискателей'
             resumes, jobseekers, context['resumes_cities'] = self.employer_filter(context, object_list)
