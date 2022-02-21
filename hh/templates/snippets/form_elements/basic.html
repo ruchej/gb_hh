@@ -10,7 +10,11 @@
            placeholder="{{ text }}"
            onfocus="this.placeholder = ''"
            onblur="this.placeholder = '{{ text }}'"
-           {% if value %}value="{{ value }}"{% endif %}
+            {% if type == 'date' %}
+           value="{{ value|date:"Y-m-d" }}"
+            {% else %}
+           {% if value %}value="{{ value }}{% endif %}"
+            {% endif %}
            class="single-input{% if required %}-accent{% endif %}"
            {% if required %}required=""{% endif %}>
 </div>
