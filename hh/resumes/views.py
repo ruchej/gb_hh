@@ -287,6 +287,7 @@ class JobCreateView(LoginRequiredMixin, CreateView):
     model = models.Job
     form_class = forms.JobForm
     success_url = reverse_lazy('resumes:resume_list')
+    extra_context = {'title': 'Добавление нового места работы'}
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -306,3 +307,8 @@ class JobUpdateView(LoginRequiredMixin, UpdateView):
     form_class = forms.JobForm
     template_name = 'resumes/job_update.html'
     success_url = reverse_lazy('resumes:resume_list')
+
+    def get_context_data(self, **kwargs):
+        context = super(JobUpdateView, self).get_context_data(**kwargs)
+        context['title'] = str(context['object'])
+        return context
