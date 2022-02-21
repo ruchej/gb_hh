@@ -43,9 +43,9 @@
                                 Вакансии
                             </a></li>
                     {% endif %}
-                    <li {% if request.resolver_match.view_name == 'about_us' %}class="active"{% endif %}><a href="#">О
-                        нас</a>
-                    </li>
+{#                    <li {% if request.resolver_match.view_name == 'about_us' %}class="active"{% endif %}><a href="#">О#}
+{#                        нас</a>#}
+{#                    </li>#}
                     <li {% if request.resolver_match.view_name == 'rules' %}class="active"{% endif %}>
                         <a href="{% url 'rules' %}">Правила</a>
                     </li>
