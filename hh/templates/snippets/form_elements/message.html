@@ -4,7 +4,10 @@
             <i class="fa {{ icon }}" aria-hidden="true"></i>
         </div>
     {% endif %}
-    <textarea id="textarea-{{ field.html_name }}" name="{{ field.html_name }}" placeholder="{{ field.label }}{{ add }}"
+    <textarea id="textarea-{{ field.html_name }}"
+              name="{{ field.html_name }}"
+              {% if disabled %}disabled{% endif %}
+              placeholder="{{ field.label }}{{ add }}"
               oninput="document.getElementById('input-{{ field.html_name }}').setAttribute('value', document.getElementById('textarea-{{ field.html_name }}').value);"
               onfocus="this.placeholder = ''"
               onblur="this.placeholder = '{{ field.label }}{{ add }}'"

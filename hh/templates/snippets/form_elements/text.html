@@ -6,6 +6,7 @@
     {% endif %}
     <input type="{% if type %}{{ type }}{% else %}text{% endif %}"
            name="{{ field.html_name }}" placeholder="{{ field.label }}"
+           {% if disabled %}disabled{% endif %}
            onfocus="this.placeholder = ''"
            onblur="this.placeholder = '{{ field.label }}'"
            {% if field.value %}value="{{ field.value }}"{% endif %}
