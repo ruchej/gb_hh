@@ -1,21 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-    <section class="post-area section-gap">
-        {% if favorites_resumes %}
-            <div class="container">
-                <div class="row justify-content-sm-center d-flex ">
-                    <div class="col-lg-8 post-list">
-                        {% for resume in favorites_resumes %}
-                            {% include 'resumes/snippets/list/card.html' %}
-                        {% endfor %}
-                    </div>
-                    <div class="col-lg-4 sidebar">
-                        {% include 'snippets/recent_news.html' %}
-                    </div>
-                </div>
+    <div class="container">
+        <div class="row justify-content-center d-flex">
+            <div class="col-lg-8 post-list data-ajax">
+                {% for resume, jobseeker, fav in favorites_resumes %}
+                    {% include 'resumes/snippets/list/card.html' %}
+                {% endfor %}
             </div>
-        {% endif %}
-    </section>
+        </div>
+    </div>
 {% endblock %}
 {% block js %}
     {{ block.super }}

@@ -1,23 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-    <section class="post-area section-gap">
-        {% if favorites_vacancies %}
-            <div class="container">
-                <div class="row justify-content-sm-center d-flex ">
-                    <div class="col-lg-8 post-list">
-                        {% for vacancy in favorites_vacancies %}
-                            {% include 'vacancies/snippets/list/cards.html' %}
-                        {% endfor %}
-                    </div>
-                    <div class="col-lg-4 sidebar">
-                        {% include 'snippets/recent_news.html' %}
-                    </div>
-                </div>
+    <div class="container">
+        <div class="row justify-content-center d-flex">
+            <div class="col-lg-8 post-list data-ajax">
+                {% for vacancy, employer, fav in favorites_vacancies %}
+                    {% include 'vacancies/snippets/list/card.html' %}
+                {% endfor %}
             </div>
-        {% endif %}
-    </section>
+        </div>
+    </div>
 {% endblock %}
 {% block js %}
+    {% load static %}
     {{ block.super }}
     {% include 'snippets/pagination.html' %}
+    <script src="{% static 'js/vacancies.js' %}"></script>
 {% endblock %}
