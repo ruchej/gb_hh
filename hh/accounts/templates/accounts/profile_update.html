@@ -3,17 +3,46 @@
 {% load static %}
 {% block content %}
     <section class="post-area section-gap">
-        <div class="container col-3">
-            <form action="{% url 'accounts:profile-update' %}" method="post"  enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form|crispy }}
-                {% if jobseeker_form %}
-                    {{ jobseeker_form|crispy }}
-                {% elif employer_form %}
-                    {{ employer_form|crispy }}
-                {% endif %}
-                <button type="submit" class="btn btn-primary">Изменить</button>
-            </form>
+        <div class="container d-flex justify-content-center">
+            <div class="col-lg-8 col-md-8">
+                <form action="{% url 'accounts:profile-update' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% include 'snippets/form_elements/text.html' with field=form.username required=True icon='fa-user-circle' %}
+                    {% include 'snippets/form_elements/text.html' with field=form.email required=True icon='fa-mail-forward' type='email' %}
+                    {% if jobseeker_form %}
+                        {% include 'snippets/form_elements/text.html' with field=jobseeker_form.first_name icon='fa-user' %}
+                        {% include 'snippets/form_elements/text.html' with field=jobseeker_form.patronymic icon='fa-user-plus' %}
+                        {% include 'snippets/form_elements/text.html' with field=jobseeker_form.last_name icon='fa-users' %}
+                        {% include 'snippets/form_elements/select.html' with field=jobseeker_form.sex %}
+                        {% include 'snippets/form_elements/date.html' with field=jobseeker_form.date_birth icon='fa-birthday-cake' %}
+                        {% include 'snippets/form_elements/text.html' with field=jobseeker_form.phone icon='fa-phone' %}
+                        <div class="d-flex justify-content-start">
+                            <div class="mr-20">
+                                {% include 'snippets/form_elements/select.html' with field=jobseeker_form.country icon='fa-globe' %}
+                            </div>
+                            {% include 'snippets/form_elements/select.html' with field=jobseeker_form.city icon='fa-map' %}
+                        </div>
+                        {% include 'snippets/form_elements/text.html' with field=jobseeker_form.address icon='fa-thumb-tack' %}
+                    {% elif employer_form %}
+                        {% include 'snippets/form_elements/text.html' with field=employer_form.name icon='fa-building' %}
+                        {% include 'snippets/form_elements/message.html' with field=employer_form.description icon='fa-info' %}
+                        {% include 'snippets/form_elements/text.html' with field=employer_form.phone icon='fa-phone' %}
+                        <div class="d-flex justify-content-start">
+                            <div class="mr-20">
+                                {% include 'snippets/form_elements/select.html' with field=employer_form.country icon='fa-globe' %}
+                            </div>
+                            {% include 'snippets/form_elements/select.html' with field=employer_form.city icon='fa-map' %}
+                        </div>
+                        {% include 'snippets/form_elements/text.html' with field=employer_form.address icon='fa-thumb-tack' %}
+                    {% endif %}
+                    <div class="mt-20">
+                        {{ form.avatar|as_crispy_field }}
+                    </div>
+                    <div class="mt-20">
+                        <button type="submit" class="genric-btn primary">Изменить</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </section>
 {% endblock %}
