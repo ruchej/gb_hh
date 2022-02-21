@@ -297,4 +297,5 @@ class JobUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Job
     form_class = forms.JobForm
+    template_name = 'resumes/job_update.html'
     success_url = reverse_lazy('resumes:resume_list')
