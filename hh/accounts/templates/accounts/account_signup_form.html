@@ -3,12 +3,20 @@
 {% load static %}
 {% block content %}
     <section class="post-area section-gap">
-        <div class="container col-3">
-            <form action="{% url 'accounts:user-create' %}" method="post">
-            {% csrf_token %}
-            {{form|crispy}}
-            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-            </form>
+        <div class="container d-flex justify-content-center">
+            <div class="col-lg-8 col-md-8">
+                <form action="{% url 'accounts:user-create' %}" method="post">
+                    {% csrf_token %}
+                    {% include 'snippets/form_elements/text.html' with field=form.username required=True icon='fa-user' %}
+                    {% include 'snippets/form_elements/text.html' with field=form.email required=True icon='fa-mail-forward' type='email' %}
+                    {% include 'snippets/form_elements/text.html' with field=form.password1 required=True icon='fa-key' type='password' %}
+                    {% include 'snippets/form_elements/text.html' with field=form.password2 icon='fa-key' type='password' %}
+                    {% include 'snippets/form_elements/select.html' with field=form.status %}
+                    <div class="mt-20">
+                        <button type="submit" class="genric-btn primary">Зарегистрироваться</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </section>
 {% endblock %}
