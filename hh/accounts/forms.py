@@ -61,8 +61,6 @@ class AccountForm(forms.ModelForm):
 
 
 class JobSeekerForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-
     class Meta:
         model = JobSeeker
         fields = (
