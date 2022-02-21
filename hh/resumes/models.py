@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -70,7 +72,7 @@ class Experience(models.Model):
         verbose_name_plural = _('опыт работ')
 
     def skills_as_list(self):
-        return self.skills.split(', ')[:5]
+        return re.split(r'[^a-zA-Z0-9а-яА-Я \+#\.\-—]', self.skills)[:5]
 
 
 class Job(models.Model):

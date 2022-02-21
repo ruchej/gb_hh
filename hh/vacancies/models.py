@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -73,4 +75,5 @@ class Vacancy(models.Model):
         return self.title
 
     def hashtags_as_list(self):
-        return self.hashtags.split(', ')[:5]
+        return re.split(r'[^a-zA-Z0-9а-яА-Я \+#\.\-—]', self.hashtags)[:5]
+        # return self.hashtags.split(', ')[:5]
