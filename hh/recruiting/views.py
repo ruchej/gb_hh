@@ -1,5 +1,6 @@
 from collections import Counter
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect
@@ -155,6 +156,7 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
         return super(ResponseCreateView, self).render_to_response(context, **response_kwargs)
 
 
+@login_required
 def response_accept(request, r_pk):
     response = models.Response.objects.get(id=r_pk)
     response.accepted = True
@@ -162,6 +164,7 @@ def response_accept(request, r_pk):
     response.save()
 
 
+@login_required
 def response_reject(request, r_pk):
     response = models.Response.objects.get(id=r_pk)
     response.accepted = False
@@ -197,6 +200,7 @@ class OfferDeleteView(LoginRequiredMixin, CreateView):
     model = models.Offer
 
 
+@login_required
 def get_notifications(request):
     from conf.context_processor import new_responses
     if request.is_ajax():

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -75,6 +76,7 @@ class ChatRejectView(LoginRequiredMixin, TemplateView):
         return context
 
 
+@login_required
 def create_chat_with_msg(request, chat, user_id):
     contact_employer = Contact.objects.get(user=request.user)
     contact_jobseeker = Contact.objects.get(user__id=user_id)
@@ -89,6 +91,7 @@ def create_chat_with_msg(request, chat, user_id):
     return redirect('chat:list')
 
 
+@login_required
 def accept_chat(request, user_id):
     if response_id := request.POST.get('response_id', None):
         response = Response.objects.get(id=response_id)
@@ -106,6 +109,7 @@ def accept_chat(request, user_id):
     return create_chat_with_msg(request, chat, user_id)
 
 
+@login_required
 def create_reject_chat(request, user_id):
     if response_id := request.POST.get('response_id', None):
         response = Response.objects.get(id=response_id)
@@ -120,12 +124,14 @@ def create_reject_chat(request, user_id):
     return create_chat_with_msg(request, chat, user_id)
 
 
+@login_required
 def get_notifications(request):
     from conf.context_processor import new_messages
     if request.is_ajax():
         return JsonResponse(new_messages(request))
 
 
+@login_required
 def read_notifications(request, chat_id=None, chat=None):
     if chat_id and not chat:
         chat = Chat.objects.get(id=chat_id)
@@ -135,6 +141,7 @@ def read_notifications(request, chat_id=None, chat=None):
             notif.save()
 
 
+@login_required
 def open_chat(request, chat_id):
     if request.is_ajax():
         chat = Chat.objects.get(id=chat_id)
@@ -157,6 +164,7 @@ def open_chat(request, chat_id):
     return redirect('blog:news')
 
 
+@login_required
 def get_last_message_text(request, user, text):
     if request.user == user:
         sender = 'Вы'
@@ -172,6 +180,7 @@ def get_last_message_text(request, user, text):
     return f'{string[:40] + "..." if len(string) > 40 else string}'
 
 
+@login_required
 def receive_message(request, chat_id):
     if request.is_ajax():
         chat = Chat.objects.get(id=chat_id)
@@ -189,6 +198,7 @@ def receive_message(request, chat_id):
         return JsonResponse({'result': result, 'message': message, 'timestamp': timestamp})
 
 
+@login_required
 def update_context_from_chats(request, context, chats):
     employers, jobseekers = [], []
     resumes, responses = [], []
@@ -233,6 +243,7 @@ def update_context_from_chats(request, context, chats):
     context['chat_contacts'] = sorted(pack, key=lambda x: x[5], reverse=True)
 
 
+@login_required
 def search_contact(request):
     if request.is_ajax():
         name = request.GET.get('contact')

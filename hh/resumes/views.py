@@ -22,6 +22,7 @@ from .forms import ResumeForm
 from .models import Resume
 
 
+@login_required
 def resume_favorite_list(request):
     user = request.user
     favorites_resumes = user.favourites_resumes.all()

@@ -1,6 +1,7 @@
 from datetime import datetime
 from collections import Counter
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -19,6 +20,7 @@ from conf.choices import PublicStatusChoices, UserStatusChoices
 from recruiting.models import Response
 
 
+@login_required
 def favorites_vacancies_list(request):
     user = request.user
     favorites_vacancies = user.favourites_vacancies.all()
@@ -169,6 +171,7 @@ def filter_by_city(vacancies, city_id):
     return vacancies, employers
 
 
+@login_required
 def switch_status(request, pk, status):
     if request.is_ajax():
         vacancy = Vacancy.objects.get(id=pk)
