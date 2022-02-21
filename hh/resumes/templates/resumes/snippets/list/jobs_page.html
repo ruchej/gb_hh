@@ -4,7 +4,7 @@
         {% for job in jobs %}
             <li class="single-blog">
                 <a href="{% url 'resumes:job_update' job.id %}">
-                    <h4>{{ job.position }} в {{ job.organization }}</h4>
+                    <h4>{{ job }}</h4>
                 </a>
                 <div class="meta justify-content-between d-flex">
                     <p>с {{ job.start }} до {{ job.end }}</p>

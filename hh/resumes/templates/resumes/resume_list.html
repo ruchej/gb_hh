@@ -17,7 +17,7 @@
                         {% endif %}
                         {% include 'resumes/snippets/list/search.html' %}
                         {% if user.status == user_status_choices.JOBSEEKER %}
-                            <a class="d-flex flex-row ticker-btn" href="#">
+                            <a class="d-flex flex-row ticker-btn" href="{% url 'resumes:job_create' %}">
                                 Добавить место работы
                             </a>
                         {% endif %}
@@ -38,15 +38,6 @@
                         </div>
                     </div>
                 {% endif %}
-
-
-
-
-                {#                {% if user.status == user_status_choices.JOBSEEKER %}#}
-                {#                    {% include 'resumes/snippets/list/employee_list.html' %}#}
-                {#                {% else %}#}
-                {#                    {% include 'resumes/snippets/list/employer_list.html' %}#}
-                {#                {% endif %}#}
             </div>
         </div>
     </section>

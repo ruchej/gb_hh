@@ -169,63 +169,39 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
 class ResumeCreateView(CreateView):
     model = Resume
     form_class = ResumeForm
-    success_url = reverse_lazy("resumes:resume_detail")
+    success_url = reverse_lazy("resumes:resume_list")
     template_name = "resumes/resume_create.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resume_form'] = forms.ResumeForm(self.request.POST)
+        context['resume_form'] = context['form']
         context['contacts_form'] = forms.ContactsForm(self.request.POST)
         context['position_form'] = forms.PositionForm(self.request.POST)
         context['experience_form'] = forms.ExperienceForm(self.request.POST)
-        context['job_form'] = forms.JobForm(self.request.POST)
         return context
 
+    def get_form_kwargs(self):
+        kwargs = super(ResumeCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     @transaction.atomic
-    def form_valid(self, form):
+    def get_form(self, form_class=None):
+        form = super(ResumeCreateView, self).get_form(form_class=form_class)
         contacts_form = forms.ContactsForm(self.request.POST)
         position_form = forms.PositionForm(self.request.POST)
         experience_form = forms.ExperienceForm(self.request.POST)
-        job_form = forms.JobForm(self.request.POST)
-        if job_form.is_valid():
-            super().form_valid(job_form)
         if experience_form.is_valid():
-            super().form_valid(experience_form)
+            form.instance.experience_id = experience_form.save().id
+            form.errors.pop('experience')
         if position_form.is_valid():
-            super().form_valid(position_form)
+            form.instance.position_id = position_form.save().id
+            form.errors.pop('position')
         if contacts_form.is_valid():
-            super().form_valid(contacts_form)
-        return super().form_valid(form)
-
-
-@login_required
-def resume_create(request):
-    if request.method == 'POST':
-        resume_form = forms.ResumeForm(request.POST)
-        contacts_form = forms.ContactsForm(request.POST)
-        position_form = forms.PositionForm(request.POST)
-        experience_form = forms.ExperienceForm(request.POST)
-        job_form = forms.JobForm(request.POST)
-        view_forms = (resume_form, contacts_form, position_form, experience_form, job_form)
-        if all([item.is_valid() for item in view_forms]):
-            resume_form.save(commit=False)
-            resume_form.user = request.user
-            for item in view_forms[1:]:
-                item.save()
-        return render(request, 'resumes/resume_create.html')
-    else:
-        resume_form = forms.ResumeForm()
-        contacts_form = forms.ContactsForm()
-        position_form = forms.PositionForm()
-        experience_form = forms.ExperienceForm()
-        job_form = forms.JobForm()
-    return render(request, 'resumes/resume_create.html', {
-        'resume_form': resume_form,
-        'contacts_form': contacts_form,
-        'position_form': position_form,
-        'experience_form': experience_form,
-        'job_form': job_form,
-    })
+            form.instance.contacts_id = contacts_form.save().id
+            form.errors.pop('contacts')
+        form.instance.user_id = self.request.user.id
+        return form
 
 
 class ResumeUpdateView(LoginRequiredMixin, UpdateView):
@@ -282,6 +258,16 @@ class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
     model = models.Experience
     form_class = forms.ExperienceForm
     success_url = reverse_lazy('resumes:resume_list')
+
+
+class JobCreateView(LoginRequiredMixin, CreateView):
+    model = models.Job
+    form_class = forms.JobForm
+    success_url = reverse_lazy('resumes:resume_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(JobCreateView, self).form_valid(form)
 
 
 class JobDetailView(LoginRequiredMixin, DetailView):

@@ -10,7 +10,15 @@ class ResumeForm(forms.ModelForm):
 
     class Meta:
         model = models.Resume
-        fields = ('title', 'photo')
+        fields = ('title', 'photo', 'contacts', 'position', 'experience', 'jobs')
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(ResumeForm, self).__init__(*args, **kwargs)
+        self.fields['jobs'].widget = forms.widgets.CheckboxSelectMultiple()
+        self.fields['jobs'].queryset = models.Job.objects.filter(user=user)
+        # self.fields['jobs'].widget.attrs['checked'] = ''
+        self.fields['jobs'].widget.attrs['form'] = 'resume_form'
 
 
 class ContactsForm(forms.ModelForm):

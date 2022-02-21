@@ -85,7 +85,7 @@ class Job(models.Model):
     functions = models.TextField(verbose_name=_('обязанности на рабочем месте'), blank=True)
 
     def __str__(self):
-        return self.organization
+        return f'{ self.position } в { self.organization }'
 
     class Meta:
         ordering = ('organization',)
@@ -108,7 +108,7 @@ class Resume(models.Model):
         Experience, verbose_name=_('опыт работы'), on_delete=models.CASCADE,
         db_index=True
     )
-    jobs = models.ManyToManyField(Job, related_name='jobs', blank=True, default=None)
+    jobs = models.ManyToManyField(Job, related_name='jobs', blank=True, default=None, verbose_name=_('места работы'))
     favourites = models.ManyToManyField(User, related_name='favourites_resumes', blank=True, default=None)
     accepted_by = models.ManyToManyField(User, related_name='accepted_by', blank=True, default=None)
     rejected_by = models.ManyToManyField(User, related_name='rejected_by', blank=True, default=None)
