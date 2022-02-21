@@ -68,8 +68,9 @@ class Command(BaseCommand):
                         country=russia, city=moscow, phone=get_random_phone())
             employee.avatar = 'avatars/pupkin.jpg'
             employee.save()
+            mixer.cycle(5).blend(resumes_models.Job, user=employee,
+                                 city=random.choice([moscow, st_peter, chelyabinsk]))
             resume = mixer.blend(resumes_models.Resume, user=employee, photo='')
-            mixer.cycle(5).blend(resumes_models.Job, experience=resume.experience)
         else:
             employee = User.objects.get(username='employee')
         mixer.blend(recruiting_models.Response, vacancy__employer=employer, resume__user=employee)
@@ -94,15 +95,22 @@ class Command(BaseCommand):
                         city=random.choice([moscow, st_peter, chelyabinsk]))
 
     @staticmethod
-    def create_resumes():
-        for _ in range(random.randint(10, 100)):
-            mixer.blend(resumes_models.Resume, user=mixer.SELECT,
-                        user__status=UserStatusChoices.JOBSEEKER)
-
-    @staticmethod
     def create_jobs():
         for _ in range(random.randint(10, 100)):
-            mixer.blend(resumes_models.Job, experience=mixer.SELECT)
+            mixer.blend(resumes_models.Job, user=mixer.SELECT,
+                        user__status=UserStatusChoices.JOBSEEKER,
+                        city=mixer.SELECT)
+
+    @staticmethod
+    def create_resumes():
+        for _ in range(random.randint(10, 100)):
+            resume = mixer.blend(resumes_models.Resume, user=mixer.SELECT,
+                                 user__status=UserStatusChoices.JOBSEEKER)
+            user_jobs = resumes_models.Job.objects.filter(user=resume.user)
+            user_jobs = [j for j in user_jobs]
+            for i in range(random.randint(0, len(user_jobs))):
+                resume.jobs.add(user_jobs[i])
+            resume.save()
 
     @staticmethod
     def create_vacancies():
@@ -210,8 +218,8 @@ class Command(BaseCommand):
             self.create_suser()
 
             self.create_jobseekers()
-            self.create_resumes()
             self.create_jobs()
+            self.create_resumes()
 
             self.create_employers()
             self.create_vacancies()
@@ -226,8 +234,8 @@ class Command(BaseCommand):
             self.create_suser()
 
             self.create_jobseekers()
-            self.create_resumes()
             self.create_jobs()
+            self.create_resumes()
 
             self.add_employers_from_fixtures()
             self.add_vacancies_from_fixtures()

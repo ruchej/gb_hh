@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <section class="section-gap">
+    <section class="post-area section-gap">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
+            <div class="title d-flex flex-row justify-content-between">
+                <div class="col-lg-4 sidebar">
                     {% include 'resumes/snippets/detail/card.html' %}
-                    <h1 class="pt-30 pb-20">Ищет</h1>
                     {% include 'resumes/snippets/detail/panel_position.html' %}
-                    <h1 class="pt-30 pb-20">Опыт работы</h1>
+                </div>
+                <div class="col-lg-8 post-list">
+                    <div class="single-post">
+                        {% include 'resumes/snippets/detail/panel_experience.html' %}
+                    </div>
+                    <div class="single-post mb-3">
+                        <h4>
+                            Опыт работы
+                        </h4>
+                    </div>
                     {% include 'resumes/snippets/detail/panel_jobs.html' %}
-                    <h1 class="pt-30 pb-20">Дополнительно</h1>
-                    {% include 'resumes/snippets/detail/panel_experience.html' %}
                 </div>
             </div>
         </div>

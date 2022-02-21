@@ -23,8 +23,7 @@ urlpatterns = [
     path('', views.ResumeListView.as_view(), name='resume_list'),
     path('search/', views.ResumeListView.as_view(), name='resume_list_search'),
     path('<int:pk>/', views.ResumeDetailView.as_view(), name='resume_detail'),
-    # path('create/', views.ResumeCreateView.as_view(), name='resume_create'),
-    path('create/', views.resume_create, name='resume_create'),
+    path('create/', views.ResumeCreateView.as_view(), name='resume_create'),
     path('update/<int:pk>/', views.ResumeUpdateView.as_view(), name='resume_update'),
     path('delete/<int:pk>/', views.ResumeDeleteView.as_view(), name='resume_delete'),
     path('contacts/<int:pk>/', views.ContactsDetailView.as_view(), name='contacts_detail'),
@@ -34,6 +33,7 @@ urlpatterns = [
     path('experience/<int:pk>/', views.ExperienceDetailView.as_view(), name='experience_detail'),
     path('experience/update/<int:pk>/', views.ExperienceUpdateView.as_view(), name='experience_update'),
     path('job/<int:pk>/', views.JobDetailView.as_view(), name='job_detail'),
+    path('job/create/', views.JobCreateView.as_view(), name='job_create'),
     path('job/update/<int:pk>/', views.JobUpdateView.as_view(), name='job_update'),
     path('favorites_resumes/', views.resume_favorite_list, name='favorites_resumes'),
 ]

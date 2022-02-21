@@ -12,7 +12,7 @@ class ContactsAdmin(admin.ModelAdmin):
 
 @admin.register(models.Position)
 class PositionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'salary', 'employment_type', 'relocation', 'business_trip',)
+    list_display = ('position', 'salary', 'employment_type', 'relocation', 'business_trip',)
     list_filter = ('salary',)
     list_per_page = 15
     search_fields = ('title', )
@@ -27,8 +27,8 @@ class ExperienceAdmin(admin.ModelAdmin):
 
 @admin.register(models.Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'start', 'end', 'location', 'site', 'scope', 'position', 'functions',)
-    list_filter = ('start', 'end', 'location')
+    list_display = ('organization', 'start', 'end', 'city', 'site', 'scope', 'position', 'functions',)
+    list_filter = ('start', 'end', 'city')
     list_per_page = 15
     search_fields = ('organization',)
 

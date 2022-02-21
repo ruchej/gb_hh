@@ -1,0 +1,12 @@
+<div class="{% if icon %}input-group-icon {% endif %}mt-10">
+    {% if icon %}
+        <div class="icon">
+            <i class="fa {{ icon }}" aria-hidden="true"></i>
+        </div>
+    {% endif %}
+    <input type="date" name="{{ field.html_name }}" placeholder="{{ field.label }}" onfocus="this.placeholder = ''"
+           onblur="this.placeholder = '{{ field.label }}'"
+           {% if field.value %}value="{{ field.value|date:"Y-m-d" }}"{% endif %}
+           class="single-input{% if required %}-accent{% endif %}"
+           {% if required %}required=""{% endif %}>
+</div>

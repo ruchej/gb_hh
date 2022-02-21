@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from cities_light.models import City
 
 from conf.choices import EmploymentTypeChoices, RelocationChoices, TripChoices
 
@@ -27,7 +28,7 @@ class Contacts(models.Model):
 class Position(models.Model):
     """Model for keeping info about wishing position."""
 
-    title = models.CharField(verbose_name=_('название должности'), max_length=64, db_index=True)
+    position = models.CharField(verbose_name=_('название должности'), max_length=64, db_index=True)
     salary = models.PositiveIntegerField(verbose_name=_('зарплата'), default=0, db_index=True)
     employment_type = models.SmallIntegerField(
         choices=EmploymentTypeChoices.choices,
@@ -45,10 +46,10 @@ class Position(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.position
 
     class Meta:
-        ordering = ('title',)
+        ordering = ('position',)
         verbose_name = _('требования к должности')
         verbose_name_plural = _('требования к должностям')
 
@@ -68,27 +69,26 @@ class Experience(models.Model):
         verbose_name = _('опыт работы')
         verbose_name_plural = _('опыт работ')
 
+    def skills_as_list(self):
+        return self.skills.split(', ')[:5]
+
 
 class Job(models.Model):
     """Model for keeping info about jobs."""
 
-    experience = models.ForeignKey(
-        Experience, verbose_name=_('анкета "опыт работы"'), on_delete=models.CASCADE,
-        db_index=True
-    )
-    # TODO: Connect database of ЕГРЮЛ to field 'organization'.
+    user = models.ForeignKey(User, verbose_name=_('пользователь'), on_delete=models.CASCADE, db_index=True)
     organization = models.CharField(verbose_name=_('организация'), max_length=128)
     start = models.DateField(verbose_name=_('начало работы'))
     end = models.DateField(verbose_name=_('окончание работы'))
-    # TODO: Connect database of regions to field 'location'.
-    location = models.CharField(verbose_name=_('регион'), max_length=64)
+    city = models.ForeignKey(City, on_delete=models.PROTECT, db_index=True,
+                             null=True, blank=True, verbose_name=_('город'))
     site = models.URLField(verbose_name=_('сайт'), blank=True)
     scope = models.CharField(verbose_name=_('сфера деятельности компании'), max_length=64)
     position = models.CharField(verbose_name=_('должность'), max_length=64, db_index=True)
     functions = models.TextField(verbose_name=_('обязанности на рабочем месте'), blank=True)
 
     def __str__(self):
-        return self.organization
+        return f'{ self.position } в { self.organization }'
 
     class Meta:
         ordering = ('organization',)
@@ -111,6 +111,7 @@ class Resume(models.Model):
         Experience, verbose_name=_('опыт работы'), on_delete=models.CASCADE,
         db_index=True
     )
+    jobs = models.ManyToManyField(Job, related_name='jobs', blank=True, default=None, verbose_name=_('места работы'))
     favourites = models.ManyToManyField(User, related_name='favourites_resumes', blank=True, default=None)
     accepted_by = models.ManyToManyField(User, related_name='accepted_by', blank=True, default=None)
     rejected_by = models.ManyToManyField(User, related_name='rejected_by', blank=True, default=None)

@@ -1,18 +1,11 @@
-<section>
-    {% if jobs %}
-        {% for job in jobs %}
-            <h3 class="mt-10 mb-3">{{ job.position }} в {{ job.organization }}:</h3>
-            <div class="pb-30">
-                {% include 'resumes/snippets/detail/job_card.html' %}
-            </div>
-        {% endfor %}
-    {% else %}
+{% if jobs %}
+    {% for job in jobs %}
+        <div class="single-post mb-2">
+            {% include 'resumes/snippets/detail/job_card.html' %}
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="single-post job-details" style="color: black">
         <p>Опыт работы отсутствует</p>
-    {% endif %}
-
-    {% if user == resume.user %}
-        <a class="ticker-btn" href="#">
-            Добавить
-        </a>
-    {% endif %}
-</section>
+    </div>
+{% endif %}

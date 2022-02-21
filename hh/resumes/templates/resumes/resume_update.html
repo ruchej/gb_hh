@@ -1,9 +1,24 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
-
 {% block content %}
-<form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form }}
-</form>
+    <section class="post-area section-gap">
+        <div class="container d-flex justify-content-center">
+            <div class="col-lg-8 col-md-8">
+                <form action="{% url 'resumes:resume_update' resume.id %}" id="resume_form"
+                      method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% include 'snippets/form_elements/text.html' with field=resume_form.title required=True icon='fa-file-text-o' %}
+                    {% include 'resumes/snippets/forms/contacts.html' %}
+                    {% include 'resumes/snippets/forms/position.html' %}
+                    {% include 'resumes/snippets/forms/experience.html' %}
+                    {% include 'snippets/form_elements/checkbox.html' with field=resume_form.jobs %}
+                    <div class="mt-20">
+                        {{ resume_form.photo|as_crispy_field }}
+                    </div>
+                    <button type="submit" class="genric-btn primary">Изменить</button>
+                </form>
+            </div>
+        </div>
+    </section>
 {% endblock %}

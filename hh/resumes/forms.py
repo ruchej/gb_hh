@@ -10,7 +10,14 @@ class ResumeForm(forms.ModelForm):
 
     class Meta:
         model = models.Resume
-        fields = ('title', 'photo')
+        fields = ('title', 'photo', 'contacts', 'position', 'experience', 'jobs')
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(ResumeForm, self).__init__(*args, **kwargs)
+        self.fields['jobs'].widget = forms.widgets.CheckboxSelectMultiple()
+        self.fields['jobs'].queryset = models.Job.objects.filter(user=user)
+        self.fields['jobs'].widget.attrs['form'] = 'resume_form'
 
 
 class ContactsForm(forms.ModelForm):
@@ -26,7 +33,7 @@ class PositionForm(forms.ModelForm):
 
     class Meta:
         model = models.Position
-        fields = ('title', 'salary', 'employment_type', 'relocation', 'business_trip')
+        fields = ('position', 'salary', 'employment_type', 'relocation', 'business_trip')
 
 
 class ExperienceForm(forms.ModelForm):
@@ -42,7 +49,7 @@ class JobForm(forms.ModelForm):
 
     class Meta:
         model = models.Job
-        fields = ('organization', 'start', 'end', 'location', 'site', 'scope', 'position', 'functions')
+        fields = ('organization', 'start', 'end', 'city', 'site', 'scope', 'position', 'functions')
         widgets = {
             'start': DateInput(attrs={'type': 'date'}),
             'end': DateInput(attrs={'type': 'date'}),

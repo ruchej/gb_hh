@@ -1288,11 +1288,12 @@ h1, h2, h3, h4, h5, h6 {
   color: #797979;
 }
 
-.input-group-icon .single-input {
+.input-group-icon .single-input, .input-group-icon .single-input-accent,
+.input-group-icon .single-textarea, .input-group-icon .single-textarea-accent {
   padding-left: 45px;
 }
 
-.single-textarea {
+.single-textarea, .single-textarea-accent {
   display: block;
   width: 100%;
   line-height: 40px;
@@ -1306,6 +1307,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .single-textarea:focus {
   outline: none;
+}
+.single-textarea-accent:focus {
+  outline: none;
+  border: 1px solid #eb6b55;
 }
 
 .single-input-primary {
@@ -1574,7 +1579,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .primary-checkbox input:checked + label {
-  background: url(../img/elements/primary-check.png) no-repeat center center/cover;
+  background: url(../img/primary-check.png) no-repeat center center/cover;
   border: none;
 }
 
@@ -1798,6 +1803,8 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: none;
   width: 100%;
   padding: 10px 0 10px 0px;
+  max-height: 200px;
+  overflow-y: scroll !important;
 }
 
 .default-select .nice-select .list .option {

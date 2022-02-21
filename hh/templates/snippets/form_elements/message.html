@@ -1,0 +1,19 @@
+<div class="{% if icon %}input-group-icon {% endif %}mt-10">
+    {% if icon %}
+        <div class="icon">
+            <i class="fa {{ icon }}" aria-hidden="true"></i>
+        </div>
+    {% endif %}
+    <textarea id="textarea-{{ field.html_name }}" name="{{ field.html_name }}" placeholder="{{ field.label }}{{ add }}"
+              oninput="document.getElementById('input-{{ field.html_name }}').setAttribute('value', document.getElementById('textarea-{{ field.html_name }}').value);"
+              onfocus="this.placeholder = ''"
+              onblur="this.placeholder = '{{ field.label }}{{ add }}'"
+              class="single-textarea{% if required %}-accent{% endif %}"
+              {% if required %}required=""{% endif %}>{% if field.data.value %}
+        {{ field.data.value }}{% endif %}</textarea>
+    <input type="text" name="{{ field.html_name }}" hidden id="input-{{ field.html_name }}"
+           {% if field.value %}value="{{ field.value }}"{% endif %}>
+    <script>
+        document.getElementById('textarea-{{ field.html_name }}').value = document.getElementById('input-{{ field.html_name }}').value;
+    </script>
+</div>
