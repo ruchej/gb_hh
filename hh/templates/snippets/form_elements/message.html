@@ -13,6 +13,11 @@
         {{ field.data.value }}{% endif %}</textarea>
     <input type="text" name="{{ field.html_name }}" hidden id="input-{{ field.html_name }}"
            {% if field.value %}value="{{ field.value }}"{% endif %}>
+    {% for error in field.errors %}
+        <div style="color: red">
+            <i class="fa fa-info mr-2 mb-2"></i><strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
     <script>
         document.getElementById('textarea-{{ field.html_name }}').value = document.getElementById('input-{{ field.html_name }}').value;
     </script>

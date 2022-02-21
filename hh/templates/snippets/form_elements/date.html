@@ -9,4 +9,9 @@
            {% if field.value %}value="{{ field.value|date:"Y-m-d" }}"{% endif %}
            class="single-input{% if required %}-accent{% endif %}"
            {% if required %}required=""{% endif %}>
+    {% for error in field.errors %}
+        <div style="color: red">
+            <i class="fa fa-info mr-2 mb-2"></i><strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
 </div>
