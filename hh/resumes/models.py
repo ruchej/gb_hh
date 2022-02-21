@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from cities_light.models import City
 
 from conf.choices import EmploymentTypeChoices, RelocationChoices, TripChoices
 
@@ -72,16 +73,12 @@ class Experience(models.Model):
 class Job(models.Model):
     """Model for keeping info about jobs."""
 
-    experience = models.ForeignKey(
-        Experience, verbose_name=_('анкета "опыт работы"'), on_delete=models.CASCADE,
-        db_index=True
-    )
-    # TODO: Connect database of ЕГРЮЛ to field 'organization'.
+    user = models.ForeignKey(User, verbose_name=_('пользователь'), on_delete=models.CASCADE, db_index=True)
     organization = models.CharField(verbose_name=_('организация'), max_length=128)
     start = models.DateField(verbose_name=_('начало работы'))
     end = models.DateField(verbose_name=_('окончание работы'))
-    # TODO: Connect database of regions to field 'location'.
-    location = models.CharField(verbose_name=_('регион'), max_length=64)
+    city = models.ForeignKey(City, on_delete=models.PROTECT, db_index=True,
+                             null=True, blank=True, verbose_name=_('город'))
     site = models.URLField(verbose_name=_('сайт'), blank=True)
     scope = models.CharField(verbose_name=_('сфера деятельности компании'), max_length=64)
     position = models.CharField(verbose_name=_('должность'), max_length=64, db_index=True)
@@ -111,6 +108,7 @@ class Resume(models.Model):
         Experience, verbose_name=_('опыт работы'), on_delete=models.CASCADE,
         db_index=True
     )
+    jobs = models.ManyToManyField(Job, related_name='jobs', blank=True, default=None)
     favourites = models.ManyToManyField(User, related_name='favourites_resumes', blank=True, default=None)
     accepted_by = models.ManyToManyField(User, related_name='accepted_by', blank=True, default=None)
     rejected_by = models.ManyToManyField(User, related_name='rejected_by', blank=True, default=None)

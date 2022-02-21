@@ -27,8 +27,8 @@ class ExperienceAdmin(admin.ModelAdmin):
 
 @admin.register(models.Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display = ('organization', 'start', 'end', 'location', 'site', 'scope', 'position', 'functions',)
-    list_filter = ('start', 'end', 'location')
+    list_display = ('organization', 'start', 'end', 'city', 'site', 'scope', 'position', 'functions',)
+    list_filter = ('start', 'end', 'city')
     list_per_page = 15
     search_fields = ('organization',)
 

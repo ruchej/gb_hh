@@ -154,7 +154,7 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ResumeDetailView, self).get_context_data()
-        context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
+        context['jobs'] = context['resume'].jobs.all()
         context['jobseeker'] = JobSeeker.objects.get(user=context['resume'].user)
         if self.request.user.status == UserStatusChoices.EMPLOYER:
             notifs = [notif for notif in self.request.user.notifications.unread()
