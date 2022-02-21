@@ -1,0 +1,12 @@
+<div class="{% if icon %}input-group-icon {% endif %}mt-10">
+    {% if icon %}
+        <div class="icon">
+            <i class="fa {{ icon }}" aria-hidden="true"></i>
+        </div>
+    {% endif %}
+    <textarea name="{{ field.html_name }}" placeholder="{{ field.label }}{{ add }}"
+              onfocus="this.placeholder = ''"
+              onblur="this.placeholder = '{{ field.label }}{{ add }}'"
+              class="single-textarea{% if required %}-accent{% endif %}"
+              {% if required %}required=""{% endif %}>{% if field.data.value %}{{ field.data.value }}{% endif %}</textarea>
+</div>

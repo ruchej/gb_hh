@@ -1,0 +1,14 @@
+<div class="mt-10">
+    <p>
+        {{ field.label }}
+    </p>
+    <div class="default-select" id="default-select">
+        <select name="{{ field.html_name }}">
+            {% for choice in field %}
+                <option value="{{ choice.data.value }}">
+                    {{ choice.choice_label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
