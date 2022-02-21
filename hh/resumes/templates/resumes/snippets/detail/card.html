@@ -1,75 +1,78 @@
-<section>
-    <div class="card-title mb-4">
-        <div class="row d-flex justify-content-start">
-            <div class="image-container d-flex flex-row">
-                <img src="{{ resume.photo.url }}" id="imgProfile"
-                     class="img-thumbnail resume-image"/>
-            </div>
-            <div class="userData ml-4 flex-row">
-                <div class="row">
-                    <h2 class="d-block mb-4" style="font-size: 2rem; font-weight: bold">
-                        {{ jobseeker.first_name }}
-                        {{ jobseeker.patronymic }}
-                        {{ jobseeker.last_name }}
-                    </h2>
-                </div>
-                <div class="row">
-                    <div>
-                        <label style="font-weight:bold;">Пол</label>
-                    </div>
-                    <div class="col-md-8 col-6">
-                        {% if jobseeker.get_sex_display %}
-                            {{ jobseeker.get_sex_display }}
+<div class="single-slidebar">
+    <div class="pl-30 pr-30">
+        <div class="col mb-3 text-center">
+            <img src="{% if resume.photo %}{{ resume.photo.url }}{% endif %}"
+                 id="imgProfile" class="mg-fluid"
+                 style="max-width: 150px; max-height: 150px; min-width: 50px; min-height: 50px"/>
+        </div>
+        <div class="col mx-auto mb-2">
+            <h4>
+                {{ jobseeker.first_name }}
+                {{ jobseeker.patronymic }}
+                {{ jobseeker.last_name }}
+            </h4>
+        </div>
+        <div class="col mx-auto mb-3">
+            <p class="mb-1">
+                <span class="fa fa-puzzle-piece"></span> {{ jobseeker.get_sex_display|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-birthday-cake"></span> {{ jobseeker.date_birth|default:'Не указана' }}
+            </p>
+            <p class="mb-1">
+                <a {% if resume.contacts.email %}href="mailto:{{ resume.contacts.email }}"{% endif %}
+                style="color: #777777">
+                    <span class="fa fa-mail-forward"></span> {{ resume.contacts.email|default:'Не указан' }}
+                </a>
+            </p>
+            <p class="mb-1">
+                <a {% if resume.contacts.telegram %}href="https://t.me/{{ resume.contacts.telegram }}"{% endif %}
+                style="color: #777777">
+                    <span class="fa fa-telegram"></span> @{{ resume.contacts.telegram }}
+                </a>
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-phone"></span> {{ resume.contacts.phone|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-map"></span> {{ jobseeker.city|default:'Не указан' }}
+            </p>
+        </div>
+        <div class="d-flex justify-content-between">
+            {% if user.status == user_status_choices.JOBSEEKER %}
+                <a class="genric-btn primary small warning"
+                   href="{% url 'resumes:resume_update' resume.id %}">
+                    Изменить
+                </a>
+                <a class="genric-btn primary small danger"
+                   href="{% url 'resumes:resume_delete' resume.id %}">
+                    Удалить
+                </a>
+            {% elif user.status == user_status_choices.EMPLOYER %}
+                {% if response %}
+                    <a class="genric-btn primary small pl-3 pr-3"
+                       href="{% url 'chat:start_response' response_id=response.id %}">
+                        Откликнуться
+                    </a>
+                    <a class="genric-btn primary small pl-3 pr-3"
+                       href="{% url 'chat:start_reject' response_id=response.id %}">
+                        Отклонить
+                    </a>
+                {% else %}
+                    <a class="genric-btn primary small"
+                       href="{% url 'chat:start_resume' resume_id=resume.id %}">
+                        Откликнуться
+                    </a>
+                    <a class="genric-btn default-border small favorite-icon pl-3 pr-3"
+                       href="{% url 'accounts:favourite_add' resume.id %}">
+                        {% if fav %}
+                            <span class="lnr lnr-trash"></span>
                         {% else %}
-                            Не указан
+                            <span class="lnr lnr-star"></span>
                         {% endif %}
-                    </div>
-                </div>
-                <div class="row">
-                    <div>
-                        <label style="font-weight:bold;">Дата рождения</label>
-                    </div>
-                    <div class="col-md-8 col-6">
-                        {{ jobseeker.date_birth }}
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div>
-                        <label style="font-weight:bold;">Email</label>
-                    </div>
-                    <div class="col-md-8 col-6">
-                        {{ resume.contacts.email }}
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div>
-                        <label style="font-weight:bold;">Адрес</label>
-                    </div>
-                    <div class="col-md-8 col-6">
-                        {{ jobseeker.address }}
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div>
-                        <label style="font-weight:bold;">Телефон</label>
-                    </div>
-                    <div class="col-md-8 col-6">
-                        {{ resume.contacts.phone }}
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div>
-                        <label style="font-weight:bold;">Telegram</label>
-                    </div>
-                    <div class="col-md-8 col-6">
-                        @{{ resume.contacts.telegram }}
-                    </div>
-                </div>
-            </div>
+                    </a>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
-</section>
+</div>

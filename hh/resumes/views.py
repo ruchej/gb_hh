@@ -159,11 +159,18 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
         context['jobs'] = context['resume'].jobs.all()
         context['jobseeker'] = JobSeeker.objects.get(user=context['resume'].user)
         if self.request.user.status == UserStatusChoices.EMPLOYER:
+            from recruiting.models import Response
             notifs = [notif for notif in self.request.user.notifications.unread()
                       if notif.verb == NEW_RESUME_NOTIF]
             notifs_resumes = [notif.target for notif in notifs]
             if (resume := context['object']) in notifs_resumes:
                 notifs[notifs_resumes.index(resume)].mark_as_read()
+            if self.request.user in resume.favourites.all():
+                context['fav'] = True
+            if Response.objects.filter(resume=context['resume']).exists() and \
+                    'vac_id' in self.request.GET:
+                context['response'] = Response.objects.get(resume=context['resume'],
+                                                           vacancy__id=self.request.GET['vac_id'])
         return context
 
 
