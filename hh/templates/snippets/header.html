@@ -20,7 +20,21 @@
                         {% if user.status == user_status_choices.EMPLOYER %}
                             <li {% if request.resolver_match.view_name == 'recruiting:response_list' %}class="active"{% endif %}>
                                 <a class="notification" href="{% url 'recruiting:response_list' %}">
-                                    <span>Отклики</span><span class="badge badge-danger resp-nav-notif">{% if new_responses %}{{ new_responses }}{% endif %}</span>
+                                    <span>Отклики</span><span
+                                        class="badge badge-danger resp-nav-notif">{% if new_responses %}
+                                    {{ new_responses }}{% endif %}</span>
+                                </a>
+                            </li>
+                            <li {% if request.resolver_match.view_name == 'resumes:favorites_resumes' %}class="active"{% endif %}>
+                                <a href="{% url 'resumes:favorites_resumes' %}">
+                                    <span>Избранное</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if user.status == user_status_choices.JOBSEEKER %}
+                            <li {% if request.resolver_match.view_name == 'vacancies:favorites_vacancies' %}class="active"{% endif %}>
+                                <a href="{% url 'vacancies:favorites_vacancies' %}">
+                                    <span>Избранное</span>
                                 </a>
                             </li>
                         {% endif %}
@@ -32,7 +46,8 @@
                         <li {% if request.resolver_match.view_name == 'chat:list' %}class="active"{% endif %}>
                             <a class="notification" href="{% url 'chat:list' %}">
                                 <span>Чат</span>
-                                <span class="badge badge-danger chat-nav-notif">{% if new_messages %}{{ new_messages }}{% endif %}</span>
+                                <span class="badge badge-danger chat-nav-notif">{% if new_messages %}
+                                    {{ new_messages }}{% endif %}</span>
                             </a>
                         </li>
                     {% else %}
@@ -43,20 +58,20 @@
                                 Вакансии
                             </a></li>
                     {% endif %}
-{#                    <li {% if request.resolver_match.view_name == 'about_us' %}class="active"{% endif %}><a href="#">О#}
-{#                        нас</a>#}
-{#                    </li>#}
+                    {#                    <li {% if request.resolver_match.view_name == 'about_us' %}class="active"{% endif %}><a href="#">О#}
+                    {#                        нас</a>#}
+                    {#                    </li>#}
                     <li {% if request.resolver_match.view_name == 'rules' %}class="active"{% endif %}>
                         <a href="{% url 'rules' %}">Правила</a>
                     </li>
-{#                    Пример выпадающего окна#}
-{#                    <li class="menu-has-children"><a href="">Pages</a>#}
-{#                        <ul>#}
-{#                            <li><a href="elements.html">elements</a></li>#}
-{#                            <li><a href="search.html">search</a></li>#}
-{#                            <li><a href="single.html">single</a></li>#}
-{#                        </ul>#}
-{#                    </li>#}
+                    {#                    Пример выпадающего окна#}
+                    {#                    <li class="menu-has-children"><a href="">Pages</a>#}
+                    {#                        <ul>#}
+                    {#                            <li><a href="elements.html">elements</a></li>#}
+                    {#                            <li><a href="search.html">search</a></li>#}
+                    {#                            <li><a href="single.html">single</a></li>#}
+                    {#                        </ul>#}
+                    {#                    </li>#}
                     {% if user.username %}
                         <li {% if request.resolver_match.view_name == 'accounts:user-detail' %}class="active"{% endif %}>
                             <a href="{% url 'accounts:user-detail' %}" style="font-weight: 600; font-size: 18px">

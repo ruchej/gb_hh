@@ -31,6 +31,7 @@ def resume_favorite_list(request):
         favs.append(True)
     context = {
         'favorites_resumes': zip(favorites_resumes, jobseekers, favs),
+        'title': 'Избранные резюме',
     }
     return render(request, 'resumes/favorites_resume_list.html', context)
 
