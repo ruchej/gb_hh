@@ -4,10 +4,21 @@
     </p>
     <div class="default-select" id="default-select">
         <select name="{{ field.html_name }}">
+            {% if field.value %}
+                {% for choice in field %}
+                    {% if choice.data.value == field.value %}
+                        <option value="{{ choice.data.value }}">
+                            {{ choice.choice_label }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             {% for choice in field %}
-                <option value="{{ choice.data.value }}">
-                    {{ choice.choice_label }}
-                </option>
+                {% if choice.data.value != field.value %}
+                    <option value="{{ choice.data.value }}">
+                        {{ choice.choice_label }}
+                    </option>
+                {% endif %}
             {% endfor %}
         </select>
     </div>
