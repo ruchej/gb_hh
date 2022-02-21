@@ -1,8 +1,9 @@
-<div class="row">
-    <div class="col-12">
-        {% include 'accounts/snippets/detail/jobseeker_nav.html' %}
-        <div class="tab-content ml-1" id="myTabContent">
-            {% include 'accounts/snippets/detail/jobseeker_personal.html' %}
-        </div>
-    </div>
-</div>
+{#{% include 'snippets/form_elements/basic.html' with value=jobseeker.first_name icon='fa-user' disabled=True %}#}
+{#{% include 'snippets/form_elements/basic.html' with value=jobseeker.patronymic icon='fa-user-plus' disabled=True %}#}
+{#{% include 'snippets/form_elements/basic.html' with value=jobseeker.last_name icon='fa-users' disabled=True %}#}
+{% include 'snippets/form_elements/basic.html' with value=jobseeker.get_sex_display disabled=True icon='fa-puzzle-piece' %}
+{% include 'snippets/form_elements/basic.html' with value=jobseeker.date_birth icon='fa-birthday-cake' type='date' disabled=True %}
+{% include 'snippets/form_elements/basic.html' with value=jobseeker.phone icon='fa-phone' disabled=True %}
+{% include 'snippets/form_elements/basic.html' with value=jobseeker.country icon='fa-globe' disabled=True %}
+{% include 'snippets/form_elements/basic.html' with value=jobseeker.city.name icon='fa-map' disabled=True %}
+{% include 'snippets/form_elements/basic.html' with value=jobseeker.address icon='fa-thumb-tack' disabled=True %}

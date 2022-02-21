@@ -2,37 +2,33 @@
 {% load static %}
 {% block content %}
     <section class="post-area section-gap">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-
-                        <div class="card-body">
-                            <div class="card-title mb-4">
-                                <div class="row d-flex justify-content-start">
-                                    <div class="image-container d-flex flex-row">
-                                        <img src="{% if user.avatar %}{{ user.avatar.url }}{% endif %}"
-                                             id="imgProfile"
-                                             style="max-width: 150px; max-height: 150px"/>
-                                    </div>
-                                    <div class="userData ml-2 flex-row">
-                                        <h2 class="d-block mb-3" style="font-size: 2rem; font-weight: bold">
-                                            {{ object }}
-                                        </h2>
-                                        <a class="ticker-btn" href="{%  url 'accounts:profile-update' %}">
-                                            Редактировать
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            {% if user.status == user_status_choices.JOBSEEKER %}
-                                {% include 'accounts/snippets/detail/jobseeker_card.html' %}
-                            {% elif user.status == user_status_choices.EMPLOYER %}
-                                {% include 'accounts/snippets/detail/employer_card.html' %}
-                            {% endif %}
+        <div class="container d-flex justify-content-center">
+            <div class="col-lg-8 col-md-8 post-list">
+                <div class="single-post mb-2">
+                    <div class="row d-flex justify-content-start">
+                        <div class="image-container">
+                            <img src="{% if user.avatar %}{{ user.avatar.url }}{% endif %}"
+                                 id="imgProfile"
+                                 style="max-width: 150px; max-height: 150px"/>
+                        </div>
+                        <div class="userData ml-3 flex-row">
+                            <h2 class="d-block mb-3" style="font-size: 2rem; font-weight: bold">
+                                {{ object }}
+                            </h2>
+                            <a class="genric-btn primary" href="{% url 'accounts:profile-update' %}">
+                                Редактировать
+                            </a>
                         </div>
                     </div>
                 </div>
+                {% include 'snippets/form_elements/basic.html' with value=user.username icon='fa-user-circle' disabled=True %}
+                {% include 'snippets/form_elements/basic.html' with value=user.email icon='fa-mail-forward' disabled=True %}
+
+                {% if user.status == user_status_choices.JOBSEEKER %}
+                    {% include 'accounts/snippets/detail/jobseeker_card.html' %}
+                {% elif user.status == user_status_choices.EMPLOYER %}
+                    {% include 'accounts/snippets/detail/employer_card.html' %}
+                {% endif %}
             </div>
         </div>
     </section>
