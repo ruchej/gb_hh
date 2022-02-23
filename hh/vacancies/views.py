@@ -124,6 +124,7 @@ class VacancyDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(VacancyDetail, self).get_context_data(**kwargs)
+        context['publicstatuschoices'] = PublicStatusChoices
         context['employer'] = Employer.objects.get(user=context['vacancy'].employer)
         return context
 
