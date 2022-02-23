@@ -14,7 +14,7 @@ from accounts.models import JobSeeker, Employer
 from conf.choices import UserStatusChoices
 from resumes.models import Resume
 from recruiting.models import Response
-from recruiting.views import response_accept, response_reject
+from recruiting.views import response_accept, response_reject, NEW_RESUME_NOTIF
 
 User = get_user_model()
 
@@ -58,6 +58,14 @@ class ChatAcceptView(LoginRequiredMixin, TemplateView):
         context['responding'] = True
         return context
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.user.status != UserStatusChoices.EMPLOYER or \
+                context['response'].vacancy.employer != request.user or \
+                context['response'].accepted or context['response'].rejected:
+            return redirect('blog:news')
+        return self.render_to_response(context)
+
 
 class ChatRejectView(LoginRequiredMixin, TemplateView):
     extra_context = {'title': 'Сообщение кандидату об отказе'}
@@ -74,6 +82,14 @@ class ChatRejectView(LoginRequiredMixin, TemplateView):
         context['jobseeker'] = JobSeeker.objects.get(user=resume.user)
         context['responding'] = True
         return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.user.status != UserStatusChoices.EMPLOYER or \
+                context['response'].vacancy.employer != request.user or \
+                context['response'].accepted or context['response'].rejected:
+            return redirect('blog:news')
+        return self.render_to_response(context)
 
 
 @login_required
@@ -98,6 +114,11 @@ def accept_chat(request, user_id):
         response_accept(request, response_id)
         resume = response.resume
         chat = Chat(response=response)
+        notifs = [notif for notif in request.user.notifications.unread()
+                  if notif.verb == NEW_RESUME_NOTIF]
+        notifs_resumes = [notif.target for notif in notifs]
+        if resume in notifs_resumes:
+            notifs[notifs_resumes.index(resume)].mark_as_read()
     elif resume_id := request.POST.get('resume_id', None):
         resume = Resume.objects.get(id=resume_id)
         chat = Chat(resume=resume)

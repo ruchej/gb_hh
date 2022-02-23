@@ -131,9 +131,6 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
     template_name = 'recruiting/response_create.html'
     model = models.Response
 
-    def dispatch(self, request, *args, **kwargs):
-        return super(ResponseCreateView, self).dispatch(request, *args, **kwargs)
-
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResponseCreateView, self).get_context_data(object_list=object_list, **kwargs)
         context['vacancy'] = Vacancy.objects.get(id=context['v_pk'])
@@ -154,6 +151,16 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
                 models.Response.objects.create(resume=resume, vacancy=context['vacancy'])
             return redirect('vacancies:vacancy_list')
         return super(ResponseCreateView, self).render_to_response(context, **response_kwargs)
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        vacancy = context['vacancy']
+        resumes = context['resumes']
+        if request.user.status != UserStatusChoices.JOBSEEKER or \
+                models.Response.objects.filter(vacancy=vacancy,
+                                               resume__in=resumes).exists():
+            return redirect('vacancies:vacancy_list')
+        return self.render_to_response(context)
 
 
 class ResponseDeleteView(LoginRequiredMixin, CreateView):
