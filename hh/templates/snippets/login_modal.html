@@ -15,6 +15,9 @@
                     <div class="form-outline mb-3">
                         {% include 'snippets/form_elements/basic.html' with name='password' type='password' text='Пароль' icon='fa-key' %}
                     </div>
+                    <div class="text-lg-start">
+                        <a href="{% url 'accounts:password_reset' %}" class="hidden-link">Забыли пароль?</a>
+                    </div>
                     <a class="genric-btn primary" href="#" onclick="document.getElementById('loginForm').submit();">
                         Войти
                     </a>
