@@ -1,4 +1,4 @@
-{% if user.status == 1 and object_list or user.status == 2 and jobseekers_resume_list %}
+{% if user.status == user_status_choices.JOBSEEKER and object_list or user.status == user_status_choices.EMPLOYER and jobseekers_resume_list %}
     {% load el_pagination_tags %}
 
     {% if user.status == user_status_choices.JOBSEEKER %}
