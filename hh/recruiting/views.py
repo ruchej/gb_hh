@@ -156,6 +156,12 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
         return super(ResponseCreateView, self).render_to_response(context, **response_kwargs)
 
 
+class ResponseDeleteView(LoginRequiredMixin, CreateView):
+    """View for deleting response for job."""
+
+    model = models.Response
+
+
 @login_required
 def response_accept(request, r_pk):
     response = models.Response.objects.get(id=r_pk)
@@ -170,34 +176,6 @@ def response_reject(request, r_pk):
     response.accepted = False
     response.rejected = True
     response.save()
-
-
-class ResponseDeleteView(LoginRequiredMixin, CreateView):
-    """View for deleting response for job."""
-
-    model = models.Response
-
-
-class OfferListView(LoginRequiredMixin, ListView):
-    """View for getting list of offers."""
-
-    model = models.Offer
-
-
-def offer_create(v_pk, r_pk=None):
-    models.Offer.objects.create(resume__id=r_pk, vacancy__id=v_pk)
-
-
-class OfferCreateView(LoginRequiredMixin, CreateView):
-    """View for creating offer."""
-
-    model = models.Offer
-
-
-class OfferDeleteView(LoginRequiredMixin, CreateView):
-    """View for deleting offer."""
-
-    model = models.Offer
 
 
 @login_required

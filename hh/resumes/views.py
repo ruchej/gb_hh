@@ -242,48 +242,6 @@ class ResumeDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('resumes:resume_list')
 
 
-class ContactsDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about contacts in resume."""
-
-    model = models.Contacts
-
-
-class ContactsUpdateView(LoginRequiredMixin, UpdateView):
-    """View for updating contacts in resume."""
-
-    model = models.Contacts
-    form_class = forms.ContactsForm
-    success_url = reverse_lazy('resumes:resume_list')
-
-
-class PositionDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about position in resume."""
-
-    model = models.Position
-
-
-class PositionUpdateView(LoginRequiredMixin, UpdateView):
-    """View for updating position in resume."""
-
-    model = models.Position
-    form_class = forms.PositionForm
-    success_url = reverse_lazy('resumes:resume_list')
-
-
-class ExperienceDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about experience in resume."""
-
-    model = models.Experience
-
-
-class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
-    """View for updating experience in resume."""
-
-    model = models.Experience
-    form_class = forms.ExperienceForm
-    success_url = reverse_lazy('resumes:resume_list')
-
-
 class JobCreateView(LoginRequiredMixin, CreateView):
     model = models.Job
     form_class = forms.JobForm
@@ -293,12 +251,6 @@ class JobCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super(JobCreateView, self).form_valid(form)
-
-
-class JobDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about jobs in resume."""
-
-    model = models.Job
 
 
 class JobUpdateView(LoginRequiredMixin, UpdateView):
