@@ -9,9 +9,15 @@
             <p class="mb-1">
                 <span class="fa fa-id-badge"></span> {{ resume.position.position|default:'Не указан' }}
             </p>
-            <p class="mb-1">
-                <span class="fa fa-money"></span> от {{ resume.position.salary|default:'Не указана' }} руб.
-            </p>
+            {% if not salary or salary == 'Не указана'%}
+                <p class="mb-1">
+                    <span class="fa fa-money"></span> {{ resume.position.salary|default:'Не указана' }}
+                </p>
+            {% else %}
+                <p class="mb-1">
+                    <span class="fa fa-money"></span> от {{ resume.position.salary|default:'Не указана' }} руб.
+                </p>
+            {% endif %}
             <p class="mb-1">
                 <span class="fa fa-clock-o"></span> {{ resume.position.get_employment_type_display|default:'Не указан' }}
             </p>
