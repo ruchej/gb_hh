@@ -117,6 +117,7 @@ class Resume(models.Model):
     favourites = models.ManyToManyField(User, related_name='favourites_resumes', blank=True, default=None)
     accepted_by = models.ManyToManyField(User, related_name='accepted_by', blank=True, default=None)
     rejected_by = models.ManyToManyField(User, related_name='rejected_by', blank=True, default=None)
+    published_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title

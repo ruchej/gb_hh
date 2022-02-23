@@ -1,4 +1,5 @@
 from collections import Counter
+from typing import Iterable
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -61,7 +62,7 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.request.user.status == UserStatusChoices.JOBSEEKER:
-            queryset = queryset.filter(user=self.request.user)
+            queryset = queryset.filter(user=self.request.user).order_by('-published_at')
         return queryset
 
     def render_to_response(self, context, **response_kwargs):
@@ -76,14 +77,13 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
                 object_list = object_list.filter(position__salary=int(text))
             else:
                 object_list = object_list.filter(
-                    Q(title__contains=text) |
-                    Q(experience__skills__contains=text) |
-                    Q(experience__about__contains=text) |
-                    Q(position__title__contains=text) |
-                    Q(position__employment__contains=text) |
-                    Q(position__schedule__contains=text) |
-                    Q(position__relocation__contains=text) |
-                    Q(position__business_trip__contains=text)
+                    Q(title__icontains=text) |
+                    Q(experience__skills__icontains=text) |
+                    Q(experience__about__icontains=text) |
+                    Q(position__position__icontains=text) |
+                    Q(position__employment_type__icontains=text) |
+                    Q(position__relocation__icontains=text) |
+                    Q(position__business_trip__icontains=text)
                 )
         return object_list
 
@@ -103,31 +103,37 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
         # Check if normal search was invoked
         if 'search' in self.request.GET and (text := self.request.GET['search']):
             jobseekers = jobseekers_cities.filter(
-                Q(first_name__contains=text) |
-                Q(last_name__contains=text)
+                Q(first_name__icontains=text) |
+                Q(last_name__icontains=text)
             )
             if text.isnumeric():
                 resumes = object_list.exclude(id__in=response_resumes_ids).filter(position__salary=int(text))
             else:
                 resumes = object_list.exclude(id__in=response_resumes_ids).filter(
-                    Q(experience__skills=text) |
-                    Q(position__title=text) |
-                    Q(position__employment=text) |
-                    Q(position__schedule=text) |
-                    Q(position__relocation=text) |
-                    Q(position__business_trip=text)
+                    Q(experience__skills__icontains=text) |
+                    Q(experience__about__icontains=text) |
+                    Q(position__position__icontains=text) |
+                    Q(position__employment_type__icontains=text) |
+                    Q(position__relocation__icontains=text) |
+                    Q(position__business_trip__icontains=text)
                 )
             if jobseekers:
                 new_resumes = []
                 for jobseeker in jobseekers:
                     js_resumes = list(object_list.exclude(id__in=response_resumes_ids).filter(user=jobseeker.user))
-                    new_resumes.extend(js_resumes)
+                    if isinstance(js_resumes, Iterable):
+                        new_resumes.extend(js_resumes)
+                    else:
+                        new_resumes.append(js_resumes)
                 resumes = new_resumes
             elif resumes:
                 new_resumes = []
                 for resume in resumes:
                     if jobseekers_cities.filter(user=resume.user).exists():
-                        new_resumes.extend(resume)
+                        if isinstance(resume, Iterable):
+                            new_resumes.extend(resume)
+                        else:
+                            new_resumes.append(resume)
                 resumes = new_resumes
             else:
                 resumes = []
