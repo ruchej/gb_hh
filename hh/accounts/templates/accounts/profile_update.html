@@ -38,16 +38,15 @@
                     <div class="mt-20">
                         {{ form.avatar|as_crispy_field }}
                     </div>
-                    <div class="mt-20">
+                    <div class="mt-20 d-flex justify-content-between">
                         <button type="submit" class="genric-btn primary">Изменить</button>
+                        <a style="position: absolute;
+                                      right: 30px;"
+                           class="genric-btn warning"
+                           href="{% url 'accounts:password_change' %}">Сменить пароль</a>
                     </div>
                 </form>
             </div>
         </div>
     </section>
 {% endblock %}
-
-<div class="row">
-    <div class="col-12">
-    </div>
-</div>
