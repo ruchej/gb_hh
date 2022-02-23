@@ -15,7 +15,10 @@
                 {% if vacancy.hashtags %}
                     {% for hashtag in vacancy.hashtags_as_list %}
                         <li>
-                            <a href="#">{{ hashtag|truncatechars:17 }}</a>
+                            <a href="{% url 'vacancies:vacancy_list' %}?search={{ hashtag }}"
+                               class="hashtag">
+                                {{ hashtag|truncatechars:17 }}
+                            </a>
                         </li>
                     {% endfor %}
                 {% endif %}

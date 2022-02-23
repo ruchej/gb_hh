@@ -72,12 +72,22 @@ function searchClear(event) {
     searchAjax(link);
 }
 
+function searchHashtag(event) {
+    event.preventDefault();
+    const regex = /\/\?search=([^\/]+)/;
+    let link = $(this).attr('href');
+    let text = regex.exec(link)[1];
+    $('.search-input-ajax').val(text);
+    searchAjax(link);
+}
+
 window.onload = () => {
     $('.search-cities-ajax').on('click', 'a', cityAjax);
     $('.search-vacancies-ajax').on('click', 'a', vacanciesAjax);
     $('.ajax-search').submit(searchSubmit);
     $('.show-more-cities').click(showMoreCities);
     $('.show-more-vacancies').click(showMoreVacancies);
+    $('.hashtag').click(searchHashtag);
     // Too laggy
     // $('.search-input-ajax').on('input', searchSubmit);
     $('.clear-link').on('click', searchClear);

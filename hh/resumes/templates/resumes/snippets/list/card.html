@@ -18,8 +18,6 @@
         <div class="thumb justify-content-center">
             {% if resume.photo %}
                 <a href="
-
-
                         {% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
                     <img src="{{ resume.photo.url }}" style="object-fit: cover; width: 120px; height: 120px">
                 </a>
@@ -28,7 +26,10 @@
                 {% if resume.experience.skills %}
                     {% for hashtag in resume.experience.skills_as_list %}
                         <li>
-                            <a href="#">{{ hashtag|truncatechars:17 }}</a>
+                            <a href="{% url 'resumes:resume_list' %}?search={{ hashtag }}"
+                               class="hashtag">
+                                {{ hashtag|truncatechars:17 }}
+                            </a>
                         </li>
                     {% endfor %}
                 {% endif %}
@@ -41,6 +42,7 @@
                         <a href="
 
 
+
                                 {% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
                             <h4>
                                 {{ resume.title }}
@@ -48,6 +50,7 @@
                         </a>
                     {% elif user.status == user_status_choices.EMPLOYER %}
                         <a href="
+
 
 
                                 {% url 'resumes:resume_detail' resume.id %}{% if response %}?vac_id={{ response.vacancy.id }}{% endif %}">
@@ -99,7 +102,7 @@
                 <p class="mb-1">
                     <span class="fa fa-id-badge"></span> {{ resume.position.position|default:'Не указан' }}
                 </p>
-                {% if not salary or salary == 'Не указана'%}
+                {% if not salary or salary == 'Не указана' %}
                     <p class="mb-1">
                         <span class="fa fa-money"></span> {{ resume.position.salary|default:'Не указана' }}
                     </p>
