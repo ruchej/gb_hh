@@ -4,6 +4,6 @@ function showMoreJobs(event) {
     $('.show-more-jobs').hide();
 }
 
-window.onload = () => {
+$(document).ready(function () {
     $('.show-more-jobs').click(showMoreJobs);
-}
+});
