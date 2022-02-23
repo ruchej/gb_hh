@@ -74,7 +74,7 @@
                 <span class="fa fa-money"></span> {{ vacancy.salary|default:'Зарплата не указана' }}
             </p>
             <p class="mb-1">
-                <span class="fa fa-question"></span>
+                <span class="fa fa-info"></span>
                 {% if vacancy.description %}
                     {{ vacancy.description|striptags|truncatewords:20 }}
                 {% else %}
