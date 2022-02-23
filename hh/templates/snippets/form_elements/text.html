@@ -5,10 +5,11 @@
         </div>
     {% endif %}
     <input type="{% if type %}{{ type }}{% else %}text{% endif %}"
-           name="{{ field.html_name }}" placeholder="{{ field.label }}"
+           name="{{ field.html_name }}"
+           placeholder="{{ field.label }}{{ add }}"
            {% if disabled %}disabled{% endif %}
            onfocus="this.placeholder = ''"
-           onblur="this.placeholder = '{{ field.label }}'"
+           onblur="this.placeholder = '{{ field.label }}{{ add }}'"
            {% if field.value %}value="{{ field.value }}"{% endif %}
            class="single-input{% if required %}-accent{% endif %}"
            {% if required %}required=""{% endif %}>
