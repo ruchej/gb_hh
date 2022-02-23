@@ -12,18 +12,17 @@
                                  style="max-width: 150px; max-height: 150px"/>
                         </div>
                         <div class="userData ml-3 flex-row">
-                            <h2 class="d-block mb-3" style="font-size: 2rem; font-weight: bold">
-                                {{ object }}
-                            </h2>
-                            <a class="genric-btn primary" href="{% url 'accounts:profile-update' %}">
-                                Редактировать
-                            </a>
+                            <h2 class="d-block mb-3" style="font-size: 2rem; font-weight: bold">{{ object }}</h2>
+                            <a class="genric-btn primary" href="{% url 'accounts:profile-update' %}">Редактировать</a>
+                            <a style="position: absolute;
+                                      right: 30px;"
+                               class="genric-btn primary"
+                               href="{% url 'accounts:password_change' %}">Сменить пароль</a>
                         </div>
                     </div>
                 </div>
                 {% include 'snippets/form_elements/basic.html' with value=user.username icon='fa-user-circle' disabled=True %}
                 {% include 'snippets/form_elements/basic.html' with value=user.email icon='fa-mail-forward' disabled=True %}
-
                 {% if user.status == user_status_choices.JOBSEEKER %}
                     {% include 'accounts/snippets/detail/jobseeker_card.html' %}
                 {% elif user.status == user_status_choices.EMPLOYER %}
