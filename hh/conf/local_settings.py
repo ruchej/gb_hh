@@ -3,7 +3,6 @@ from environs import Env
 env = Env()
 env.read_env()
 
-
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
@@ -15,3 +14,5 @@ DB_LOGIN = env('POSTGRES_USER')
 DB_PASS = env('POSTGRES_PASSWORD')
 REDIS_HOST = env('REDIS_HOST')
 REDIS_PORT = env('REDIS_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')

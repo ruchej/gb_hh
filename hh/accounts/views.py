@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     UserPassesTestMixin,
 )
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetConfirmView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetConfirmView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.http import HttpResponseRedirect
