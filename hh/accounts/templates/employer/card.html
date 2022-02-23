@@ -10,18 +10,18 @@
         </div>
         <div class="col mx-auto mb-3">
             <p class="mb-1">
-                <span class="lnr lnr-map"></span> {{ object.city.name|default:"" }}
+                <span class="fa fa-map"></span> {{ object.city.name|default:"" }}
             </p>
             {% if object.address %}
                 <p class="mb-1">
-                    <span class="lnr lnr-home"></span> {{ object.address|default:"" }}
+                    <span class="fa fa-thumb-tack"></span> {{ object.address|default:"" }}
                 </p>
             {% endif %}
             <p class="mb-1">
-                <span class="lnr lnr-phone"></span> {{ object.phone|default:"" }}
+                <span class="fa fa-phone"></span> {{ object.phone|default:"" }}
             </p>
             <a class="mb-1" href="{% url 'vacancies:vacancy_list' %}?search={{ object.name }}">
-                <span class="lnr lnr-briefcase"></span> Вакансий: {{ object.vacancy_amount }}
+                <span class="fa fa-briefcase"></span> Вакансий: {{ object.vacancy_amount }}
             </a>
         </div>
     </div>
