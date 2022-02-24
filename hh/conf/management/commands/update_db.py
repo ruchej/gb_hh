@@ -40,6 +40,9 @@ class Command(BaseCommand):
         if not User.objects.filter(username='admin').exists():
             User.objects.create_superuser('admin', 'suser@example.local', 'admin',
                                           status=UserStatusChoices.MODERATOR)
+
+    @staticmethod
+    def create_custom_users():
         if not User.objects.filter(username='employer').exists():
             employer = User.objects.create_superuser('employer', 'employer@employer.employer', 'A1234567a',
                                                      status=UserStatusChoices.EMPLOYER)
@@ -206,6 +209,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
+            '-d',
+            '--deploy',
+            action='store_true',
+            default=False,
+            help='Fill database using fixtures for deploy'
+        )
+        parser.add_argument(
             '-j',
             '--json',
             action='store_true',
@@ -247,17 +257,26 @@ class Command(BaseCommand):
             self.add_blog_from_fixtures()
 
             self.create_suser()
+            self.create_custom_users()
 
-            # self.create_jobseekers()
-            # self.create_jobs()
-            # self.create_resumes()
+            self.create_jobseekers()
+            self.create_jobs()
+            self.create_resumes()
 
             self.add_employers_from_fixtures()
             self.add_vacancies_from_fixtures()
 
-            # self.create_responses()
-            # self.create_offers()
+            self.create_responses()
+            self.create_offers()
 
             # self.create_blog()
+        elif options.get('deploy'):
+            self.import_fixtures()
+
+            self.create_suser()
+
+            self.add_blog_from_fixtures()
+            self.add_employers_from_fixtures()
+            self.add_vacancies_from_fixtures()
         elif options.get('clear'):
             self.clear_db()
