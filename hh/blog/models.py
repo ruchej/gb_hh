@@ -10,7 +10,7 @@ from django.utils.text import slugify
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True,
                             db_index=True, verbose_name='URL', editable=False)
     short_description = models.CharField(max_length=200)
