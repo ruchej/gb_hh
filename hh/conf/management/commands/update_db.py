@@ -33,6 +33,7 @@ class Command(BaseCommand):
     help = 'Update database with test data.'
     employers_fixtures = []
     vacancies_fixtures = []
+    news_fixtures = []
 
     @staticmethod
     def create_suser():
@@ -155,6 +156,8 @@ class Command(BaseCommand):
             self.employers_fixtures = json.load(f, strict=False)
         with open('conf/fixtures/vacancies.json', 'r', encoding='utf-8') as f:
             self.vacancies_fixtures = json.load(f, strict=False)
+        with open('conf/fixtures/news.json', 'r', encoding='utf-8') as f:
+            self.news_fixtures = json.load(f, strict=False)
 
     def add_employers_from_fixtures(self):
         for employer_data in self.employers_fixtures:
@@ -189,6 +192,15 @@ class Command(BaseCommand):
                             salary=salary,
                             address=vacancy_data['address'] if 'address' in vacancy_data else '',
                             status=PublicStatusChoices.PUBLISHED)
+
+    def add_blog_from_fixtures(self):
+        for news_data in self.news_fixtures:
+            news = mixer.blend(blog_models.Article,
+                               title=news_data['title'],
+                               description=news_data['description'],
+                               author=news_data['author'])
+            news.image = news_data['photo']
+            news.save()
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -230,18 +242,19 @@ class Command(BaseCommand):
             self.create_blog()
         elif options.get('json'):
             self.import_fixtures()
+            self.add_blog_from_fixtures()
 
             self.create_suser()
 
-            self.create_jobseekers()
-            self.create_jobs()
-            self.create_resumes()
+            # self.create_jobseekers()
+            # self.create_jobs()
+            # self.create_resumes()
 
             self.add_employers_from_fixtures()
             self.add_vacancies_from_fixtures()
 
-            self.create_responses()
-            self.create_offers()
+            # self.create_responses()
+            # self.create_offers()
 
             self.create_blog()
         elif options.get('clear'):
