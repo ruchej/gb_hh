@@ -258,6 +258,6 @@ class Command(BaseCommand):
             # self.create_responses()
             # self.create_offers()
 
-            self.create_blog()
+            # self.create_blog()
         elif options.get('clear'):
             self.clear_db()
