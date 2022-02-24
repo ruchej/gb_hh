@@ -194,6 +194,7 @@ class ResumeCreateView(CreateView):
         context['contacts_form'] = forms.ContactsForm(self.request.POST)
         context['position_form'] = forms.PositionForm(self.request.POST)
         context['experience_form'] = forms.ExperienceForm(self.request.POST)
+        context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
         return context
 
     def get_form_kwargs(self):
