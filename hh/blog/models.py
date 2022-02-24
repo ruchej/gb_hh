@@ -1,5 +1,6 @@
 from hashlib import blake2b
 from re import T
+from unidecode import unidecode
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -11,7 +12,7 @@ from django.utils.text import slugify
 class Article(models.Model):
     title = models.CharField(max_length=64)
     slug = models.SlugField(max_length=255, unique=True,
-                            db_index=True, verbose_name='URL', default='', editable=False)
+                            db_index=True, verbose_name='URL', editable=False)
     short_description = models.CharField(max_length=200)
     description = models.TextField(max_length=1000)
     image = models.ImageField(upload_to='blog/%Y/%m/%d/', blank=True)
@@ -25,7 +26,7 @@ class Article(models.Model):
 
     def save(self, *args, **kwargs):
         value = self.title
-        self.slug = slugify(value, allow_unicode=True)
+        self.slug = slugify(unidecode(value), allow_unicode=True)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
