@@ -11,6 +11,7 @@
            onfocus="this.placeholder = ''"
            onblur="this.placeholder = '{{ field.label }}{{ add }}'"
            {% if field.value %}value="{{ field.value }}"{% endif %}
+           {% if value %}value="{{ value }}"{% endif %}
            class="single-input{% if required %}-accent{% endif %}"
            {% if required %}required=""{% endif %}>
     {% for error in field.errors %}

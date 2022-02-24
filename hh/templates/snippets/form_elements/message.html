@@ -13,9 +13,10 @@
               onblur="this.placeholder = '{{ field.label }}{{ add }}'"
               class="single-textarea{% if required %}-accent{% endif %}"
               {% if required %}required=""{% endif %}>{% if field.data.value %}
-        {{ field.data.value }}{% endif %}</textarea>
+        {{ field.data.value }}{% endif %}{% if value %}value="{{ value }}"{% endif %}</textarea>
     <input type="text" name="{{ field.html_name }}" hidden id="input-{{ field.html_name }}"
-           {% if field.value %}value="{{ field.value }}"{% endif %}>
+           {% if field.value %}value="{{ field.value }}"{% endif %}
+           {% if value %}value="{{ value }}"{% endif %}>
     {% for error in field.errors %}
         <div style="color: red">
             <i class="fa fa-info mr-2 mb-2"></i><strong>{{ error|escape }}</strong>
