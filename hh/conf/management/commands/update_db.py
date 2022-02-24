@@ -201,6 +201,8 @@ class Command(BaseCommand):
                                author=news_data['author'])
             news.image = news_data['photo']
             news.save()
+        for _ in range(random.randint(10, 20)):
+            mixer.blend(blog_models.Article)
 
     def add_arguments(self, parser):
         parser.add_argument(
