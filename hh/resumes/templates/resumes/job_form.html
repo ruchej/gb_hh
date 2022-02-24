@@ -9,7 +9,7 @@
                     {% csrf_token %}
                     {% include 'snippets/form_elements/text.html' with field=form.organization required=True icon='fa-building' %}
                     {% include 'snippets/form_elements/date.html' with field=form.start required=True icon='fa-play' %}
-                    {% include 'snippets/form_elements/date.html' with field=form.end required=True icon='fa-stop' %}
+                    {% include 'snippets/form_elements/date.html' with field=form.end icon='fa-stop' %}
                     {% include 'snippets/form_elements/text.html' with field=form.site icon='fa-external-link' %}
                     {% include 'snippets/form_elements/text.html' with field=form.scope required=True icon='fa-suitcase' %}
                     {% include 'snippets/form_elements/text.html' with field=form.position required=True icon='fa-id-badge' %}

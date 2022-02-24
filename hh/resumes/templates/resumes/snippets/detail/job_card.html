@@ -3,7 +3,7 @@
         {{ job.position }}
     </h4>
     <p class="mb-0">
-        с {{ job.start }} по {{ job.end }}
+        с {{ job.start }} по {{ job.end|default:'настоящее время' }}
     </p>
 </div>
 <div class="col mx-auto mb-3 pl-0">

@@ -81,7 +81,7 @@ class Job(models.Model):
     user = models.ForeignKey(User, verbose_name=_('пользователь'), on_delete=models.CASCADE, db_index=True)
     organization = models.CharField(verbose_name=_('организация'), max_length=128)
     start = models.DateField(verbose_name=_('начало работы'))
-    end = models.DateField(verbose_name=_('окончание работы'))
+    end = models.DateField(verbose_name=_('окончание работы'), null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.PROTECT, db_index=True,
                              null=True, blank=True, verbose_name=_('город'))
     site = models.URLField(verbose_name=_('сайт'), blank=True)

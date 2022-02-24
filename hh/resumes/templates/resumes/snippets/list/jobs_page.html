@@ -7,7 +7,7 @@
                     <h4>{{ job }}</h4>
                 </a>
                 <div class="meta justify-content-between d-flex">
-                    <p>с {{ job.start }} до {{ job.end }}</p>
+                    <p>с {{ job.start }} по {{ job.end|default:'настоящее время' }}</p>
                 </div>
             </li>
         {% endfor %}
