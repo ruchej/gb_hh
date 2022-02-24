@@ -34,7 +34,8 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
         return context
 
     def get_queryset(self):
-        return super().get_queryset().filter(vacancy__employer=self.request.user, accepted=False, rejected=False)
+        return super().get_queryset().filter(vacancy__employer=self.request.user,
+                                             accepted=False, rejected=False).order_by('-published_at')
 
     def render_to_response(self, context, **response_kwargs):
         if self.request.user.status == UserStatusChoices.JOBSEEKER:
