@@ -1,5 +1,6 @@
 from collections import Counter
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect
@@ -10,7 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 
 from . import models
-from accounts.models import JobSeeker, Employer, UserStatus
+from accounts.models import JobSeeker, Employer
+from conf.choices import UserStatusChoices
 from resumes.models import Resume
 from vacancies.models import Vacancy
 from el_pagination.views import AjaxListView
@@ -32,10 +34,11 @@ class ResponseListView(LoginRequiredMixin, AjaxListView):
         return context
 
     def get_queryset(self):
-        return super().get_queryset().filter(vacancy__employer=self.request.user, accepted=False, rejected=False)
+        return super().get_queryset().filter(vacancy__employer=self.request.user,
+                                             accepted=False, rejected=False).order_by('-published_at')
 
     def render_to_response(self, context, **response_kwargs):
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             return redirect('blog:news')
         if self.request.is_ajax() and 'page' not in self.request.GET:
             result = render_to_string(self.page_template, context=context, request=self.request)
@@ -129,9 +132,6 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
     template_name = 'recruiting/response_create.html'
     model = models.Response
 
-    def dispatch(self, request, *args, **kwargs):
-        return super(ResponseCreateView, self).dispatch(request, *args, **kwargs)
-
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResponseCreateView, self).get_context_data(object_list=object_list, **kwargs)
         context['vacancy'] = Vacancy.objects.get(id=context['v_pk'])
@@ -153,19 +153,15 @@ class ResponseCreateView(LoginRequiredMixin, TemplateView):
             return redirect('vacancies:vacancy_list')
         return super(ResponseCreateView, self).render_to_response(context, **response_kwargs)
 
-
-def response_accept(request, r_pk):
-    response = models.Response.objects.get(id=r_pk)
-    response.accepted = True
-    response.rejected = False
-    response.save()
-
-
-def response_reject(request, r_pk):
-    response = models.Response.objects.get(id=r_pk)
-    response.accepted = False
-    response.rejected = True
-    response.save()
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        vacancy = context['vacancy']
+        resumes = context['resumes']
+        if request.user.status != UserStatusChoices.JOBSEEKER or \
+                models.Response.objects.filter(vacancy=vacancy,
+                                               resume__in=resumes).exists():
+            return redirect('vacancies:vacancy_list')
+        return self.render_to_response(context)
 
 
 class ResponseDeleteView(LoginRequiredMixin, CreateView):
@@ -174,28 +170,23 @@ class ResponseDeleteView(LoginRequiredMixin, CreateView):
     model = models.Response
 
 
-class OfferListView(LoginRequiredMixin, ListView):
-    """View for getting list of offers."""
-
-    model = models.Offer
-
-
-def offer_create(v_pk, r_pk=None):
-    models.Offer.objects.create(resume__id=r_pk, vacancy__id=v_pk)
+@login_required
+def response_accept(request, r_pk):
+    response = models.Response.objects.get(id=r_pk)
+    response.accepted = True
+    response.rejected = False
+    response.save()
 
 
-class OfferCreateView(LoginRequiredMixin, CreateView):
-    """View for creating offer."""
-
-    model = models.Offer
-
-
-class OfferDeleteView(LoginRequiredMixin, CreateView):
-    """View for deleting offer."""
-
-    model = models.Offer
+@login_required
+def response_reject(request, r_pk):
+    response = models.Response.objects.get(id=r_pk)
+    response.accepted = False
+    response.rejected = True
+    response.save()
 
 
+@login_required
 def get_notifications(request):
     from conf.context_processor import new_responses
     if request.is_ajax():

@@ -3,16 +3,20 @@
 {% load static %}
 {% block content %}
     <section class="post-area section-gap">
-        <div class="container col-3">
-            <form method="post">
-                {% csrf_token %}
-                {{ form.username|as_crispy_field }}
-                {{ form.password|as_crispy_field }}
-                <button type="submit" class="btn btn-primary">Войти</button>
-            </form>
-            <div class="text-lg-start">
-                <a class="hidden-link" href="{% url 'accounts:user-create' %}">или создайте учётную
-                    запись</a>
+        <div class="container d-flex justify-content-center">
+            <div class="col-lg-4 col-md-4">
+                <form method="post">
+                    {% csrf_token %}
+                    {% include 'snippets/form_elements/text.html' with field=form.username required=True icon='fa-user' %}
+                    {% include 'snippets/form_elements/text.html' with field=form.password icon='fa-key' type='password' %}
+                    <div class="mt-20">
+                        <button type="submit" class="genric-btn primary">Войти</button>
+                    </div>
+                </form>
+                <div class="text-lg-start">
+                    <a class="hidden-link" href="{% url 'accounts:user-create' %}">или создайте учётную
+                        запись</a>
+                </div>
             </div>
         </div>
     </section>

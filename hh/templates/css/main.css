@@ -1288,11 +1288,12 @@ h1, h2, h3, h4, h5, h6 {
   color: #797979;
 }
 
-.input-group-icon .single-input {
+.input-group-icon .single-input, .input-group-icon .single-input-accent,
+.input-group-icon .single-textarea, .input-group-icon .single-textarea-accent {
   padding-left: 45px;
 }
 
-.single-textarea {
+.single-textarea, .single-textarea-accent {
   display: block;
   width: 100%;
   line-height: 40px;
@@ -1306,6 +1307,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .single-textarea:focus {
   outline: none;
+}
+.single-textarea-accent:focus {
+  outline: none;
+  border: 1px solid #eb6b55;
 }
 
 .single-input-primary {
@@ -1574,7 +1579,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .primary-checkbox input:checked + label {
-  background: url(../img/elements/primary-check.png) no-repeat center center/cover;
+  background: url(../img/primary-check.png) no-repeat center center/cover;
   border: none;
 }
 
@@ -1798,6 +1803,8 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: none;
   width: 100%;
   padding: 10px 0 10px 0px;
+  max-height: 200px;
+  overflow-y: scroll !important;
 }
 
 .default-select .nice-select .list .option {
@@ -4193,4 +4200,64 @@ body.mobile-nav-active #mobile-nav-toggle {
   border-radius: 50%;
   background: red;
   color: white;
+}
+
+.panel-card {
+  border: 0;
+}
+
+.panel-heading {
+  padding: 0;
+  border: 0;
+}
+
+.panel-title > a, .panel-title > a:active {
+  display: block;
+  padding: 15px;
+  color: #000000;
+  background-color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  word-spacing: 3px;
+  text-decoration: none;
+}
+
+.btn-nav-accordion[aria-expanded="true"] .fa-angle-down {
+  transform: rotate(-180deg);
+}
+
+.fa-angle-down {
+    transition: all 0.3s ease;
+ }
+
+.job-details li:before {
+  content:url('../img/list.jpg');
+  position:relative;
+  top: 3px;
+  right: 10px;
+}
+
+.job-details ul {
+  padding-left: 10px;
+}
+
+.job-details ul li, .job-details ul li p {
+  color: black;
+  margin-bottom: 30px;
+}
+
+.job-details p {
+  font-size: 16px;
+}
+
+.job-details p strong {
+  font-weight: bold;
+  font-size: 18px;
+  color: black;
+  margin-bottom: 20px;
+}
+.job-details strong {
+  font-weight: bold;
+  color: black;
 }

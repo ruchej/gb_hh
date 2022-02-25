@@ -13,5 +13,4 @@ class VacancyForm(forms.ModelForm):
             'employment_type',
             'experience',
             'salary',
-            'status'
         )

@@ -1,5 +1,17 @@
 let getUrl = window.location;
 
+function reloadSelect() {
+    if (document.getElementById('default-select')) {
+        $('select').niceSelect();
+    }
+    if (typeof setStatusHandler !== 'undefined') {
+        setStatusHandler();
+    }
+}
+
+function favoritesHandler($icon, url) {
+}
+
 function activateFavorites() {
     $('.favorite-icon').on('click', (event) => {
         let iconSpan = event.target.localName === 'span' ? event.target : event.target.querySelector('span');
@@ -13,6 +25,7 @@ function activateFavorites() {
             iconSpan.classList.add('lnr-star');
         }
         $.ajax({url});
+        favoritesHandler(iconSpan, url);
     });
 }
 
@@ -176,4 +189,5 @@ $(document).ready(function () {
     if ($('.resp-nav-notif')[0]) {
         setInterval(updateRespNav, 5000);
     }
+    $('.single-slidebar ul li:gt(3)').hide();
 });

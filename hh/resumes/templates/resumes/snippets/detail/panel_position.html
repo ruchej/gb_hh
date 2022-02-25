@@ -1,67 +1,32 @@
-<section>
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">Должность</label>
+<div class="single-slidebar">
+    <div class="pl-30">
+        <div class="col mx-auto mb-2">
+            <h4>
+                Ищу
+            </h4>
         </div>
-        <div class="col-md-8 col-6">
-            {{ resume.position.title }}
-        </div>
-    </div>
-    <hr/>
-
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">Зарплата</label>
-        </div>
-        <div class="col-md-8 col-6">
-            {{ resume.position.salary }}
-        </div>
-    </div>
-    <hr/>
-
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">Занятость</label>
-        </div>
-        <div class="col-md-8 col-6">
-            {{ resume.position.employment }}
-        </div>
-    </div>
-    <hr/>
-
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">График</label>
-        </div>
-        <div class="col-md-8 col-6">
-            {{ resume.position.schedule }}
+        <div class="col mx-auto mb-3">
+            <p class="mb-1">
+                <span class="fa fa-id-badge"></span> {{ resume.position.position|default:'Не указан' }}
+            </p>
+            {% if not salary or salary == 'Не указана'%}
+                <p class="mb-1">
+                    <span class="fa fa-money"></span> {{ resume.position.salary|default:'Не указана' }}
+                </p>
+            {% else %}
+                <p class="mb-1">
+                    <span class="fa fa-money"></span> от {{ resume.position.salary|default:'Не указана' }} руб.
+                </p>
+            {% endif %}
+            <p class="mb-1">
+                <span class="fa fa-clock-o"></span> {{ resume.position.get_employment_type_display|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-car"></span> Переезд: {{ resume.position.get_relocation_display|default:'Не указан' }}
+            </p>
+            <p class="mb-1">
+                <span class="fa fa-plane"></span> Командировки: {{ resume.position.get_business_trip_display|default:'Не указан' }}
+            </p>
         </div>
     </div>
-    <hr/>
-
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">Переезд</label>
-        </div>
-        <div class="col-md-8 col-6">
-            {{ resume.position.get_relocation_display }}
-        </div>
-    </div>
-    <hr/>
-
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">Командировки</label>
-        </div>
-        <div class="col-md-8 col-6">
-            {{ resume.position.get_business_trip_display }}
-        </div>
-    </div>
-    <hr/>
-
-    {% if user == resume.user %}
-        <a class="ticker-btn" href="{% url 'resumes:position_update' resume.position.id %}">
-            Изменить
-        </a>
-    {% endif %}
-</section>
+</div>

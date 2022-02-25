@@ -1,0 +1,89 @@
+version: '3.1'
+
+services:
+  backend:
+    container_name: gb_hh_backend
+    build:
+      context: ./hh
+      dockerfile: Dockerfile
+    command: gunicorn conf.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/code
+      - static_volume:/home/app/backend/templates
+      - media_volume:/home/app/backend/media
+    expose:
+      - 8000
+    networks:
+      - webnet
+      - redisnet
+    links:
+      - redis
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+  backend_asgi:
+    container_name: gb_hh_backend_asgi
+    build:
+      context: ./hh
+      dockerfile: Dockerfile
+    command: daphne -b 0.0.0.0 -p 8000 conf.asgi:application
+    networks:
+      - webnet
+      - redisnet
+    volumes:
+      - .:/code
+    links:
+      - redis
+    env_file:
+      - ./.env
+
+  db:
+    container_name: gb_hh_db
+    image: postgres:13.0-alpine
+    privileged: true
+    ports:
+      - "5432:5432"
+    networks:
+      - webnet
+      - redisnet
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+
+  redis:
+    container_name: gb_hh_redis
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+      - "6379:6379"
+    networks:
+      - redisnet
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+
+  nginx:
+    container_name: gb_hh_nginx
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/backend/templates
+      - media_volume:/home/app/backend/media
+    ports:
+      - "9080:80"
+    networks:
+      - webnet
+    depends_on:
+      - backend
+      - backend_asgi
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+
+networks:
+  webnet:
+  redisnet:

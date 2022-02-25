@@ -1,0 +1,14 @@
+<div class="mt-20">
+    <p>{{ field.label }}</p>
+    {% for choice in field %}
+        <div class="switch-wrap d-flex justify-content-start">
+            <div class="primary-checkbox">
+                {{ choice.tag }}
+                <label for="{{ choice.id_for_label }}"></label>
+            </div>
+            <p class="ml-3" style="font-size: 16px">
+                {{ choice.choice_label }}
+            </p>
+        </div>
+    {% endfor %}
+</div>

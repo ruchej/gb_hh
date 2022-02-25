@@ -4,6 +4,8 @@ class Chat {
         this.chatClass = `chat-${chatId}`
         this.socket = this.establishConnection(chatId);
         this.setHandlers();
+        $('.contacts-loading').hide();
+        $(`.${this.chatClass}-alert`).show();
     }
 
     establishConnection(chatId) {

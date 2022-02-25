@@ -1,0 +1,18 @@
+<div class="single-slidebar">
+    <h4>Ваш опыт работы</h4>
+    <ul class="blog-list jobs-ajax">
+        {% for job in jobs %}
+            <li class="single-blog">
+                <a href="{% url 'resumes:job_update' job.id %}">
+                    <h4>{{ job }}</h4>
+                </a>
+                <div class="meta justify-content-between d-flex">
+                    <p>с {{ job.start }} по {{ job.end|default:'настоящее время' }}</p>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="#" class="mt-0 mb-0 pt-0 pb-0 show-more-jobs">
+        Показать больше
+    </a>
+</div>

@@ -49,6 +49,11 @@ class DetailPost(DetailView):
     template_name = 'blog/article_detail.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super(DetailPost, self).get_context_data(**kwargs)
+        context['title'] = context['post'].title
+        return context
+
 
 def rss_parser(request):
     url = 'https://lenta.ru/rss/top7'

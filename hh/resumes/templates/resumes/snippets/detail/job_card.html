@@ -1,59 +1,28 @@
-<div class="row">
-    <div class="col-sm-3 col-md-2 col-5">
-        <label style="font-weight:bold;">Фирма</label>
-    </div>
-    <div class="col-md-8 col-6">
-        {{ job.organization }}
-    </div>
+<div class="d-flex justify-content-between mb-2">
+    <h4 class="mt-0">
+        {{ job.position }}
+    </h4>
+    <p class="mb-0">
+        с {{ job.start }} по {{ job.end|default:'настоящее время' }}
+    </p>
 </div>
-<hr/>
-<div class="row">
-    <div class="col-sm-3 col-md-2 col-5">
-        <label style="font-weight:bold;">Сфера</label>
-    </div>
-    <div class="col-md-8 col-6">
-        {{ job.scope }}
-    </div>
+<div class="col mx-auto mb-3 pl-0">
+    <p class="mb-1">
+        <span class="fa fa-building"></span> {{ job.organization|default:'Не указан' }}
+    </p>
+    <p class="mb-1">
+        <span class="fa fa-map"></span> {{ job.city|default:'Не указан' }}
+    </p>
+    <p class="mb-1">
+        <a {% if job.site %}href="{{ job.site }}"{% endif %}
+           style="color: #777777">
+            <span class="fa fa-external-link"></span> {{ job.site|default:'Не указана' }}
+        </a>
+    </p>
+    <p class="mb-1">
+        <span class="fa fa-info mr-2"></span> Сфера деятельности компании: {{ job.scope|default:'Не указан' }}
+    </p>
+    <p class="mb-1">
+        <span class="fa fa-question mr-1"></span> Обязанности: {{ job.functions|default:'Не указан' }}
+    </p>
 </div>
-<hr/>
-<div class="row">
-    <div class="col-sm-3 col-md-2 col-5">
-        <label style="font-weight:bold;">Локация</label>
-    </div>
-    <div class="col-md-8 col-6">
-        {{ job.location }}
-    </div>
-</div>
-<hr/>
-<div class="row">
-    <div class="col-sm-3 col-md-2 col-5">
-        <label style="font-weight:bold;">Сайт</label>
-    </div>
-    <div class="col-md-8 col-6">
-        {{ job.site }}
-    </div>
-</div>
-<hr/>
-<div class="row">
-    <div class="col-sm-3 col-md-2 col-5">
-        <label style="font-weight:bold;">Период работы</label>
-    </div>
-    <div class="col-md-8 col-6">
-        с {{ job.start }} до {{ job.end }}
-    </div>
-</div>
-<hr/>
-<div class="row">
-    <div class="col-sm-3 col-md-2 col-5">
-        <label style="font-weight:bold;">Обязанности</label>
-    </div>
-    <div class="col-md-8 col-6">
-        {{ job.functions }}
-    </div>
-</div>
-<hr/>
-{% if user == resume.user %}
-    <a class="ticker-btn" href="{% url 'resumes:job_update' job.id %}">
-        Изменить
-    </a>
-{% endif %}

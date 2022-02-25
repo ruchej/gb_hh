@@ -2,13 +2,8 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from cities_light.models import Country, City
-from smart_selects.db_fields import ChainedForeignKey
 
-
-class UserStatus(models.IntegerChoices):
-    MODERATOR = 0, _("Модератор")
-    JOBSEEKER = 1, _("Соискатель")
-    EMPLOYER = 2, _("Работодатель")
+from conf.choices import SexChoices, UserStatusChoices, PublicStatusChoices
 
 
 class AccountManager(UserManager):
@@ -18,18 +13,18 @@ class AccountManager(UserManager):
 
 class JobSeekerManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(user__status=UserStatus.JOBSEEKER)
+        return super().get_queryset().filter(user__status=UserStatusChoices.JOBSEEKER)
 
 
 class EmployerManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(user__status=UserStatus.EMPLOYER)
+        return super().get_queryset().filter(user__status=UserStatusChoices.EMPLOYER)
 
 
 class Account(AbstractUser):
     status = models.PositiveSmallIntegerField(
-        choices=UserStatus.choices,
-        default=UserStatus.JOBSEEKER,
+        choices=UserStatusChoices.choices,
+        default=UserStatusChoices.JOBSEEKER,
         verbose_name=_("Статус пользователя"),
         db_index=True
     )
@@ -69,11 +64,11 @@ class Account(AbstractUser):
         if not Contact.objects.filter(user=self).exists():
             contact = Contact(user=self)
             contact.save()
-        if self.status == UserStatus.EMPLOYER:
+        if self.status == UserStatusChoices.EMPLOYER:
             if not Employer.objects.filter(user=self).exists():
                 employer = Employer(user=self)
                 employer.save()
-        elif self.status == UserStatus.JOBSEEKER:
+        elif self.status == UserStatusChoices.JOBSEEKER:
             if not JobSeeker.objects.filter(user=self).exists():
                 seeker = JobSeeker(user=self)
                 seeker.save()
@@ -81,11 +76,6 @@ class Account(AbstractUser):
 
 class JobSeeker(models.Model):
     """Соискатель"""
-
-    class Sex(models.IntegerChoices):
-        WOMAN = 0, "Женщина"
-        MAN = 1, "Мужчина"
-        __empty__ = _('не выбрано')
 
     user = models.OneToOneField(
         Account, related_name="seeker", on_delete=models.PROTECT, verbose_name=_('Пользователь'),
@@ -102,7 +92,7 @@ class JobSeeker(models.Model):
     date_birth = models.DateField(
         blank=True, null=True, verbose_name=_("Дата рождения"))
     sex = models.BooleanField(
-        choices=Sex.choices, null=True, blank=True, verbose_name=_("Пол"))
+        choices=SexChoices.choices, null=True, blank=True, verbose_name=_("Пол"))
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("Телефон"))
     country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True,
@@ -117,7 +107,7 @@ class JobSeeker(models.Model):
         verbose_name_plural = _("Соискатели")
 
     def __str__(self):
-        full_name = f"{self.first_name} {self.patronymic} {self.last_name}".strip()
+        full_name = f"{self.first_name} {self.last_name}".strip()
         name = full_name if full_name else str(self.user)
         return name
 
@@ -129,11 +119,10 @@ class Employer(models.Model):
         Account, related_name="employer", on_delete=models.CASCADE, verbose_name=_("Работодатель")
     )
     name = models.CharField(
-        blank=True, null=True, max_length=50, verbose_name=_("название компании"),
+        blank=True, null=True, max_length=500, verbose_name=_("название компании"),
         db_index=True)
     description = models.TextField(
-        blank=True, null=True, verbose_name=_("Описание"),
-        db_index=True)
+        blank=True, null=True, verbose_name=_("Описание"))
     phone = models.CharField(max_length=20, blank=True,
                              verbose_name=_("телефон"))
     country = models.ForeignKey(Country, on_delete=models.PROTECT, null=True, blank=True,
@@ -149,3 +138,7 @@ class Employer(models.Model):
 
     def __str__(self):
         return self.name if self.name else str(self.user)
+
+    def vacancy_amount(self):
+        from vacancies.models import Vacancy
+        return Vacancy.objects.filter(employer=self.user, status=PublicStatusChoices.PUBLISHED).count()

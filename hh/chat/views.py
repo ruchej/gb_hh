@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -9,17 +10,18 @@ from django.db.models import Q
 from notifications.signals import notify
 
 from .models import Chat, Contact, Message
-from accounts.models import UserStatus, JobSeeker, Employer
+from accounts.models import JobSeeker, Employer
+from conf.choices import UserStatusChoices
 from resumes.models import Resume
 from recruiting.models import Response
-from recruiting.views import response_accept, response_reject
+from recruiting.views import response_accept, response_reject, NEW_RESUME_NOTIF
 
 User = get_user_model()
 
 NEW_MESSAGE = 'New message'
 
 
-class ChatListView(ListView, LoginRequiredMixin):
+class ChatListView(LoginRequiredMixin, ListView):
     model = Chat
     extra_context = {'title': 'Чат'}
 
@@ -36,7 +38,7 @@ class ChatListView(ListView, LoginRequiredMixin):
         return queryset
 
 
-class ChatAcceptView(TemplateView, LoginRequiredMixin):
+class ChatAcceptView(LoginRequiredMixin, TemplateView):
     extra_context = {'title': 'Сообщение кандидату'}
     template_name = 'chat/chat_accept.html'
 
@@ -56,8 +58,16 @@ class ChatAcceptView(TemplateView, LoginRequiredMixin):
         context['responding'] = True
         return context
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.user.status != UserStatusChoices.EMPLOYER or \
+                context['response'].vacancy.employer != request.user or \
+                context['response'].accepted or context['response'].rejected:
+            return redirect('blog:news')
+        return self.render_to_response(context)
 
-class ChatRejectView(TemplateView, LoginRequiredMixin):
+
+class ChatRejectView(LoginRequiredMixin, TemplateView):
     extra_context = {'title': 'Сообщение кандидату об отказе'}
     template_name = 'chat/chat_reject.html'
 
@@ -73,7 +83,16 @@ class ChatRejectView(TemplateView, LoginRequiredMixin):
         context['responding'] = True
         return context
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.user.status != UserStatusChoices.EMPLOYER or \
+                context['response'].vacancy.employer != request.user or \
+                context['response'].accepted or context['response'].rejected:
+            return redirect('blog:news')
+        return self.render_to_response(context)
 
+
+@login_required
 def create_chat_with_msg(request, chat, user_id):
     contact_employer = Contact.objects.get(user=request.user)
     contact_jobseeker = Contact.objects.get(user__id=user_id)
@@ -88,12 +107,18 @@ def create_chat_with_msg(request, chat, user_id):
     return redirect('chat:list')
 
 
+@login_required
 def accept_chat(request, user_id):
     if response_id := request.POST.get('response_id', None):
         response = Response.objects.get(id=response_id)
         response_accept(request, response_id)
         resume = response.resume
         chat = Chat(response=response)
+        notifs = [notif for notif in request.user.notifications.unread()
+                  if notif.verb == NEW_RESUME_NOTIF]
+        notifs_resumes = [notif.target for notif in notifs]
+        if resume in notifs_resumes:
+            notifs[notifs_resumes.index(resume)].mark_as_read()
     elif resume_id := request.POST.get('resume_id', None):
         resume = Resume.objects.get(id=resume_id)
         chat = Chat(resume=resume)
@@ -105,6 +130,7 @@ def accept_chat(request, user_id):
     return create_chat_with_msg(request, chat, user_id)
 
 
+@login_required
 def create_reject_chat(request, user_id):
     if response_id := request.POST.get('response_id', None):
         response = Response.objects.get(id=response_id)
@@ -119,12 +145,14 @@ def create_reject_chat(request, user_id):
     return create_chat_with_msg(request, chat, user_id)
 
 
+@login_required
 def get_notifications(request):
     from conf.context_processor import new_messages
     if request.is_ajax():
         return JsonResponse(new_messages(request))
 
 
+@login_required
 def read_notifications(request, chat_id=None, chat=None):
     if chat_id and not chat:
         chat = Chat.objects.get(id=chat_id)
@@ -134,6 +162,7 @@ def read_notifications(request, chat_id=None, chat=None):
             notif.save()
 
 
+@login_required
 def open_chat(request, chat_id):
     if request.is_ajax():
         chat = Chat.objects.get(id=chat_id)
@@ -156,21 +185,23 @@ def open_chat(request, chat_id):
     return redirect('blog:news')
 
 
+@login_required
 def get_last_message_text(request, user, text):
     if request.user == user:
         sender = 'Вы'
-    elif user.status == UserStatus.JOBSEEKER:
+    elif user.status == UserStatusChoices.JOBSEEKER:
         sender = JobSeeker.objects.get(user=user)
-        sender = f'{sender.first_name} {sender.last_name}'
-    elif user.status == UserStatus.EMPLOYER:
+        sender = str(sender)
+    elif user.status == UserStatusChoices.EMPLOYER:
         sender = Employer.objects.get(user=user)
-        sender = sender.name
+        sender = str(sender)
     else:
         sender = 'Неизвестный'
     string = f'{sender}: {text}'
     return f'{string[:40] + "..." if len(string) > 40 else string}'
 
 
+@login_required
 def receive_message(request, chat_id):
     if request.is_ajax():
         chat = Chat.objects.get(id=chat_id)
@@ -188,6 +219,7 @@ def receive_message(request, chat_id):
         return JsonResponse({'result': result, 'message': message, 'timestamp': timestamp})
 
 
+@login_required
 def update_context_from_chats(request, context, chats):
     employers, jobseekers = [], []
     resumes, responses = [], []
@@ -198,11 +230,12 @@ def update_context_from_chats(request, context, chats):
               if notif.verb == NEW_MESSAGE]
     notif_chats = [notif.target for notif in notifs]
     for chat in chats:
-        if request.user.status == UserStatus.EMPLOYER:
-            contact = chat.participants.all()[1]
+        participants = [p for p in chat.participants.all()]
+        participants.remove(Contact.objects.get(user=request.user))
+        contact = participants[0]
+        if request.user.status == UserStatusChoices.EMPLOYER:
             jobseekers.append(JobSeeker.objects.get(user=contact.user))
-        elif request.user.status == UserStatus.JOBSEEKER:
-            contact = chat.participants.all()[0]
+        elif request.user.status == UserStatusChoices.JOBSEEKER:
             employers.append(Employer.objects.get(user=contact.user))
         last_message = chat.messages.all().last()
         last_message_text = get_last_message_text(request, last_message.contact.user, last_message.content)
@@ -231,20 +264,21 @@ def update_context_from_chats(request, context, chats):
     context['chat_contacts'] = sorted(pack, key=lambda x: x[5], reverse=True)
 
 
+@login_required
 def search_contact(request):
     if request.is_ajax():
         name = request.GET.get('contact')
         if name:
-            if request.user.status == UserStatus.JOBSEEKER:
+            if request.user.status == UserStatusChoices.JOBSEEKER:
                 contacts = Employer.objects.filter(name__contains=name)
-            elif request.user.status == UserStatus.EMPLOYER:
+            elif request.user.status == UserStatusChoices.EMPLOYER:
                 contacts = JobSeeker.objects.filter(Q(first_name__contains=name) | Q(last_name__contains=name))
             else:
                 raise Exception('Unsupported user')
             usernames = []
             usernames.extend([cont.user.username for cont in contacts])
         else:
-            usernames = [request.user]
+            usernames = [request.user.username]
         chats = Chat.objects.filter(participants__user__username__in=usernames)
         user_contact = Contact.objects.get(user=request.user)
         chats = [chat for chat in chats if user_contact in chat.participants.all()]

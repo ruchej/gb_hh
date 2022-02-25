@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="post-area section-gap">
+        <div class="container">
+            <div class="row justify-content-sm-center d-flex ">
+                <div class="mb-4">
+                    <h4 class="mt-3 mb-3">Уверены, что хотите удалить позицию "{{ job }}"?</h4>
+                    <form action="{% url 'resumes:job_delete' job.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-center">
+                            <a type="submit" class="genric-btn primary danger mr-50"
+                               onclick="this.closest('form').submit();return false;">
+                                Удалить
+                            </a>
+                            <a class="genric-btn primary ml-50"
+                               href="{% url 'resumes:job_update' job.id %}">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </section>
+{% endblock %}

@@ -28,8 +28,4 @@ urlpatterns = [
     path('responses/accept/<int:r_pk>/', views.response_accept, name='response_accept'),
     path('responses/reject/<int:r_pk>/', views.response_reject, name='response_reject'),
     path('responses/delete/<int:pk>/', views.ResponseDeleteView.as_view(), name='response_delete'),
-
-    path('offers/', views.OfferListView.as_view(), name='offer_list'),
-    path('offers/create/<int:v_pk>/<int:r_pk>/', views.OfferCreateView.as_view(), name='offer_create'),
-    path('offers/delete/<int:pk>/', views.OfferDeleteView.as_view(), name='offer_delete'),
 ]

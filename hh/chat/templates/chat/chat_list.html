@@ -26,6 +26,10 @@
                                 </div>
                             </div>
                             <div class="inbox_chat" style="margin-left: 8px">
+                                <div class="spinner-border contacts-loading" role="status"
+                                     style="position: relative; top: 42%; left: 50%;">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
                                 <div class="contacts-ajax">
                                     {% include 'chat/snippets/contacts.html' %}
                                 </div>
@@ -43,11 +47,11 @@
                     <p style="text-align: center; font-size: large;">
                         Тут пока ничего нет :(
                     </p>
-                    {% if user.status == 1 %}
+                    {% if user.status == user_status_choices.JOBSEEKER %}
                         <p style="text-align: center; font-size: large;">
                             Как только на ваше резюме откликнутся - чат будет доступен
                         </p>
-                    {% elif user.status == 2 %}
+                    {% elif user.status == user_status_choices.EMPLOYER %}
                         <p style="text-align: center; font-size: large;">
                             Отправьте ответ на резюме и чат будет доступен
                         </p>

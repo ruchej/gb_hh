@@ -1,37 +1,27 @@
-<section>
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">Навыки</label>
-        </div>
-        <div class="col-md-8 col-6">
-            {{ resume.experience.skills }}
-        </div>
-    </div>
-    <hr/>
-
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">О себе</label>
-        </div>
-        <div class="col-md-8 col-6">
-            {{ resume.experience.about }}
-        </div>
-    </div>
-    <hr/>
-
-    <div class="row">
-        <div class="col-sm-3 col-md-2 col-5">
-            <label style="font-weight:bold;">Портфолио</label>
-        </div>
-        <div class="col-md-8 col-6">
-            {{ resume.experience.portfolio }}
-        </div>
-    </div>
-    <hr/>
-
-    {% if user == resume.user %}
-        <a class="ticker-btn" href="{% url 'resumes:experience_update'  resume.experience.id %}">
-            Изменить
+<div class="mb-5">
+    <h4>
+        Обо мне:
+    </h4>
+    <p class="mt-2">
+        {{ resume.experience.about|default:'Не указано' }}
+    </p>
+</div>
+<div class="mb-5">
+    <h4>
+        Мои навыки:
+    </h4>
+    <p class="mt-2">
+        {{ resume.experience.skills|default:'Не указано' }}
+    </p>
+</div>
+<div>
+    <h4>
+        Моё портфолио:
+    </h4>
+    <p class="mt-2">
+        <a {% if job.site %}href="{{ resume.experience.portfolio }}"{% endif %}
+           style="color: #777777">
+            {{ resume.experience.portfolio|default:'Не указано' }}
         </a>
-    {% endif %}
-</section>
+    </p>
+</div>

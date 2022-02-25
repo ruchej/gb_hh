@@ -1,1 +1,25 @@
-{% include 'snippets/generic_form.html' %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="post-area section-gap">
+        <div class="container d-flex justify-content-center">
+            <div class="col-lg-8 col-md-8">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% include 'snippets/form_elements/text.html' with field=form.organization required=True icon='fa-building' %}
+                    {% include 'snippets/form_elements/date.html' with field=form.start required=True icon='fa-play' %}
+                    {% include 'snippets/form_elements/date.html' with field=form.end icon='fa-stop' %}
+                    {% include 'snippets/form_elements/text.html' with field=form.site icon='fa-external-link' %}
+                    {% include 'snippets/form_elements/text.html' with field=form.scope required=True icon='fa-suitcase' %}
+                    {% include 'snippets/form_elements/text.html' with field=form.position required=True icon='fa-id-badge' %}
+                    {% include 'snippets/form_elements/message.html' with field=form.functions icon='fa-question' %}
+                    {% include 'snippets/form_elements/select.html' with field=form.city %}
+                    <div class="mt-20">
+                        <button type="submit" class="genric-btn primary">Создать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}

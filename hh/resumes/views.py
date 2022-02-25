@@ -1,7 +1,9 @@
 from collections import Counter
+from typing import Iterable
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -10,17 +12,28 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView,
 from el_pagination.views import AjaxListView
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
+from django.forms.models import model_to_dict
 
+from accounts.views import UserNotAuthMixin
 from . import models, forms
-from accounts.models import UserStatus, JobSeeker
+from accounts.models import JobSeeker
+from conf.choices import UserStatusChoices
 from recruiting.views import NEW_RESUME_NOTIF
+from .forms import ResumeForm
+from .models import Resume
 
 
+@login_required
 def resume_favorite_list(request):
     user = request.user
     favorites_resumes = user.favourites_resumes.all()
+    jobseekers, favs = [], []
+    for resume in favorites_resumes:
+        jobseekers.append(JobSeeker.objects.get(user=resume.user))
+        favs.append(True)
     context = {
-        'favorites_resumes': favorites_resumes,
+        'favorites_resumes': list(zip(favorites_resumes, jobseekers, favs)),
+        'title': 'Избранные резюме',
     }
     return render(request, 'resumes/favorites_resume_list.html', context)
 
@@ -35,9 +48,10 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ResumeListView, self).get_context_data(object_list=object_list, **kwargs)
         context.update({'title': 'Мои Резюме'})
-        if self.request.user.status == UserStatus.JOBSEEKER:
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
             context['object_list'] = self.employee_filter(context, object_list)
             context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
+            context['jobs'] = models.Job.objects.filter(user=self.request.user).order_by('-start')
         else:
             context['title'] = 'Резюме Соискателей'
             resumes, jobseekers, context['resumes_cities'] = self.employer_filter(context, object_list)
@@ -47,8 +61,8 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.status == UserStatus.JOBSEEKER:
-            queryset = queryset.filter(user=self.request.user)
+        if self.request.user.status == UserStatusChoices.JOBSEEKER:
+            queryset = queryset.filter(user=self.request.user).order_by('-published_at')
         return queryset
 
     def render_to_response(self, context, **response_kwargs):
@@ -63,14 +77,13 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
                 object_list = object_list.filter(position__salary=int(text))
             else:
                 object_list = object_list.filter(
-                    Q(title__contains=text) |
-                    Q(experience__skills__contains=text) |
-                    Q(experience__about__contains=text) |
-                    Q(position__title__contains=text) |
-                    Q(position__employment__contains=text) |
-                    Q(position__schedule__contains=text) |
-                    Q(position__relocation__contains=text) |
-                    Q(position__business_trip__contains=text)
+                    Q(title__icontains=text) |
+                    Q(experience__skills__icontains=text) |
+                    Q(experience__about__icontains=text) |
+                    Q(position__position__icontains=text) |
+                    Q(position__employment_type__icontains=text) |
+                    Q(position__relocation__icontains=text) |
+                    Q(position__business_trip__icontains=text)
                 )
         return object_list
 
@@ -90,31 +103,37 @@ class ResumeListView(LoginRequiredMixin, AjaxListView):
         # Check if normal search was invoked
         if 'search' in self.request.GET and (text := self.request.GET['search']):
             jobseekers = jobseekers_cities.filter(
-                Q(first_name__contains=text) |
-                Q(last_name__contains=text)
+                Q(first_name__icontains=text) |
+                Q(last_name__icontains=text)
             )
             if text.isnumeric():
                 resumes = object_list.exclude(id__in=response_resumes_ids).filter(position__salary=int(text))
             else:
                 resumes = object_list.exclude(id__in=response_resumes_ids).filter(
-                    Q(experience__skills=text) |
-                    Q(position__title=text) |
-                    Q(position__employment=text) |
-                    Q(position__schedule=text) |
-                    Q(position__relocation=text) |
-                    Q(position__business_trip=text)
+                    Q(experience__skills__icontains=text) |
+                    Q(experience__about__icontains=text) |
+                    Q(position__position__icontains=text) |
+                    Q(position__employment_type__icontains=text) |
+                    Q(position__relocation__icontains=text) |
+                    Q(position__business_trip__icontains=text)
                 )
             if jobseekers:
                 new_resumes = []
                 for jobseeker in jobseekers:
                     js_resumes = list(object_list.exclude(id__in=response_resumes_ids).filter(user=jobseeker.user))
-                    new_resumes.extend(js_resumes)
+                    if isinstance(js_resumes, Iterable):
+                        new_resumes.extend(js_resumes)
+                    else:
+                        new_resumes.append(js_resumes)
                 resumes = new_resumes
             elif resumes:
                 new_resumes = []
                 for resume in resumes:
                     if jobseekers_cities.filter(user=resume.user).exists():
-                        new_resumes.extend(resume)
+                        if isinstance(resume, Iterable):
+                            new_resumes.extend(resume)
+                        else:
+                            new_resumes.append(resume)
                 resumes = new_resumes
             else:
                 resumes = []
@@ -145,52 +164,82 @@ class ResumeDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ResumeDetailView, self).get_context_data()
-        context['jobs'] = models.Job.objects.filter(experience=context['resume'].experience)
+        context['jobs'] = context['resume'].jobs.all()
         context['jobseeker'] = JobSeeker.objects.get(user=context['resume'].user)
-        if self.request.user.status == UserStatus.EMPLOYER:
+        if self.request.user.status == UserStatusChoices.EMPLOYER:
+            from recruiting.models import Response
             notifs = [notif for notif in self.request.user.notifications.unread()
                       if notif.verb == NEW_RESUME_NOTIF]
             notifs_resumes = [notif.target for notif in notifs]
             if (resume := context['object']) in notifs_resumes:
                 notifs[notifs_resumes.index(resume)].mark_as_read()
+            if self.request.user in resume.favourites.all():
+                context['fav'] = True
+            if Response.objects.filter(resume=context['resume']).exists() and \
+                    'vac_id' in self.request.GET:
+                context['response'] = Response.objects.get(resume=context['resume'],
+                                                           vacancy__id=self.request.GET['vac_id'])
         return context
 
 
-@login_required
-def resume_create(request):
-    if request.method == 'POST':
-        resume_form = forms.ResumeForm(request.POST)
-        contacts_form = forms.ContactsForm(request.POST)
-        position_form = forms.PositionForm(request.POST)
-        experience_form = forms.ExperienceForm(request.POST)
-        job_form = forms.JobForm(request.POST)
-        view_forms = (resume_form, contacts_form, position_form, experience_form, job_form)
-        if all([item.is_valid() for item in view_forms]):
-            resume_form.form.save(commit=False)
-            resume_form.user = request.user
-            for item in view_forms[1:]:
-                item.save()
-        return render(request, 'resumes/resume_create.html')
-    else:
-        resume_form = forms.ResumeForm()
-        contacts_form = forms.ContactsForm()
-        position_form = forms.PositionForm()
-        experience_form = forms.ExperienceForm()
-        job_form = forms.JobForm()
-    return render(request, 'resumes/resume_create.html', {
-        'resume_form': resume_form,
-        'contacts_form': contacts_form,
-        'position_form': position_form,
-        'experience_form': experience_form,
-        'job_form': job_form,
-    })
+class ResumeCreateView(CreateView):
+    model = Resume
+    form_class = ResumeForm
+    success_url = reverse_lazy("resumes:resume_list")
+    extra_context = {'title': 'Создание Резюме'}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resume_form'] = context['form']
+        context['contacts_form'] = forms.ContactsForm(self.request.POST)
+        context['position_form'] = forms.PositionForm(self.request.POST)
+        context['experience_form'] = forms.ExperienceForm(self.request.POST)
+        context['jobseeker'] = JobSeeker.objects.get(user=self.request.user)
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super(ResumeCreateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    @transaction.atomic
+    def get_form(self, form_class=None):
+        form = super(ResumeCreateView, self).get_form(form_class=form_class)
+        if self.request.method == 'POST':
+            contacts_form = forms.ContactsForm(self.request.POST)
+            position_form = forms.PositionForm(self.request.POST)
+            experience_form = forms.ExperienceForm(self.request.POST)
+            if experience_form.is_valid():
+                form.instance.experience_id = experience_form.save().id
+                form.errors.pop('experience')
+            if position_form.is_valid():
+                form.instance.position_id = position_form.save().id
+                form.errors.pop('position')
+            if contacts_form.is_valid():
+                form.instance.contacts_id = contacts_form.save().id
+                form.errors.pop('contacts')
+            form.instance.user_id = self.request.user.id
+        return form
 
 
-class ResumeUpdateView(LoginRequiredMixin, UpdateView):
+class ResumeUpdateView(LoginRequiredMixin, ResumeCreateView, UpdateView):
     """View for updating resume."""
+    template_name = "resumes/resume_update.html"
 
-    model = models.Resume
-    form_class = forms.ResumeForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        resume = context['object']
+        context['resume_form'] = context['form']
+        context['contacts_form'] = forms.ContactsForm(initial=model_to_dict(resume.contacts))
+        context['position_form'] = forms.PositionForm(initial=model_to_dict(resume.position))
+        context['experience_form'] = forms.ExperienceForm(initial=model_to_dict(resume.experience))
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return super(UpdateView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return super(UpdateView, self).post(request, *args, **kwargs)
 
 
 class ResumeDeleteView(LoginRequiredMixin, DeleteView):
@@ -200,52 +249,15 @@ class ResumeDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('resumes:resume_list')
 
 
-class ContactsDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about contacts in resume."""
-
-    model = models.Contacts
-
-
-class ContactsUpdateView(LoginRequiredMixin, UpdateView):
-    """View for updating contacts in resume."""
-
-    model = models.Contacts
-    form_class = forms.ContactsForm
-    success_url = reverse_lazy('resumes:resume_list')
-
-
-class PositionDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about position in resume."""
-
-    model = models.Position
-
-
-class PositionUpdateView(LoginRequiredMixin, UpdateView):
-    """View for updating position in resume."""
-
-    model = models.Position
-    form_class = forms.PositionForm
-    success_url = reverse_lazy('resumes:resume_list')
-
-
-class ExperienceDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about experience in resume."""
-
-    model = models.Experience
-
-
-class ExperienceUpdateView(LoginRequiredMixin, UpdateView):
-    """View for updating experience in resume."""
-
-    model = models.Experience
-    form_class = forms.ExperienceForm
-    success_url = reverse_lazy('resumes:resume_list')
-
-
-class JobDetailView(LoginRequiredMixin, DetailView):
-    """View for getting detail information about jobs in resume."""
-
+class JobCreateView(LoginRequiredMixin, CreateView):
     model = models.Job
+    form_class = forms.JobForm
+    success_url = reverse_lazy('resumes:resume_list')
+    extra_context = {'title': 'Добавление нового места работы'}
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(JobCreateView, self).form_valid(form)
 
 
 class JobUpdateView(LoginRequiredMixin, UpdateView):
@@ -253,4 +265,17 @@ class JobUpdateView(LoginRequiredMixin, UpdateView):
 
     model = models.Job
     form_class = forms.JobForm
+    template_name = 'resumes/job_update.html'
+    success_url = reverse_lazy('resumes:resume_list')
+
+    def get_context_data(self, **kwargs):
+        context = super(JobUpdateView, self).get_context_data(**kwargs)
+        context['title'] = str(context['object'])
+        return context
+
+
+class JobDeleteView(LoginRequiredMixin, DeleteView):
+    """View for deleting job."""
+
+    model = models.Job
     success_url = reverse_lazy('resumes:resume_list')

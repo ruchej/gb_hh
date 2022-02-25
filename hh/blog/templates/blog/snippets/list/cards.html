@@ -15,7 +15,7 @@
         {% endif %}
         <p class="author">{{ news.author }}, {{ news.created_at|date:"d M Y в H:i" }}</p>
 
-        <p>{{ news.short_description }}</p>
+        <p>{{ news.description|truncatewords:20 }}</p>
         <div class="d-flex flex-row-reverse">
             <a href="{{ news.get_absolute_url }}">
                 <p>

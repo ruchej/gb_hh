@@ -1,6 +1,6 @@
 {% for chat, contact, resume, response, last_message, timestamp, notify in chat_contacts %}
     <div class="alert m-0 chat-{{ chat.id }}-alert {% if notify %}alert-danger{% endif %}"
-         style="padding: 0">
+         style="padding: 0; display: none">
         {% if response %}
             <p class="ml-15" style="margin-bottom: -25px">
                 <a href="{% url 'vacancies:detail' response.vacancy.id %}">
@@ -27,11 +27,7 @@
                     </div>
                     <div class="chat_ib">
                         <h5>
-                            {% if contact.user.status == 1 %}
-                                {{ contact.first_name }} {{ contact.last_name }}
-                            {% elif contact.user.status == 2 %}
-                                {{ contact.name }}
-                            {% endif %}
+                            {{ contact }}
                             {% include 'chat/snippets/msg_time.html' %}
                         </h5>
                         <p class="chat-{{ chat.id }}-last">{{ last_message }}</p>

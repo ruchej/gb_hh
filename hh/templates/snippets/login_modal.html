@@ -10,16 +10,15 @@
                       action="{% url 'accounts:login' %}?next={{ request.path|urlencode }}">
                     {% csrf_token %}
                     <div class="form-outline mb-3">
-                        <input type="text" id="id_username" name="username" maxlength="30"
-                               class="form-control form-control-lg"
-                               placeholder="Логин"/>
+                        {% include 'snippets/form_elements/basic.html' with name='username' text='Логин' icon='fa-user' %}
                     </div>
                     <div class="form-outline mb-3">
-                        <input type="password" id="id_password" name="password" class="form-control form-control-lg"
-                               placeholder="Пароль"/>
+                        {% include 'snippets/form_elements/basic.html' with name='password' type='password' text='Пароль' icon='fa-key' %}
                     </div>
-                    <!--                    <input class="btn btn-primary btn-lg mt-2 pt-2" type="submit" name="login" value="Войти"/>-->
-                    <a class="ticker-btn mt-2 pt-2" href="#" onclick="document.getElementById('loginForm').submit();">
+                    <div class="text-lg-start">
+                        <a href="{% url 'accounts:password_reset' %}" class="hidden-link">Забыли пароль?</a>
+                    </div>
+                    <a class="genric-btn primary" href="#" onclick="document.getElementById('loginForm').submit();">
                         Войти
                     </a>
                     <div class="text-lg-start">

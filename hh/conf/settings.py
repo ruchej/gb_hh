@@ -28,6 +28,9 @@ DEBUG = local_settings.DEBUG
 
 ALLOWED_HOSTS = local_settings.ALLOWED_HOSTS
 
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
 
     # installed
     'crispy_forms',
+    'widget_tweaks',
     'cities_light',
     'smart_selects',
     'el_pagination',
@@ -86,6 +90,7 @@ TEMPLATES = [
                 'blog.context_processor.recent_news',
                 'conf.context_processor.new_messages',
                 'conf.context_processor.new_responses',
+                'conf.context_processor.user_status_choices',
             ],
         },
     },
@@ -96,12 +101,24 @@ WSGI_APPLICATION = 'conf.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': local_settings.DB_ENGINE,
+            'HOST': local_settings.DB_HOST,
+            'PORT': local_settings.DB_PORT,
+            'NAME': local_settings.DB_NAME,
+            'USER': local_settings.DB_LOGIN,
+            'PASSWORD': local_settings.DB_PASS,
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -138,9 +155,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-)
+if DEBUG:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'templates'),
+    )
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'templates')
 
 # Media files
 MEDIA_URL = 'media/'
@@ -250,6 +270,7 @@ CITIES_LIGHT_TRANSLATION_LANGUAGES = ['ru']
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['RU']
 CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC', 'PPLF', 'PPLG', 'PPLL', 'PPLR',
                                    'PPLS', 'STLMT', ]
+CITIES_LIGHT_FIXTURES_BASE_URL = f'file://{os.path.join(BASE_DIR, "conf/fixtures/cities_light/")}'
 
 # Channels
 ASGI_APPLICATION = "conf.asgi.application"
@@ -265,7 +286,16 @@ else:
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
-                "hosts": [("127.0.0.1", 6379)],
+                "hosts": [(local_settings.REDIS_HOST, local_settings.REDIS_PORT)],
             },
         },
     }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = local_settings.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = local_settings.EMAIL_HOST_PASSWORD
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
